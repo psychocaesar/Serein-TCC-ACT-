@@ -492,6 +492,67 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .track-empty { text-align: center; padding: 2rem 1rem; color: var(--color-muted); }
 .track-empty-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
 
+/* ─── TOOL BUTTONS ROW (schemas) ─── */
+.tool-btn-row { display: flex; flex-direction: column; gap: 0.5rem; margin: 0.75rem 0; }
+
+/* ─── RANGE SLIDERS ─── */
+.range-group { margin: 0.875rem 0; }
+.range-group label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.85rem; font-weight: 500; color: var(--color-text); margin-bottom: 0.4rem; }
+.range-group .range-val { font-family: var(--font-title); font-weight: 700; color: var(--color-primary); font-size: 1rem; }
+input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 24px; cursor: pointer; }
+
+/* ─── CATASTROPHE RESULT ─── */
+.cata-result {
+  background: var(--color-primary-light); border: 1px solid rgba(147,201,172,0.25);
+  border-radius: var(--radius); padding: 1.125rem; margin-top: 1rem;
+  display: none;
+}
+.cata-result.visible { display: block; animation: fadeIn 0.3s ease; }
+.cata-result h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
+.cata-result p { color: var(--color-text); font-size: 0.88rem; margin-bottom: 0.4rem; }
+.cata-result .cata-gap { font-family: var(--font-title); font-weight: 700; color: var(--color-primary-2); }
+
+/* ─── METAPHORS ─── */
+.metaphor-list { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
+.metaphor-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1rem; padding: 0; overflow: hidden;
+}
+.metaphor-card summary {
+  list-style: none; cursor: pointer; padding: 1rem 1.125rem;
+  display: flex; align-items: center; gap: 0.75rem; font-weight: 600; font-size: 0.92rem;
+}
+.metaphor-card summary::-webkit-details-marker { display: none; }
+.metaphor-card summary .m-emoji { font-size: 1.5rem; }
+.metaphor-card[open] summary { border-bottom: 1px solid var(--color-border); }
+.metaphor-card .metaphor-body { padding: 0.875rem 1.125rem 1.125rem; }
+.metaphor-card .metaphor-body p { font-size: 0.86rem; line-height: 1.6; margin-bottom: 0.5rem; }
+.metaphor-card .metaphor-lesson { color: var(--color-primary); font-weight: 500; font-size: 0.85rem; }
+
+/* ─── BEHAVIORAL EXPERIMENTS ─── */
+.exp-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1.125rem; margin-bottom: 0.75rem;
+}
+.exp-card .exp-status {
+  display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 0.15rem 0.6rem; border-radius: 1rem; margin-bottom: 0.6rem;
+}
+.exp-status.todo { background: rgba(216,183,138,0.15); color: var(--color-primary-2); }
+.exp-status.done { background: var(--color-primary-light); color: var(--color-primary); }
+.exp-card .exp-belief { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.5rem; }
+.exp-card .exp-line { font-size: 0.83rem; color: var(--color-muted); margin-bottom: 0.35rem; }
+.exp-card .exp-line strong { color: var(--color-text); font-weight: 600; }
+.exp-card .exp-revision {
+  margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--color-border);
+  font-size: 0.85rem; color: var(--color-text);
+}
+.exp-card .exp-revision .belief-change { font-family: var(--font-title); font-weight: 700; }
+.exp-card .belief-down { color: var(--color-primary); }
+.exp-card-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+.exp-complete-form { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); display: none; }
+.exp-complete-form.visible { display: block; }
+
 /* ─── FEAR LADDER ─── */
 .fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .fear-level {
@@ -1363,12 +1424,16 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 
     <div class="divider"></div>
 
-    <h2 class="mb-1">🎯 Entraîne ton œil critique</h2>
-    <p>Un quiz court pour t'exercer à repérer les schémas dans des pensées du quotidien.</p>
-
-    <div class="mt-2">
+    <h2 class="mb-1">Pour aller plus loin</h2>
+    <div class="tool-btn-row">
+      <button class="btn btn-secondary" onclick="navigateTo('catastrophe')" aria-label="Échelle de catastrophe">
+        ⚖️ Échelle de catastrophe
+      </button>
+      <button class="btn btn-secondary" onclick="navigateTo('metaphores')" aria-label="Métaphores ACT">
+        🌿 Métaphores ACT
+      </button>
       <button class="btn btn-secondary" onclick="navigateTo('quiz')" aria-label="Démarrer le quiz d'identification des schémas">
-        🎯 Démarrer le quiz
+        🎯 Quiz : identifie le schéma
       </button>
     </div>
 
@@ -1453,6 +1518,16 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
       <div class="big-emoji">🌱</div>
       <h3>Tu l'as fait !</h3>
       <p>Chaque pas compte. L'évitement maintient l'anxiété - l'action la réduit progressivement. Reviens demain pour continuer.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="mb-1">🔬 Expériences comportementales</h2>
+    <p>Teste une croyance anxieuse au lieu de la croire sur parole : prédis, expérimente, observe, révise.</p>
+    <div class="mt-2">
+      <button class="btn btn-secondary" onclick="navigateTo('experiments')" aria-label="Ouvrir les expériences comportementales">
+        🔬 Mes expériences
+      </button>
     </div>
 
     <div class="mt-3">
@@ -1611,6 +1686,153 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
   </div>
 
+  <!-- ═══ SCREEN : ÉCHELLE DE CATASTROPHE ═══ -->
+  <div class="screen" id="screen-catastrophe" role="main" aria-label="Échelle de catastrophe">
+    <div class="greeting-block">
+      <div class="time-label">Décatastrophiser</div>
+      <h1>Échelle de <span>catastrophe</span></h1>
+    </div>
+    <p>Quand l'esprit anticipe le pire, confronte la prédiction aux faits. Réponds aussi honnêtement que possible.</p>
+
+    <div class="form-group mt-2">
+      <label class="form-label" for="cataSituation">La situation que tu redoutes</label>
+      <input type="text" id="cataSituation" placeholder="Ex. : Faire une erreur pendant ma présentation…" aria-label="Situation redoutée">
+    </div>
+
+    <div class="range-group">
+      <label for="cataProb">Probabilité réelle que ça arrive <span class="range-val" id="cataProbVal">50%</span></label>
+      <input type="range" id="cataProb" min="0" max="100" value="50" oninput="updateCataLabels()" aria-label="Probabilité réelle de 0 à 100 pourcent">
+    </div>
+
+    <div class="range-group">
+      <label for="cataGrav">Si ça arrivait, gravité ressentie <span class="range-val" id="cataGravVal">50</span></label>
+      <input type="range" id="cataGrav" min="0" max="100" value="50" oninput="updateCataLabels()" aria-label="Gravité ressentie de 0 à 100">
+    </div>
+
+    <div class="range-group">
+      <label for="cataCope">Ta capacité à y faire face <span class="range-val" id="cataCopeVal">50</span></label>
+      <input type="range" id="cataCope" min="0" max="100" value="50" oninput="updateCataLabels()" aria-label="Capacité à faire face de 0 à 100">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="cataPlan">Concrètement, comment y ferais-tu face ?</label>
+      <textarea id="cataPlan" rows="2" placeholder="Ex. : Je m'excuserais, je reprendrais mon fil. Demain, personne ne s'en souviendrait." aria-label="Plan pour y faire face"></textarea>
+    </div>
+
+    <button class="btn btn-primary mt-1" onclick="computeCatastrophe()" aria-label="Voir l'analyse">Voir l'analyse</button>
+
+    <div class="cata-result" id="cataResult" aria-live="polite">
+      <h3 id="cataResultTitle"></h3>
+      <p id="cataResultBody"></p>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('schemas')" aria-label="Retour aux schémas">← Schémas</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN : MÉTAPHORES ACT ═══ -->
+  <div class="screen" id="screen-metaphores" role="main" aria-label="Métaphores ACT">
+    <div class="greeting-block">
+      <div class="time-label">ACT</div>
+      <h1>Métaphores <span>ACT</span></h1>
+    </div>
+    <p>Des images pour changer ta relation aux pensées et aux émotions difficiles. Touche une métaphore pour la déplier.</p>
+
+    <div class="metaphor-list">
+      <details class="metaphor-card">
+        <summary><span class="m-emoji">🏖️</span> Les sables mouvants</summary>
+        <div class="metaphor-body">
+          <p>Le réflexe naturel, pris dans des sables mouvants, est de se débattre de toutes ses forces. Mais c'est exactement ce qui fait couler. La survie passe par l'inverse : s'allonger, augmenter le contact avec la surface, cesser de lutter.</p>
+          <p class="metaphor-lesson">Lutter contre l'anxiété l'amplifie. Faire de la place à l'inconfort, c'est paradoxalement ce qui le rend supportable.</p>
+        </div>
+      </details>
+      <details class="metaphor-card">
+        <summary><span class="m-emoji">🎭</span> L'invité indésirable</summary>
+        <div class="metaphor-body">
+          <p>Tu organises une fête chez toi, porte ouverte à tous. Un invité désagréable se présente. Tu peux passer toute la soirée à essayer de le mettre dehors - et rater ta fête. Ou le laisser être là, dans un coin, et continuer à profiter de tes autres invités.</p>
+          <p class="metaphor-lesson">Tu peux accueillir une émotion difficile sans la laisser diriger toute ta soirée.</p>
+        </div>
+      </details>
+      <details class="metaphor-card">
+        <summary><span class="m-emoji">🪢</span> Le tir à la corde avec le monstre</summary>
+        <div class="metaphor-body">
+          <p>Tu es en plein tir à la corde avec un monstre (l'anxiété), au-dessus d'un gouffre. Plus tu tires fort, plus il tire. Tu t'épuises sans avancer. La solution n'est pas de gagner le combat - c'est de lâcher la corde.</p>
+          <p class="metaphor-lesson">Arrêter de lutter libère l'énergie pour ce qui compte vraiment pour toi.</p>
+        </div>
+      </details>
+      <details class="metaphor-card">
+        <summary><span class="m-emoji">☁️</span> Le ciel et la météo</summary>
+        <div class="metaphor-body">
+          <p>Tu es le ciel. Tes pensées et tes émotions sont la météo : tempêtes, nuages lourds, éclaircies. La météo peut être violente, mais elle n'a jamais abîmé le ciel. Et elle finit toujours par passer.</p>
+          <p class="metaphor-lesson">Tu n'es pas tes pensées - tu es l'espace dans lequel elles passent.</p>
+        </div>
+      </details>
+      <details class="metaphor-card">
+        <summary><span class="m-emoji">📻</span> La radio qu'on ne peut pas éteindre</summary>
+        <div class="metaphor-body">
+          <p>L'esprit est comme une radio allumée en permanence, qui diffuse commentaires, jugements et scénarios catastrophes. Tu ne peux pas l'éteindre. Mais tu peux choisir de ne pas monter le volume de ton attention, et agir malgré le bruit de fond.</p>
+          <p class="metaphor-lesson">Les pensées continuent ; tu n'es pas obligé·e de leur obéir.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('schemas')" aria-label="Retour aux schémas">← Schémas</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN : EXPÉRIENCES COMPORTEMENTALES ═══ -->
+  <div class="screen" id="screen-experiments" role="main" aria-label="Expériences comportementales">
+    <div class="greeting-block">
+      <div class="time-label">TCC</div>
+      <h1>Expériences <span>comportementales</span></h1>
+    </div>
+    <p>Une croyance anxieuse est une hypothèse, pas un fait. Conçois une petite expérience pour la mettre à l'épreuve du réel.</p>
+
+    <details class="onboarding-tip" style="cursor:pointer;margin:1rem 0;">
+      <summary style="font-weight:600;list-style:none;">🧠 Comment ça marche</summary>
+      <div style="margin-top:0.6rem;font-size:0.83rem;display:flex;flex-direction:column;gap:0.3rem;">
+        <p style="margin:0;">1. <strong>Croyance</strong> - ce que tu crains de croire vrai (« Si je dis non, on me rejettera »).</p>
+        <p style="margin:0;">2. <strong>Prédiction</strong> - ce que tu t'attends à voir arriver concrètement.</p>
+        <p style="margin:0;">3. <strong>Expérience</strong> - l'action précise que tu vas tester.</p>
+        <p style="margin:0;">4. <strong>Observation</strong> - ce qui s'est réellement passé, les faits.</p>
+        <p style="margin:0;">5. <strong>Révision</strong> - à quel point tu crois encore à la croyance de départ.</p>
+      </div>
+    </details>
+
+    <button class="btn btn-secondary" id="expAddBtn" onclick="toggleExpForm()" aria-label="Nouvelle expérience">+ Nouvelle expérience</button>
+
+    <div class="card-add-form" id="expAddForm">
+      <div class="form-group">
+        <label class="form-label" for="expBelief">Croyance à tester</label>
+        <input type="text" id="expBelief" placeholder="Ex. : Si je demande de l'aide, on me jugera incompétent·e." aria-label="Croyance à tester">
+      </div>
+      <div class="range-group">
+        <label for="expBeliefStart">À quel point y crois-tu maintenant ? <span class="range-val" id="expBeliefStartVal">70</span></label>
+        <input type="range" id="expBeliefStart" min="0" max="100" value="70" oninput="document.getElementById('expBeliefStartVal').textContent=this.value" aria-label="Degré de croyance initial de 0 à 100">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="expPrediction">Ta prédiction (qu'est-ce que tu crains qu'il se passe ?)</label>
+        <textarea id="expPrediction" rows="2" placeholder="Ex. : Mon collègue va soupirer et me trouver nul·le." aria-label="Prédiction"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="expAction">L'expérience (que vas-tu faire, précisément ?)</label>
+        <textarea id="expAction" rows="2" placeholder="Ex. : Demander de l'aide à un collègue sur une tâche, demain matin." aria-label="Expérience prévue"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="toggleExpForm()" aria-label="Annuler">Annuler</button>
+        <button class="btn btn-primary" onclick="saveExperiment()" aria-label="Enregistrer l'expérience">Enregistrer</button>
+      </div>
+    </div>
+
+    <div class="mt-2" id="expList"></div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('ladder')" aria-label="Retour à l'exposition">← Exposition</button>
+    </div>
+  </div>
+
 </div><!-- end screen-container -->
 
 <!-- ─── BOTTOM NAV (5 tabs) ─── -->
@@ -1728,13 +1950,15 @@ const screenMap = {
   home: 'screen-home', checkin: 'screen-checkin', journal: 'screen-journal',
   calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
   cards: 'screen-cards', diary: 'screen-diary', whatup: 'screen-whatup', quiz: 'screen-quiz',
-  tracking: 'screen-tracking',
+  tracking: 'screen-tracking', catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
+  experiments: 'screen-experiments',
 };
 const navMap = {
   home: 'nav-home', checkin: 'nav-home', journal: 'nav-journal',
   calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
   cards: 'nav-home', diary: 'nav-home', whatup: 'nav-home', quiz: 'nav-schemas',
-  tracking: 'nav-tracking',
+  tracking: 'nav-tracking', catastrophe: 'nav-schemas', metaphores: 'nav-schemas',
+  experiments: 'nav-schemas',
 };
 const screenInitFns = {
   cards: renderCards,
@@ -1744,6 +1968,8 @@ const screenInitFns = {
   schemas: () => renderDefusion(currentDefusion),
   calm: loadBells,
   tracking: renderTracking,
+  catastrophe: initCatastrophe,
+  experiments: renderExperiments,
 };
 
 function navigateTo(screen) {
@@ -2515,6 +2741,122 @@ function clearAnxietyLog() {
   renderDailyCheckinCard();
 }
 
+// ─── ÉCHELLE DE CATASTROPHE ───
+function updateCataLabels() {
+  document.getElementById('cataProbVal').textContent = document.getElementById('cataProb').value + '%';
+  document.getElementById('cataGravVal').textContent = document.getElementById('cataGrav').value;
+  document.getElementById('cataCopeVal').textContent = document.getElementById('cataCope').value;
+}
+function initCatastrophe() {
+  document.getElementById('cataResult').classList.remove('visible');
+}
+function computeCatastrophe() {
+  const prob = +document.getElementById('cataProb').value;
+  const grav = +document.getElementById('cataGrav').value;
+  const cope = +document.getElementById('cataCope').value;
+  const plan = document.getElementById('cataPlan').value.trim();
+  document.getElementById('cataResultTitle').textContent = '🔎 Ce que disent tes réponses';
+  let msg = `Tu estimes la probabilité réelle à <span class="cata-gap">${prob}%</span> - ce qui veut dire que dans <span class="cata-gap">${100 - prob}%</span> des cas, ce que tu redoutes n'arrive pas. `;
+  if (cope >= grav) {
+    msg += `Et même si ça arrivait, tu évalues ta capacité à y faire face (<span class="cata-gap">${cope}</span>) à la hauteur de la gravité (<span class="cata-gap">${grav}</span>) : tu as les ressources. `;
+  } else {
+    msg += `La gravité ressentie (<span class="cata-gap">${grav}</span>) dépasse pour l'instant ta capacité perçue à y faire face (<span class="cata-gap">${cope}</span>) - c'est souvent là que l'anxiété s'installe, et c'est précisément ce levier qu'on peut renforcer. `;
+  }
+  msg += plan
+    ? `Tu as déjà un plan : « ${escHtml(plan)} ». Avoir une réponse concrète réduit l'incertitude qui nourrit la catastrophe.`
+    : `Essaie de noter une réponse concrète à « comment y ferais-je face ? » Avoir un plan, même imparfait, désamorce le scénario catastrophe.`;
+  document.getElementById('cataResultBody').innerHTML = msg;
+  document.getElementById('cataResult').classList.add('visible');
+}
+
+// ─── EXPÉRIENCES COMPORTEMENTALES ───
+function loadExperiments() { return JSON.parse(localStorage.getItem('serein_experiments') || '[]'); }
+function saveExperiments(x) { localStorage.setItem('serein_experiments', JSON.stringify(x)); }
+function toggleExpForm() {
+  const f = document.getElementById('expAddForm');
+  f.classList.toggle('visible');
+  if (f.classList.contains('visible')) document.getElementById('expBelief').focus();
+}
+function saveExperiment() {
+  const belief = document.getElementById('expBelief').value.trim();
+  const beliefStart = +document.getElementById('expBeliefStart').value;
+  const prediction = document.getElementById('expPrediction').value.trim();
+  const action = document.getElementById('expAction').value.trim();
+  if (!belief || !action) return;
+  const exps = loadExperiments();
+  exps.unshift({ id: Date.now(), belief, beliefStart, prediction, action, observation: null, beliefEnd: null, date: new Date().toLocaleDateString('fr-FR') });
+  saveExperiments(exps);
+  document.getElementById('expBelief').value = '';
+  document.getElementById('expPrediction').value = '';
+  document.getElementById('expAction').value = '';
+  document.getElementById('expBeliefStart').value = 70;
+  document.getElementById('expBeliefStartVal').textContent = '70';
+  document.getElementById('expAddForm').classList.remove('visible');
+  renderExperiments();
+}
+function deleteExperiment(id) {
+  saveExperiments(loadExperiments().filter(e => e.id !== id));
+  renderExperiments();
+}
+function toggleExpComplete(id) {
+  const f = document.getElementById('expComplete-' + id);
+  if (f) f.classList.toggle('visible');
+}
+function completeExperiment(id) {
+  const obs = document.getElementById('expObs-' + id).value.trim();
+  const beliefEnd = +document.getElementById('expBeliefEnd-' + id).value;
+  if (!obs) return;
+  const exps = loadExperiments();
+  const e = exps.find(x => x.id === id);
+  if (!e) return;
+  e.observation = obs; e.beliefEnd = beliefEnd;
+  saveExperiments(exps);
+  renderExperiments();
+}
+function renderExperiments() {
+  const list = document.getElementById('expList');
+  const exps = loadExperiments();
+  if (!exps.length) {
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🔬</div><p>Aucune expérience pour l\'instant.<br>Choisis une croyance anxieuse à mettre à l\'épreuve.</p></div>';
+    return;
+  }
+  list.innerHTML = exps.map(e => {
+    const done = e.observation !== null;
+    let h = `<div class="exp-card">
+      <span class="exp-status ${done ? 'done' : 'todo'}">${done ? '✓ Réalisée' : '○ À réaliser'}</span>
+      <div class="exp-belief">${escHtml(e.belief)}</div>
+      <div class="exp-line"><strong>Prédiction :</strong> ${e.prediction ? escHtml(e.prediction) : '-'}</div>
+      <div class="exp-line"><strong>Expérience :</strong> ${escHtml(e.action)}</div>`;
+    if (done) {
+      const delta = e.beliefStart - e.beliefEnd;
+      h += `<div class="exp-revision">
+        <div class="exp-line"><strong>Observation :</strong> ${escHtml(e.observation)}</div>
+        <div style="margin-top:0.4rem;">Croyance : <span class="belief-change">${e.beliefStart}</span> → <span class="belief-change ${delta > 0 ? 'belief-down' : ''}">${e.beliefEnd}</span>${delta > 0 ? ` <span class="belief-down">(-${delta})</span>` : ''}</div>
+      </div>
+      <div class="exp-card-actions">
+        <button class="btn btn-ghost" onclick="deleteExperiment(${e.id})" aria-label="Supprimer cette expérience">Supprimer</button>
+      </div>`;
+    } else {
+      h += `<div class="exp-card-actions">
+        <button class="btn btn-secondary" onclick="toggleExpComplete(${e.id})" aria-label="Noter le résultat de l'expérience">Noter le résultat</button>
+        <button class="btn btn-ghost" onclick="deleteExperiment(${e.id})" aria-label="Supprimer cette expérience">Supprimer</button>
+      </div>
+      <div class="exp-complete-form" id="expComplete-${e.id}">
+        <div class="form-group">
+          <label class="form-label" for="expObs-${e.id}">Qu'est-ce qui s'est réellement passé ?</label>
+          <textarea id="expObs-${e.id}" rows="2" placeholder="Décris les faits observés, pas tes interprétations." aria-label="Observation des faits"></textarea>
+        </div>
+        <div class="range-group">
+          <label for="expBeliefEnd-${e.id}">À quel point crois-tu encore à la croyance de départ ? <span class="range-val" id="expBeliefEndVal-${e.id}">${e.beliefStart}</span></label>
+          <input type="range" id="expBeliefEnd-${e.id}" min="0" max="100" value="${e.beliefStart}" oninput="document.getElementById('expBeliefEndVal-${e.id}').textContent=this.value" aria-label="Degré de croyance après l'expérience">
+        </div>
+        <button class="btn btn-primary" onclick="completeExperiment(${e.id})" aria-label="Enregistrer le résultat">Enregistrer le résultat</button>
+      </div>`;
+    }
+    return h + `</div>`;
+  }).join('');
+}
+
 // ─── QUIZ ───
 const quizData = [
   { thought: "Si je ne réussis pas ce projet de manière irréprochable, c'est que je suis un échec total.", schema: 'toutourien', explain: "Cette pensée réduit une situation complexe à deux extrêmes sans laisser de place à la nuance ou à la réussite partielle." },
@@ -2604,6 +2946,8 @@ function exportData() {
     stats: JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}'),
     coping_cards: JSON.parse(localStorage.getItem('serein_cards') || '[]'),
     positive_diary: JSON.parse(localStorage.getItem('serein_diary') || '[]'),
+    anxiety_log: JSON.parse(localStorage.getItem('serein_anxiety_log') || '[]'),
+    behavioral_experiments: JSON.parse(localStorage.getItem('serein_experiments') || '[]'),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);

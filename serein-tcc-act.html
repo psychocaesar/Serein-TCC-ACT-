@@ -469,6 +469,208 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .closing-card .big-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .closing-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
 
+/* ─── ONBOARDING ─── */
+.onboarding-slide { display: none; animation: fadeIn 0.3s ease; }
+.onboarding-slide.active { display: block; }
+.onboarding-emoji { font-size: 3rem; margin-bottom: 0.75rem; }
+.onboarding-dots { display: flex; gap: 0.5rem; justify-content: center; margin: 1.25rem 0 1rem; }
+.ob-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-border); transition: background var(--transition), width var(--transition); }
+.ob-dot.active { background: var(--color-primary); width: 20px; border-radius: 4px; }
+.onboarding-tip {
+  background: var(--color-primary-light); border: 1px solid var(--color-primary);
+  border-radius: 1rem; padding: 0.75rem 1rem; margin-top: 0.75rem;
+  font-size: 0.82rem; color: var(--color-text); line-height: 1.5;
+}
+
+/* ─── CRISIS OVERLAY ─── */
+.crisis-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: var(--color-bg);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem;
+  animation: fadeIn 0.25s ease;
+}
+.crisis-overlay.visible { display: flex; }
+.crisis-close {
+  position: absolute; top: 1.25rem; right: 1.25rem;
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: 2rem; padding: 0.4rem 1rem;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+  color: var(--color-muted); cursor: pointer;
+}
+.crisis-label {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem;
+}
+.crisis-safe {
+  font-family: var(--font-title); font-size: 1.6rem; font-weight: 700;
+  color: var(--color-primary); text-align: center; line-height: 1.2; margin-bottom: 1.5rem;
+}
+.crisis-breath-wrap {
+  display: flex; align-items: center; justify-content: center;
+  width: 140px; height: 140px; border-radius: 50%;
+  background: var(--color-primary-light); border: 2px solid var(--color-primary);
+  margin-bottom: 0.5rem;
+  transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
+  transform: scale(0.75);
+}
+.crisis-breath-wrap.expand { transform: scale(1); box-shadow: 0 0 40px 12px rgba(147,201,172,0.15); }
+.crisis-breath-text {
+  font-family: var(--font-title); font-weight: 700; font-size: 1rem;
+  color: var(--color-primary); text-align: center;
+}
+.crisis-breath-info { font-size: 0.78rem; color: var(--color-muted); margin-bottom: 1.5rem; min-height: 1.2em; }
+.crisis-anchor-wrap {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1.25rem;
+  width: 100%; text-align: center; margin-bottom: 1.25rem;
+  position: relative;
+}
+.crisis-anchor-text {
+  font-family: var(--font-title); font-size: 1rem; font-weight: 600;
+  color: var(--color-text); line-height: 1.4;
+}
+.crisis-anchor-nav { display: flex; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
+.crisis-anchor-btn {
+  background: none; border: 1.5px solid var(--color-border); border-radius: 50%;
+  width: 32px; height: 32px; cursor: pointer; color: var(--color-muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; transition: all var(--transition);
+}
+.crisis-anchor-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.crisis-3114 {
+  font-size: 0.8rem; color: var(--color-muted); text-align: center;
+}
+.crisis-3114 strong { color: var(--color-text); }
+
+/* ─── SOS FAB ─── */
+.fab-sos {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 0.75rem); right: 1rem;
+  z-index: 90;
+  background: linear-gradient(135deg, #c0504a, #e07060);
+  color: #fff; border: none; border-radius: 2rem;
+  padding: 0.5rem 1rem; font-family: var(--font-body);
+  font-size: 0.75rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(192,80,74,0.4);
+  display: flex; align-items: center; gap: 0.35rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+  letter-spacing: 0.04em;
+}
+.fab-sos:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(192,80,74,0.5); }
+
+/* ─── COPING CARDS ─── */
+.cards-list { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
+.coping-card-item {
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: 1.25rem; padding: 1rem;
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  transition: border-color var(--transition);
+}
+.coping-card-item:hover { border-color: var(--color-primary); }
+.coping-card-icon { font-size: 1.5rem; flex-shrink: 0; }
+.coping-card-body { flex: 1; min-width: 0; }
+.coping-card-trigger { font-size: 0.75rem; color: var(--color-muted); margin-bottom: 0.25rem; }
+.coping-card-thought { font-size: 0.88rem; color: var(--color-text); font-weight: 500; line-height: 1.4; }
+.coping-card-del {
+  background: none; border: none; cursor: pointer; color: var(--color-border);
+  font-size: 1.1rem; padding: 0.2rem; flex-shrink: 0;
+  transition: color var(--transition);
+}
+.coping-card-del:hover { color: #c05050; }
+.card-add-form {
+  background: var(--color-surface); border: 1.5px dashed var(--color-primary);
+  border-radius: 1.25rem; padding: 1.25rem; margin-top: 0.75rem;
+  display: none;
+}
+.card-add-form.visible { display: block; }
+.card-empty { text-align: center; padding: 2rem 1rem; color: var(--color-muted); font-size: 0.88rem; }
+.card-empty .empty-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+
+/* ─── POSITIVE DIARY ─── */
+.diary-entries { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
+.diary-entry {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1.25rem; padding: 1rem;
+}
+.diary-entry-date { font-size: 0.7rem; color: var(--color-muted); margin-bottom: 0.3rem; }
+.diary-entry-text { font-size: 0.88rem; color: var(--color-text); line-height: 1.5; }
+.diary-input-row { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
+
+/* ─── FLASH CARDS (What's up?) ─── */
+.flashcard-wrap { display: flex; flex-direction: column; align-items: center; margin: 1.25rem 0; }
+.flashcard {
+  width: 100%; min-height: 200px;
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: var(--radius); padding: 2rem 1.5rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; position: relative;
+  transition: border-color var(--transition);
+}
+.flashcard.seen { border-color: var(--color-primary); }
+.flashcard-num {
+  position: absolute; top: 0.75rem; right: 1rem;
+  font-size: 0.72rem; color: var(--color-muted); font-weight: 600;
+}
+.flashcard-question {
+  font-family: var(--font-title); font-size: 1.15rem; font-weight: 600;
+  color: var(--color-text); line-height: 1.4;
+}
+.flashcard-nav { display: flex; gap: 0.75rem; margin-top: 1rem; width: 100%; }
+.flashcard-nav .btn { padding: 0.75rem 1rem; font-size: 0.85rem; }
+.fc-count { font-size: 0.78rem; color: var(--color-muted); margin-top: 0.5rem; }
+
+/* ─── QUIZ ─── */
+.quiz-thought {
+  background: rgba(216,183,138,0.1); border: 1.5px solid var(--color-primary-2);
+  border-radius: var(--radius); padding: 1.5rem;
+  font-family: var(--font-title); font-size: 1rem; font-weight: 600;
+  color: var(--color-text); text-align: center; line-height: 1.4; margin: 1rem 0;
+}
+.quiz-schemas { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
+.quiz-schema-btn {
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: 1rem; padding: 0.75rem; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 500;
+  color: var(--color-text); text-align: center;
+  transition: all var(--transition);
+}
+.quiz-schema-btn:hover { border-color: var(--color-primary-2); background: rgba(216,183,138,0.08); }
+.quiz-schema-btn.correct { border-color: var(--color-primary); background: var(--color-primary-light); color: var(--color-primary); }
+.quiz-schema-btn.wrong { border-color: #c05050; background: rgba(192,80,80,0.1); color: #c05050; }
+.quiz-schema-btn:disabled { cursor: default; }
+.quiz-feedback {
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: var(--radius); padding: 1.25rem; margin-top: 0.75rem;
+  display: none; animation: fadeIn 0.3s ease;
+}
+.quiz-feedback.visible { display: block; }
+.quiz-score { display: flex; align-items: center; gap: 0.5rem; }
+.score-val {
+  font-family: var(--font-title); font-size: 2rem; font-weight: 700;
+  background: var(--gradient); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; background-clip: text;
+}
+.quiz-progress-wrap { display: flex; align-items: center; gap: 0.75rem; margin: 0.75rem 0; }
+.quiz-progress-bar { flex: 1; height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
+.quiz-progress-fill { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.4s ease; }
+
+/* ─── EXPORT / SETTINGS (home) ─── */
+.export-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1.25rem; padding: 1rem 1.25rem; margin: 0.625rem 0;
+}
+.export-row-label { font-size: 0.88rem; font-weight: 500; }
+.export-row-sub { font-size: 0.72rem; color: var(--color-muted); margin-top: 0.15rem; }
+.btn-icon {
+  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
+  color: var(--color-primary); border-radius: 2rem;
+  padding: 0.4rem 0.9rem; font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: all var(--transition);
+}
+.btn-icon:hover { background: var(--color-primary); color: #0d1b15; }
+
 /* ─── BREATHING ─── */
 .breath-tech-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
 .breath-tab {
@@ -587,6 +789,67 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 </head>
 <body>
 
+<!-- ─── ONBOARDING (shown before disclaimer on very first launch) ─── -->
+<div class="modal-overlay" id="onboardingModal" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+  <div class="modal-box">
+    <div class="onboarding-dots">
+      <div class="ob-dot active" id="obdot-1"></div>
+      <div class="ob-dot" id="obdot-2"></div>
+      <div class="ob-dot" id="obdot-3"></div>
+    </div>
+
+    <div class="onboarding-slide active" id="obslide-1">
+      <div class="onboarding-emoji">🧠</div>
+      <h2 id="obTitle">La Thérapie Cognitivo-Comportementale</h2>
+      <p>La TCC part d'un constat simple : nos pensées influencent nos émotions, qui influencent nos actions. En apprenant à identifier et questionner les pensées automatiques, on peut changer la façon dont on se sent.</p>
+      <div class="onboarding-tip">Ex. "Je rate tout" devient "J'ai raté cette fois — qu'est-ce que j'en apprends ?"</div>
+    </div>
+
+    <div class="onboarding-slide" id="obslide-2">
+      <div class="onboarding-emoji">🌊</div>
+      <h2>L'Acceptance et l'Engagement (ACT)</h2>
+      <p>L'ACT ne cherche pas à supprimer les pensées difficiles, mais à changer notre relation à elles. Observer une pensée sans la croire aveuglément, c'est déjà reprendre le contrôle.</p>
+      <div class="onboarding-tip">"J'ai la pensée que je suis nul·le" - plutôt que - "Je suis nul·le."</div>
+    </div>
+
+    <div class="onboarding-slide" id="obslide-3">
+      <div class="onboarding-emoji">🗺️</div>
+      <h2>Comment utiliser cette app</h2>
+      <p>Commence par le <strong>Check-in</strong> pour nommer ce que tu ressens. Utilise le <strong>Journal TCC</strong> pour restructurer une pensée, l'<strong>Espace calme</strong> pour les moments de crise, et les <strong>Cartes de coping</strong> pour tes reformulations préférées.</p>
+      <div class="onboarding-tip">Tout est stocké localement. Aucune donnée ne quitte ton appareil.</div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-primary" id="obNextBtn" onclick="onboardingNext()" aria-label="Slide suivante">Suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CRISIS OVERLAY ─── -->
+<div class="crisis-overlay" id="crisisOverlay" role="dialog" aria-modal="true" aria-label="Mode crise - respiration et ancrage">
+  <button class="crisis-close" onclick="hideCrisis()" aria-label="Fermer le mode crise">Fermer ×</button>
+  <div class="crisis-label">Mode crise rapide</div>
+  <div class="crisis-safe" id="crisisSafe">Tu es en sécurité.</div>
+  <div class="crisis-breath-wrap" id="crisisCircle">
+    <div class="crisis-breath-text" id="crisisBreathText">Inspire...</div>
+  </div>
+  <div class="crisis-breath-info" id="crisisBreathInfo">Respire lentement avec le cercle</div>
+  <div class="crisis-anchor-wrap">
+    <div class="crisis-anchor-text" id="crisisAnchor">Cette sensation va passer. Tu as déjà traversé des moments difficiles.</div>
+    <div class="crisis-anchor-nav">
+      <button class="crisis-anchor-btn" onclick="prevAnchor()" aria-label="Phrase précédente">‹</button>
+      <button class="crisis-anchor-btn" onclick="nextAnchor()" aria-label="Phrase suivante">›</button>
+    </div>
+  </div>
+  <div class="crisis-3114">Détresse : <strong>3114</strong> (24h/24)</div>
+</div>
+
+<!-- ─── SOS FAB ─── -->
+<button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  SOS
+</button>
+
 <!-- ─── DISCLAIMER MODAL (first launch) ─── -->
 <div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-box">
@@ -700,7 +963,37 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
           <h3>Exposition douce</h3>
           <p>Avance à ton rythme</p>
         </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('cards')" tabindex="0" aria-label="Cartes de coping">
+          <div class="icon">🃏</div>
+          <h3>Cartes de coping</h3>
+          <p>Tes reformulations en 1 tap</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('diary')" tabindex="0" aria-label="Journal positif">
+          <div class="icon">📗</div>
+          <h3>Journal positif</h3>
+          <p>Contrebalance le filtre négatif</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('whatup')" tabindex="0" aria-label="Qu'est-ce qui se passe ?">
+          <div class="icon">❓</div>
+          <h3>Qu'est-ce qui se passe ?</h3>
+          <p>40 questions d'exploration</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('quiz')" tabindex="0" aria-label="Quiz TCC">
+          <div class="icon">🎯</div>
+          <h3>Quiz schémas</h3>
+          <p>Entraîne ton oeil critique</p>
+        </div>
       </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-title">Données & paramètres</div>
+    <div class="export-row">
+      <div>
+        <div class="export-row-label">Exporter mes données</div>
+        <div class="export-row-sub">Journal, cartes, diary - fichier JSON local</div>
+      </div>
+      <button class="btn-icon" onclick="exportData()" aria-label="Télécharger mes données en JSON">↓ Export</button>
     </div>
 
     <div class="disclaimer-note" role="note">
@@ -1108,6 +1401,126 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
   </div>
 
+
+  <!-- ═══ SCREEN : COPING CARDS ═══ -->
+  <div class="screen" id="screen-cards" role="main" aria-label="Cartes de coping">
+    <div class="greeting-block">
+      <div class="time-label">Cartes de coping</div>
+      <h1>Tes <span>reformulations</span></h1>
+    </div>
+    <p>Des fiches personnelles consultables rapidement en cas de pensée difficile.</p>
+
+    <div class="cards-list" id="cardsList"></div>
+
+    <button class="btn btn-secondary mt-2" id="cardAddBtn" onclick="toggleCardForm()" aria-label="Ajouter une carte de coping">+ Nouvelle carte</button>
+
+    <div class="card-add-form" id="cardAddForm">
+      <div class="form-group">
+        <label class="form-label" for="cardTrigger">Situation ou pensée déclenchante</label>
+        <input type="text" id="cardTrigger" placeholder="Ex. : Je me sens incompétent·e au travail…" aria-label="Situation déclenchante">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cardThought">Ta pensée plus équilibrée</label>
+        <textarea id="cardThought" rows="3" placeholder="Ex. : J'ai fait une erreur, pas toute ma carrière. Je peux apprendre de ça." aria-label="Pensée équilibrée"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="toggleCardForm()" aria-label="Annuler">Annuler</button>
+        <button class="btn btn-primary" onclick="saveCard()" aria-label="Enregistrer la carte">Enregistrer</button>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN : POSITIVE DIARY ═══ -->
+  <div class="screen" id="screen-diary" role="main" aria-label="Journal positif">
+    <div class="greeting-block">
+      <div class="time-label">Journal positif</div>
+      <h1>Ce qui va <span>bien</span></h1>
+    </div>
+    <p>Un espace uniquement pour le positif. Pour contrebalancer le filtre mental négatif.</p>
+
+    <div class="diary-input-row mt-2">
+      <label class="form-label" for="diaryInput">Quelque chose de positif aujourd'hui, même petit</label>
+      <textarea id="diaryInput" rows="3" placeholder="Ex. : J'ai pris le temps de manger tranquillement. Un collègue m'a remercié." aria-label="Note positive"></textarea>
+      <button class="btn btn-primary" onclick="saveDiaryEntry()" aria-label="Ajouter cette note">Ajouter +</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-title">Mes notes positives</div>
+    <div class="diary-entries" id="diaryList"></div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN : WHAT'S UP QUESTIONS ═══ -->
+  <div class="screen" id="screen-whatup" role="main" aria-label="Questions d'exploration émotionnelle">
+    <div class="greeting-block">
+      <div class="time-label">Exploration</div>
+      <h1>Qu'est-ce qui se <span>passe</span> ?</h1>
+    </div>
+    <p>40 questions pour nommer ce que tu ressens vraiment quand tu ne sais pas par où commencer.</p>
+
+    <div class="flashcard-wrap mt-2">
+      <div class="flashcard" id="flashcard" role="article" aria-live="polite">
+        <span class="flashcard-num" id="fcNum">1 / 40</span>
+        <div class="flashcard-question" id="fcQuestion">Chargement...</div>
+      </div>
+      <div class="fc-count" id="fcSeen"></div>
+      <div class="flashcard-nav">
+        <button class="btn btn-ghost" onclick="fcAction('skip')" aria-label="Passer cette question">Passer</button>
+        <button class="btn btn-primary" onclick="fcAction('next')" aria-label="Question suivante" style="width:auto;flex:1;">Suivant →</button>
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <button class="btn btn-secondary" onclick="fcShuffle()" aria-label="Mélanger les questions">🔀 Mélanger</button>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN : QUIZ HEALTHY THINKING ═══ -->
+  <div class="screen" id="screen-quiz" role="main" aria-label="Quiz schémas de pensée">
+    <div class="greeting-block">
+      <div class="time-label">Entraînement</div>
+      <h1>Identifie le <span>schéma</span></h1>
+    </div>
+
+    <div class="quiz-progress-wrap">
+      <span id="quizLabel" style="font-size:0.78rem;color:var(--color-muted);white-space:nowrap;">Question 1/12</span>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:8%"></div></div>
+      <div class="quiz-score"><span class="score-val" id="quizScore">0</span><span style="font-size:0.72rem;color:var(--color-muted);">pts</span></div>
+    </div>
+
+    <div class="quiz-thought" id="quizThought" aria-live="polite">Chargement...</div>
+
+    <div class="quiz-schemas" id="quizSchemas" role="group" aria-label="Choisir le schéma cognitif"></div>
+
+    <div class="quiz-feedback" id="quizFeedback">
+      <h3 id="quizFeedbackTitle"></h3>
+      <p id="quizFeedbackText" style="font-size:0.88rem;"></p>
+      <button class="btn btn-primary mt-2" onclick="quizNext()" aria-label="Question suivante">Question suivante →</button>
+    </div>
+
+    <div class="closing-card" id="quizDone" style="display:none;">
+      <div class="big-emoji">🎓</div>
+      <h3>Quiz terminé !</h3>
+      <p id="quizFinalScore"></p>
+      <button class="btn btn-primary mt-2" onclick="quizRestart()" aria-label="Recommencer le quiz">Recommencer</button>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+    </div>
+  </div>
+
 </div><!-- end screen-container -->
 
 <!-- ─── BOTTOM NAV (5 tabs) ─── -->
@@ -1155,7 +1568,7 @@ const state = {
 
 // ─── DISCLAIMER ───
 function initDisclaimer() {
-  if (!localStorage.getItem('serein_disclaimer_seen')) {
+  if (localStorage.getItem('serein_onboarding_done') && !localStorage.getItem('serein_disclaimer_seen')) {
     document.getElementById('disclaimerModal').classList.add('visible');
   }
 }
@@ -1223,10 +1636,18 @@ function setGreeting() {
 const screenMap = {
   home: 'screen-home', checkin: 'screen-checkin', journal: 'screen-journal',
   calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
+  cards: 'screen-cards', diary: 'screen-diary', whatup: 'screen-whatup', quiz: 'screen-quiz',
 };
 const navMap = {
   home: 'nav-home', checkin: 'nav-checkin', journal: 'nav-journal',
   calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
+  cards: 'nav-home', diary: 'nav-home', whatup: 'nav-home', quiz: 'nav-schemas',
+};
+const screenInitFns = {
+  cards: renderCards,
+  diary: renderDiary,
+  whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
+  quiz: initQuiz,
 };
 
 function navigateTo(screen) {
@@ -1248,6 +1669,7 @@ function navigateTo(screen) {
   document.querySelector('.screen-container').scrollTo(0, 0);
   state.currentScreen = screen;
   if (screen !== 'calm' && breathActive) stopBreathing();
+  if (screenInitFns[screen]) screenInitFns[screen]();
 }
 
 // ─── MOOD CHIPS ───
@@ -1494,6 +1916,328 @@ function resetGrounding() {
   groundingStep(0);
 }
 
+// ─── ONBOARDING ───
+let obCurrentSlide = 1;
+function initOnboarding() {
+  if (!localStorage.getItem('serein_onboarding_done')) {
+    document.getElementById('onboardingModal').classList.add('visible');
+  }
+}
+function onboardingNext() {
+  if (obCurrentSlide < 3) {
+    document.getElementById(`obslide-${obCurrentSlide}`).classList.remove('active');
+    document.getElementById(`obdot-${obCurrentSlide}`).classList.remove('active');
+    obCurrentSlide++;
+    document.getElementById(`obslide-${obCurrentSlide}`).classList.add('active');
+    document.getElementById(`obdot-${obCurrentSlide}`).classList.add('active');
+    if (obCurrentSlide === 3) document.getElementById('obNextBtn').textContent = 'Commencer →';
+  } else {
+    localStorage.setItem('serein_onboarding_done', '1');
+    const m = document.getElementById('onboardingModal');
+    m.style.opacity = '0'; m.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => { m.classList.remove('visible'); m.style.opacity = ''; }, 300);
+    if (!localStorage.getItem('serein_disclaimer_seen')) {
+      setTimeout(() => document.getElementById('disclaimerModal').classList.add('visible'), 350);
+    }
+  }
+}
+
+// ─── CRISIS MODE ───
+const anchorPhrases = [
+  "Cette sensation va passer. Tu as déjà traversé des moments difficiles.",
+  "Concentre-toi sur ta respiration. C'est tout ce que tu as à faire maintenant.",
+  "Tu es en sécurité. Ton cerveau exagère le danger - c'est sa façon de te protéger.",
+  "Tu n'es pas seul·e. Des gens tiennent à toi.",
+  "Dans quelques minutes, l'intensité aura baissé. Reste avec ta respiration.",
+];
+let anchorIdx = 0;
+let crisisInterval = null;
+let crisisExpand = false;
+
+function showCrisis() {
+  document.getElementById('crisisOverlay').classList.add('visible');
+  anchorIdx = 0;
+  document.getElementById('crisisAnchor').textContent = anchorPhrases[0];
+  startCrisisBreath();
+}
+function hideCrisis() {
+  document.getElementById('crisisOverlay').classList.remove('visible');
+  clearInterval(crisisInterval);
+  crisisInterval = null;
+}
+function startCrisisBreath() {
+  crisisExpand = false;
+  updateCrisisCircle();
+  crisisInterval = setInterval(() => {
+    crisisExpand = !crisisExpand;
+    updateCrisisCircle();
+  }, 4000);
+}
+function updateCrisisCircle() {
+  const c = document.getElementById('crisisCircle');
+  const t = document.getElementById('crisisBreathText');
+  if (crisisExpand) {
+    c.classList.add('expand');
+    t.textContent = 'Inspire...';
+  } else {
+    c.classList.remove('expand');
+    t.textContent = 'Expire...';
+  }
+}
+function nextAnchor() {
+  anchorIdx = (anchorIdx + 1) % anchorPhrases.length;
+  document.getElementById('crisisAnchor').textContent = anchorPhrases[anchorIdx];
+}
+function prevAnchor() {
+  anchorIdx = (anchorIdx - 1 + anchorPhrases.length) % anchorPhrases.length;
+  document.getElementById('crisisAnchor').textContent = anchorPhrases[anchorIdx];
+}
+
+// ─── COPING CARDS ───
+function loadCards() {
+  return JSON.parse(localStorage.getItem('serein_cards') || '[]');
+}
+function saveCards(cards) {
+  localStorage.setItem('serein_cards', JSON.stringify(cards));
+}
+function renderCards() {
+  const cards = loadCards();
+  const list = document.getElementById('cardsList');
+  if (cards.length === 0) {
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Crée-en une après avoir complété un journal.</p></div>';
+    return;
+  }
+  list.innerHTML = cards.map((c, i) => `
+    <div class="coping-card-item">
+      <div class="coping-card-icon">🃏</div>
+      <div class="coping-card-body">
+        <div class="coping-card-trigger">${escHtml(c.trigger)}</div>
+        <div class="coping-card-thought">${escHtml(c.thought)}</div>
+      </div>
+      <button class="coping-card-del" onclick="deleteCard(${i})" aria-label="Supprimer cette carte">×</button>
+    </div>`).join('');
+}
+function toggleCardForm() {
+  const f = document.getElementById('cardAddForm');
+  f.classList.toggle('visible');
+  if (f.classList.contains('visible')) document.getElementById('cardTrigger').focus();
+}
+function saveCard() {
+  const trigger = document.getElementById('cardTrigger').value.trim();
+  const thought = document.getElementById('cardThought').value.trim();
+  if (!thought) return;
+  const cards = loadCards();
+  cards.unshift({ trigger: trigger || 'Moment difficile', thought, date: new Date().toLocaleDateString('fr-FR') });
+  saveCards(cards);
+  document.getElementById('cardTrigger').value = '';
+  document.getElementById('cardThought').value = '';
+  document.getElementById('cardAddForm').classList.remove('visible');
+  renderCards();
+}
+function deleteCard(i) {
+  const cards = loadCards();
+  cards.splice(i, 1);
+  saveCards(cards);
+  renderCards();
+}
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── POSITIVE DIARY ───
+function loadDiaryEntries() {
+  return JSON.parse(localStorage.getItem('serein_diary') || '[]');
+}
+function saveDiaryEntry() {
+  const text = document.getElementById('diaryInput').value.trim();
+  if (!text) return;
+  const entries = loadDiaryEntries();
+  entries.unshift({ text, date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) });
+  if (entries.length > 30) entries.pop();
+  localStorage.setItem('serein_diary', JSON.stringify(entries));
+  document.getElementById('diaryInput').value = '';
+  renderDiary();
+  incrementSessions();
+}
+function renderDiary() {
+  const entries = loadDiaryEntries();
+  const list = document.getElementById('diaryList');
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">📗</div><p>Pas encore d\'entrées.<br>Qu\'est-ce qui s\'est bien passé aujourd\'hui ?</p></div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="diary-entry">
+      <div class="diary-entry-date">${e.date}</div>
+      <div class="diary-entry-text">${escHtml(e.text)}</div>
+    </div>`).join('');
+}
+
+// ─── WHAT'S UP QUESTIONS ───
+const allQuestions = [
+  "Qu'est-ce qui se passe vraiment en ce moment ?",
+  "De quoi as-tu le plus besoin maintenant ?",
+  "Si tu parlais à un ami qui ressent ce que tu ressens, que lui dirais-tu ?",
+  "Qu'est-ce que cette émotion essaie de te dire ?",
+  "Y a-t-il quelque chose que tu évites de regarder en face ?",
+  "Cette pensée te rapproche-t-elle de ce qui compte pour toi, ou t'en éloigne-t-elle ?",
+  "Comment ton corps exprime-t-il ce que tu ressens ?",
+  "Qu'est-ce qui te ferait du bien maintenant, même une toute petite chose ?",
+  "Est-ce que tu essaies de contrôler quelque chose qui est hors de ta portée ?",
+  "Qui pourrait te comprendre dans ce que tu traverses ?",
+  "Qu'est-ce qui était vrai il y a 5 ans et qui ne l'est plus aujourd'hui ?",
+  "Qu'est-ce que tu n'as pas dit et qui pèse ?",
+  "Y a-t-il une différence entre ce que tu ressens et ce que tu penses devoir ressentir ?",
+  "Qu'est-ce qui te donnerait l'impression de progresser, même légèrement ?",
+  "De quoi es-tu fier·e en ce moment, même d'une petite chose ?",
+  "Quelle serait la prochaine étape la plus simple ?",
+  "Y a-t-il une croyance sur toi-même qui te limite ?",
+  "Qu'est-ce qui te rechargait en énergie avant, que tu ne fais plus ?",
+  "Si tu n'avais pas peur du jugement, qu'est-ce que tu ferais ?",
+  "Qu'est-ce qui te semble trop lourd à affronter seul·e ?",
+  "Est-ce que tu te traites avec la même bienveillance qu'un ami ?",
+  "Qu'est-ce que tu attends de toi-même que personne d'autre n'attend ?",
+  "Dans quel domaine de ta vie te sens-tu le plus en sécurité ?",
+  "Qu'est-ce qui te manque en ce moment ?",
+  "Quand as-tu ri pour la dernière fois ? De quoi ?",
+  "Y a-t-il quelque chose que tu te reproches injustement ?",
+  "Qu'est-ce que «aller bien» signifie pour toi en ce moment ?",
+  "Si tu pouvais changer une seule chose dans ta journée, laquelle ?",
+  "Quand tu es seul·e avec toi-même, qu'est-ce que tu ressens ?",
+  "Qu'est-ce qui reste vrai même dans les moments difficiles ?",
+  "Comment te parles-tu intérieurement quand tu fais une erreur ?",
+  "Y a-t-il quelque chose que tu fais par obligation mais qui ne te ressemble pas ?",
+  "Qu'est-ce que tu veux que les autres comprennent de toi ?",
+  "Quelle serait la version de toi dont tu serais le plus fier·e ?",
+  "Est-ce que tu te permets de ne pas savoir ?",
+  "Qu'est-ce qui compte vraiment pour toi, au fond ?",
+  "Qu'est-ce que tu voudrais te dire maintenant ?",
+  "Quelle émotion as-tu du mal à accepter en toi ?",
+  "Y a-t-il une situation que tu dois lâcher ?",
+  "Qu'est-ce qui te donne encore de l'espoir ?",
+];
+let fcQuestions = [...allQuestions];
+let fcIdx = 0;
+let fcSeen = 0;
+function fcShuffle() {
+  fcQuestions = [...allQuestions].sort(() => Math.random() - 0.5);
+  fcIdx = 0; fcSeen = 0;
+  showFcQuestion();
+}
+function showFcQuestion() {
+  document.getElementById('fcQuestion').textContent = fcQuestions[fcIdx];
+  document.getElementById('fcNum').textContent = `${fcIdx + 1} / ${fcQuestions.length}`;
+  document.getElementById('fcSeen').textContent = fcSeen > 0 ? `${fcSeen} marquée${fcSeen > 1 ? 's' : ''} comme utile` : '';
+  document.getElementById('flashcard').classList.remove('seen');
+}
+function fcAction(type) {
+  if (type === 'next') {
+    document.getElementById('flashcard').classList.add('seen');
+    fcSeen++;
+  }
+  fcIdx = (fcIdx + 1) % fcQuestions.length;
+  setTimeout(showFcQuestion, 150);
+}
+
+// ─── QUIZ ───
+const quizData = [
+  { thought: "J'ai raté une question - tout l'exam est foutu.", schema: 'toutourien', explain: "C'est du tout ou rien : une erreur ne définit pas l'ensemble du résultat." },
+  { thought: "Je sens qu'ils me trouvent tous ridicule.", schema: 'lecture', explain: "Tu lis les pensées des autres sans preuve - c'est de la lecture de pensée." },
+  { thought: "Si je rate cet entretien, ma vie sera fichue.", schema: 'catastrophisme', explain: "Tu projettes le pire scénario sur toute ta vie - c'est du catastrophisme." },
+  { thought: "Je fais toujours tout de travers.", schema: 'surgen', explain: "Le mot «toujours» transforme un événement en règle universelle - surgénéralisation." },
+  { thought: "Toute la réunion s'est mal passée. (Les 3 points réussis ? Oubliés.)", schema: 'filtre', explain: "Tu filtres le positif pour ne garder que le négatif - c'est le filtre mental." },
+  { thought: "Mon chef est de mauvaise humeur - c'est forcément à cause de moi.", schema: 'personnalisation', explain: "Tu te tiens responsable de quelque chose qui dépend d'autres facteurs." },
+  { thought: "Si ce n'est pas parfait, ça ne sert à rien de le faire.", schema: 'toutourien', explain: "Parfait ou rien - c'est une pensée tout ou rien classique." },
+  { thought: "Ça va forcément mal se terminer.", schema: 'catastrophisme', explain: "Tu anticipes le pire sans élément concret - c'est du catastrophisme." },
+  { thought: "Je ne réussis jamais à m'en sortir.", schema: 'surgen', explain: "«Jamais» généralise un ressenti à toute ta vie - surgénéralisation." },
+  { thought: "Mon ami ne m'a pas répondu - il est sûrement fâché contre moi.", schema: 'lecture', explain: "Tu interprètes le silence sans preuve réelle - lecture de pensée." },
+  { thought: "Je ne retiens que ce qui cloche dans ma journée.", schema: 'filtre', explain: "Tu appliques un filtre mental qui ne laisse passer que le négatif." },
+  { thought: "L'ambiance tendue au bureau, c'est à cause de moi.", schema: 'personnalisation', explain: "Tu t'attribues une responsabilité sur quelque chose qui ne dépend pas que de toi." },
+];
+const schemaLabels = {
+  toutourien: '⚖️ Tout ou rien',
+  lecture: '🔮 Lecture de pensée',
+  catastrophisme: '⚡ Catastrophisme',
+  surgen: '🌐 Surgénéralisation',
+  filtre: '🔍 Filtre mental',
+  personnalisation: '🎯 Personnalisation',
+};
+let quizIdx = 0;
+let quizPoints = 0;
+let quizAnswered = false;
+function initQuiz() {
+  quizIdx = 0; quizPoints = 0; quizAnswered = false;
+  document.getElementById('quizDone').style.display = 'none';
+  document.getElementById('quizFeedback').classList.remove('visible');
+  renderQuizQuestion();
+}
+function renderQuizQuestion() {
+  if (quizIdx >= quizData.length) { showQuizDone(); return; }
+  const q = quizData[quizIdx];
+  document.getElementById('quizThought').textContent = `"${q.thought}"`;
+  document.getElementById('quizLabel').textContent = `Question ${quizIdx + 1}/${quizData.length}`;
+  document.getElementById('quizProgressFill').style.width = `${((quizIdx) / quizData.length) * 100}%`;
+  document.getElementById('quizScore').textContent = quizPoints;
+  document.getElementById('quizFeedback').classList.remove('visible');
+  quizAnswered = false;
+  const container = document.getElementById('quizSchemas');
+  container.innerHTML = Object.entries(schemaLabels).map(([key, label]) =>
+    `<button class="quiz-schema-btn" onclick="quizAnswer('${key}')" aria-label="${label}">${label}</button>`
+  ).join('');
+}
+function quizAnswer(chosen) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = quizData[quizIdx];
+  const correct = chosen === q.schema;
+  if (correct) quizPoints++;
+  document.querySelectorAll('.quiz-schema-btn').forEach(b => {
+    b.disabled = true;
+    const key = b.getAttribute('onclick').match(/'(\w+)'/)[1];
+    if (key === q.schema) b.classList.add('correct');
+    else if (key === chosen && !correct) b.classList.add('wrong');
+  });
+  document.getElementById('quizFeedbackTitle').textContent = correct ? '✓ Bien vu !' : '✗ Pas tout à fait';
+  document.getElementById('quizFeedbackText').textContent = q.explain;
+  document.getElementById('quizFeedback').classList.add('visible');
+}
+function quizNext() {
+  quizIdx++;
+  if (quizIdx >= quizData.length) { showQuizDone(); return; }
+  renderQuizQuestion();
+}
+function showQuizDone() {
+  document.getElementById('quizDone').style.display = 'block';
+  document.getElementById('quizFeedback').classList.remove('visible');
+  const pct = Math.round((quizPoints / quizData.length) * 100);
+  const msg = pct >= 80 ? 'Excellent - tu reconnais bien tes schémas !' : pct >= 50 ? 'Bon début - continue à pratiquer !' : 'Continue, ça vient avec la pratique.';
+  document.getElementById('quizFinalScore').textContent = `${quizPoints}/${quizData.length} (${pct}%) - ${msg}`;
+  document.getElementById('quizProgressFill').style.width = '100%';
+  incrementSessions();
+}
+function quizRestart() {
+  document.getElementById('quizDone').style.display = 'none';
+  initQuiz();
+}
+
+// ─── EXPORT ───
+function exportData() {
+  const payload = {
+    export_date: new Date().toISOString(),
+    app: 'Serein TCC·ACT',
+    stats: JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}'),
+    coping_cards: JSON.parse(localStorage.getItem('serein_cards') || '[]'),
+    positive_diary: JSON.parse(localStorage.getItem('serein_diary') || '[]'),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `serein-export-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ─── INIT ───
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 document.getElementById('breathCircle').addEventListener('keydown', e => {
@@ -1506,6 +2250,7 @@ document.querySelectorAll('.carousel-card').forEach(c => {
 initTheme();
 setGreeting();
 loadStats();
+initOnboarding();
 initDisclaimer();
 </script>
 </body>

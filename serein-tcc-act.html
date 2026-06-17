@@ -434,6 +434,64 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 .act-step p { font-size: 0.85rem; margin: 0; color: var(--color-text); }
 
+/* ─── DAILY CHECK-IN ─── */
+.daily-checkin-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1rem 1.125rem; margin: 0.75rem 0;
+  cursor: default;
+}
+.daily-checkin-card h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-text); }
+.intensity-chips { display: flex; gap: 0.35rem; }
+.intensity-chip {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  padding: 0.5rem 0.15rem; border: 1px solid var(--color-border); border-radius: 0.875rem;
+  background: none; cursor: pointer; transition: all var(--transition);
+  font-size: 0.58rem; color: var(--color-muted); font-family: var(--font-body);
+}
+.intensity-chip .ic-emoji { font-size: 1.35rem; line-height: 1; }
+.intensity-chip:hover, .intensity-chip:focus {
+  border-color: var(--color-primary); background: var(--color-primary-light); color: var(--color-primary);
+}
+.checkin-done { display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-size: 0.875rem; font-weight: 500; }
+
+/* ─── TRACKING ─── */
+.track-period-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.track-period-btn {
+  padding: 0.35rem 1.1rem; border-radius: 2rem; border: 1px solid var(--color-border);
+  background: none; color: var(--color-muted); font-family: var(--font-body);
+  font-size: 0.8rem; cursor: pointer; transition: all var(--transition);
+}
+.track-period-btn.active {
+  background: var(--color-primary-light); color: var(--color-primary);
+  border-color: var(--color-primary); font-weight: 600;
+}
+.track-chart-wrap {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1rem 0.75rem 0.75rem; margin: 0 0 0.75rem; position: relative;
+}
+.track-chart-wrap svg { width: 100%; display: block; overflow: visible; }
+.track-tooltip {
+  position: absolute; background: var(--color-surface-2); border: 1px solid var(--color-primary);
+  border-radius: 0.5rem; padding: 0.25rem 0.6rem; font-size: 0.75rem; color: var(--color-text);
+  pointer-events: none; opacity: 0; transition: opacity 0.15s ease;
+  white-space: nowrap; transform: translate(-50%, -110%); z-index: 10;
+}
+.track-tooltip.visible { opacity: 1; }
+.track-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0 0 0.75rem; }
+.track-stat-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1rem; padding: 0.75rem 1rem;
+}
+.track-stat-label { font-size: 0.68rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+.track-stat-value { font-family: var(--font-title); font-size: 1.2rem; font-weight: 700; color: var(--color-text); }
+.track-insight {
+  background: var(--color-primary-light); border: 1px solid rgba(147,201,172,0.2);
+  border-radius: 1rem; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--color-primary);
+  margin-bottom: 1rem; min-height: 2.5rem;
+}
+.track-empty { text-align: center; padding: 2rem 1rem; color: var(--color-muted); }
+.track-empty-emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; }
+
 /* ─── FEAR LADDER ─── */
 .fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .fear-level {
@@ -919,6 +977,8 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <span class="emoji">😶</span> À plat
       </button>
     </div>
+
+    <div class="daily-checkin-card" id="dailyCheckinCard" role="group" aria-label="Note quotidienne d'intensité"></div>
 
     <div class="divider"></div>
 
@@ -1531,6 +1591,35 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
   </div>
 
+  <!-- ═══ SCREEN : SUIVI ═══ -->
+  <div class="screen" id="screen-tracking" role="main" aria-label="Suivi d'anxiété">
+    <div class="screen-pad">
+      <h1>📊 Ton suivi</h1>
+      <p>Observe l'évolution de ton état au fil des jours.</p>
+
+      <div class="track-period-tabs mt-2" role="group" aria-label="Période">
+        <button class="track-period-btn active" onclick="setTrackPeriod(7,this)" aria-label="7 derniers jours">7 jours</button>
+        <button class="track-period-btn" onclick="setTrackPeriod(30,this)" aria-label="30 derniers jours">30 jours</button>
+      </div>
+
+      <div class="track-chart-wrap" role="figure" aria-label="Graphique d'évolution">
+        <div id="trackSvgContainer"></div>
+        <div class="track-tooltip" id="trackTooltip" aria-hidden="true"></div>
+      </div>
+
+      <div class="track-stats-grid" id="trackStatsGrid"></div>
+
+      <div class="track-insight" id="trackInsight" role="status" aria-live="polite"></div>
+
+      <div class="divider"></div>
+
+      <button class="btn" style="border:1px solid var(--color-border);color:var(--color-muted);background:none;width:100%;font-size:0.8rem;"
+        onclick="clearAnxietyLog()" aria-label="Effacer toutes les données de suivi">
+        Effacer les données de suivi
+      </button>
+    </div>
+  </div>
+
 </div><!-- end screen-container -->
 
 <!-- ─── BOTTOM NAV (5 tabs) ─── -->
@@ -1564,6 +1653,12 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
     </svg>
     <span>Schémas</span>
+  </button>
+  <button class="nav-btn" id="nav-tracking" onclick="navigateTo('tracking')" aria-label="Suivi d'anxiété">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    <span>Suivi</span>
   </button>
 </nav>
 
@@ -1607,6 +1702,7 @@ function loadStats() {
     const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
     document.getElementById('statMood').textContent = ['😶','😕','😐','🙂','😊'][Math.min(4, Math.round(avg / 2))];
   }
+  renderDailyCheckinCard();
 }
 function incrementSessions() {
   const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
@@ -1647,11 +1743,13 @@ const screenMap = {
   home: 'screen-home', checkin: 'screen-checkin', journal: 'screen-journal',
   calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
   cards: 'screen-cards', diary: 'screen-diary', whatup: 'screen-whatup', quiz: 'screen-quiz',
+  tracking: 'screen-tracking',
 };
 const navMap = {
   home: 'nav-home', checkin: 'nav-checkin', journal: 'nav-journal',
   calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
   cards: 'nav-home', diary: 'nav-home', whatup: 'nav-home', quiz: 'nav-schemas',
+  tracking: 'nav-tracking',
 };
 const screenInitFns = {
   cards: renderCards,
@@ -1660,6 +1758,7 @@ const screenInitFns = {
   quiz: initQuiz,
   schemas: () => renderDefusion(currentDefusion),
   calm: loadBells,
+  tracking: renderTracking,
 };
 
 function navigateTo(screen) {
@@ -2222,6 +2321,213 @@ function fcAction(type) {
   }
   fcIdx = (fcIdx + 1) % fcQuestions.length;
   setTimeout(showFcQuestion, 150);
+}
+
+// ─── ANXIETY TRACKING ───
+const ANXIETY_KEY = 'serein_anxiety_log';
+const ANXIETY_MAX_DAYS = 90;
+
+function loadAnxietyLog() {
+  return JSON.parse(localStorage.getItem(ANXIETY_KEY) || '[]');
+}
+function saveAnxietyLog(log) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - ANXIETY_MAX_DAYS);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  localStorage.setItem(ANXIETY_KEY, JSON.stringify(log.filter(e => e.date >= cutoffStr)));
+}
+function logAnxiety(intensity) {
+  const log = loadAnxietyLog();
+  const today = new Date().toISOString().slice(0, 10);
+  const idx = log.findIndex(e => e.date === today);
+  if (idx >= 0) log[idx].intensity = intensity; else log.push({ date: today, intensity });
+  saveAnxietyLog(log);
+  renderDailyCheckinCard();
+  if (state.currentScreen === 'tracking') renderTracking();
+}
+function getTodayAnxiety() {
+  const today = new Date().toISOString().slice(0, 10);
+  return loadAnxietyLog().find(e => e.date === today);
+}
+
+function renderDailyCheckinCard() {
+  const card = document.getElementById('dailyCheckinCard');
+  if (!card) return;
+  const chips = [
+    { e: '😊', l: 'Bien', v: 2 },
+    { e: '🙂', l: 'Calme', v: 4 },
+    { e: '😐', l: 'Neutre', v: 6 },
+    { e: '😔', l: 'Difficile', v: 8 },
+    { e: '😰', l: 'Intense', v: 10 },
+  ];
+  const today = getTodayAnxiety();
+  if (today) {
+    const closest = chips.reduce((p, c) => Math.abs(c.v - today.intensity) < Math.abs(p.v - today.intensity) ? c : p);
+    card.innerHTML = `<div class="checkin-done" role="status">${closest.e} Intensité notée aujourd'hui : <strong>${today.intensity}/10</strong>&ensp;<span style="font-size:0.75rem;color:var(--color-muted);cursor:pointer" onclick="renderDailyCheckinCardForm()">Modifier</span></div>`;
+  } else {
+    renderDailyCheckinCardForm();
+  }
+}
+function renderDailyCheckinCardForm() {
+  const card = document.getElementById('dailyCheckinCard');
+  if (!card) return;
+  const chips = [
+    { e: '😊', l: 'Bien', v: 2 },
+    { e: '🙂', l: 'Calme', v: 4 },
+    { e: '😐', l: 'Neutre', v: 6 },
+    { e: '😔', l: 'Difficile', v: 8 },
+    { e: '😰', l: 'Intense', v: 10 },
+  ];
+  card.innerHTML = `
+    <h3>Comment tu te sens maintenant ?</h3>
+    <div class="intensity-chips" role="group" aria-label="Intensité ressentie de 1 à 10">
+      ${chips.map(c => `<button class="intensity-chip" onclick="logAnxiety(${c.v})" aria-label="${c.l}, intensité ${c.v} sur 10"><span class="ic-emoji">${c.e}</span><span>${c.l}</span></button>`).join('')}
+    </div>`;
+}
+
+let trackPeriod = 7;
+function setTrackPeriod(days, el) {
+  trackPeriod = days;
+  document.querySelectorAll('.track-period-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderTracking();
+}
+
+function formatDateShort(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  return ['dim','lun','mar','mer','jeu','ven','sam'][d.getDay()] + ' ' + d.getDate();
+}
+
+function renderTracking() {
+  const container = document.getElementById('trackSvgContainer');
+  const statsGrid = document.getElementById('trackStatsGrid');
+  const insight = document.getElementById('trackInsight');
+  if (!container) return;
+
+  const log = loadAnxietyLog();
+  const days = Array.from({ length: trackPeriod }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (trackPeriod - 1 - i));
+    return d.toISOString().slice(0, 10);
+  });
+  const entries = days.map(date => ({ date, intensity: (log.find(e => e.date === date) || {}).intensity ?? null }));
+  const filled = entries.filter(e => e.intensity !== null);
+
+  if (!filled.length) {
+    container.innerHTML = `<div class="track-empty"><span class="track-empty-emoji">📊</span><p>Aucune donnée pour cette période.<br>Note ton humeur depuis l'accueil pour commencer.</p></div>`;
+    statsGrid.innerHTML = ''; insight.textContent = ''; return;
+  }
+
+  // SVG dimensions
+  const W = 320, H = 130, pL = 26, pR = 10, pT = 10, pB = 28;
+  const cW = W - pL - pR, cH = H - pT - pB;
+  const n = entries.length;
+  const xOf = i => pL + (n === 1 ? cW / 2 : (i / (n - 1)) * cW);
+  const yOf = v => pT + cH - (v / 10) * cH;
+
+  const pts = entries.map((e, i) => ({ x: xOf(i), y: e.intensity !== null ? yOf(e.intensity) : null, ...e }));
+  const ep = pts.filter(p => p.y !== null);
+
+  const linePath = ep.map((p, i) => {
+    if (i === 0) return `M${p.x},${p.y}`;
+    const prev = ep[i - 1];
+    const mx = (p.x + prev.x) / 2;
+    return `C${mx},${prev.y} ${mx},${p.y} ${p.x},${p.y}`;
+  }).join(' ');
+
+  const areaPath = ep.length > 1
+    ? `${linePath} L${ep[ep.length-1].x},${pT+cH} L${ep[0].x},${pT+cH} Z` : '';
+
+  const ptColor = v => v <= 3 ? '#93c9ac' : v <= 6 ? '#d8b78a' : '#e07070';
+  const dayNames = ['dim','lun','mar','mer','jeu','ven','sam'];
+  const every = trackPeriod <= 7 ? 1 : Math.ceil(trackPeriod / 7);
+
+  container.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution de l'intensité sur ${trackPeriod} jours">
+      <defs>
+        <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#93c9ac" stop-opacity="0.28"/>
+          <stop offset="100%" stop-color="#93c9ac" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
+      ${[0,5,10].map(v => `
+        <line x1="${pL}" y1="${yOf(v)}" x2="${W-pR}" y2="${yOf(v)}" stroke="var(--color-border)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text x="${pL-4}" y="${yOf(v)+4}" font-size="8" fill="var(--color-muted)" text-anchor="end">${v}</text>`).join('')}
+      ${areaPath ? `<path d="${areaPath}" fill="url(#tg)"/>` : ''}
+      ${linePath ? `<path d="${linePath}" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+      ${ep.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${ptColor(p.intensity)}" stroke="var(--color-bg)" stroke-width="2" style="cursor:pointer"
+        onmouseenter="showTrackTip(event,'${p.date}',${p.intensity})" onmouseleave="hideTrackTip()"
+        ontouchstart="showTrackTip(event,'${p.date}',${p.intensity})" ontouchend="hideTrackTip()"
+        aria-label="${formatDateShort(p.date)} : ${p.intensity}/10"/>`).join('')}
+      ${entries.map((e, i) => {
+        if (i % every !== 0 && i !== n - 1) return '';
+        const d = new Date(e.date + 'T12:00:00');
+        const lbl = trackPeriod <= 7 ? dayNames[d.getDay()] : `${d.getDate()}/${d.getMonth()+1}`;
+        return `<text x="${xOf(i)}" y="${H-3}" font-size="8" fill="var(--color-muted)" text-anchor="middle">${lbl}</text>`;
+      }).join('')}
+    </svg>`;
+
+  // Stats
+  const vals = filled.map(e => e.intensity);
+  const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const prevDays = Array.from({ length: trackPeriod }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - trackPeriod - i); return d.toISOString().slice(0, 10);
+  });
+  const prevVals = log.filter(e => prevDays.includes(e.date)).map(e => e.intensity);
+  const prevAvg = prevVals.length ? prevVals.reduce((a, b) => a + b, 0) / prevVals.length : null;
+  const diff = prevAvg !== null ? avg - prevAvg : 0;
+  const trend = prevAvg === null ? '- Pas assez de données' : diff < -0.5 ? '↓ En amélioration' : diff > 0.5 ? '↑ Plus intense' : '→ Stable';
+  const trendColor = prevAvg === null ? 'var(--color-muted)' : diff < -0.5 ? 'var(--color-primary)' : diff > 0.5 ? '#e07070' : 'var(--color-muted)';
+  const best = filled.reduce((p, c) => c.intensity < p.intensity ? c : p);
+  const worst = filled.reduce((p, c) => c.intensity > p.intensity ? c : p);
+
+  statsGrid.innerHTML = `
+    <div class="track-stat-card">
+      <div class="track-stat-label">Moyenne</div>
+      <div class="track-stat-value">${avg.toFixed(1)}<span style="font-size:0.7rem;font-weight:400;color:var(--color-muted)">/10</span></div>
+    </div>
+    <div class="track-stat-card">
+      <div class="track-stat-label">Tendance</div>
+      <div class="track-stat-value" style="color:${trendColor};font-size:0.9rem">${trend}</div>
+    </div>
+    <div class="track-stat-card">
+      <div class="track-stat-label">Meilleur jour</div>
+      <div class="track-stat-value" style="font-size:0.88rem">${formatDateShort(best.date)} <span style="color:var(--color-primary)">${best.intensity}/10</span></div>
+    </div>
+    <div class="track-stat-card">
+      <div class="track-stat-label">Jour difficile</div>
+      <div class="track-stat-value" style="font-size:0.88rem">${formatDateShort(worst.date)} <span style="color:#e07070">${worst.intensity}/10</span></div>
+    </div>`;
+
+  const last3 = entries.slice(-3).filter(e => e.intensity !== null);
+  const l3avg = last3.length ? last3.reduce((a, b) => a + b.intensity, 0) / last3.length : null;
+  insight.textContent = l3avg === null ? '' :
+    l3avg <= 4 ? 'Tu as ressenti plus de calme ces derniers jours ✨' :
+    l3avg <= 6 ? 'Ton état semble stable ces derniers jours. Continue comme ça.' :
+    'Ces derniers jours ont été plus intenses - prends soin de toi. 💙';
+}
+
+function showTrackTip(event, date, intensity) {
+  const tip = document.getElementById('trackTooltip');
+  const wrap = document.querySelector('.track-chart-wrap');
+  if (!tip || !wrap) return;
+  const rect = wrap.getBoundingClientRect();
+  const cx = event.touches ? event.touches[0].clientX : event.clientX;
+  const cy = event.touches ? event.touches[0].clientY : event.clientY;
+  tip.textContent = `${formatDateShort(date)} : ${intensity}/10`;
+  tip.style.left = `${cx - rect.left}px`;
+  tip.style.top = `${cy - rect.top}px`;
+  tip.classList.add('visible');
+}
+function hideTrackTip() {
+  const tip = document.getElementById('trackTooltip');
+  if (tip) tip.classList.remove('visible');
+}
+
+function clearAnxietyLog() {
+  if (!confirm('Effacer toutes les données de suivi ? Cette action est irréversible.')) return;
+  localStorage.removeItem(ANXIETY_KEY);
+  renderTracking();
+  renderDailyCheckinCard();
 }
 
 // ─── QUIZ ───

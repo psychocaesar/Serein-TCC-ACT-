@@ -454,6 +454,44 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 .checkin-done { display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-size: 0.875rem; font-weight: 500; }
 
+/* ─── SYMPTOM CHIPS ─── */
+.symptom-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.symptom-chip {
+  border: 1px solid var(--color-border); background: none; cursor: pointer;
+  border-radius: 1.5rem; padding: 0.4rem 0.7rem; font-size: 0.78rem;
+  color: var(--color-muted); font-family: var(--font-body);
+  transition: all var(--transition);
+}
+.symptom-chip:hover { border-color: var(--color-primary); }
+.symptom-chip.selected {
+  background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600;
+}
+.checkin-saved {
+  display: none; text-align: center; color: var(--color-primary);
+  font-size: 0.85rem; font-weight: 500; margin: 0.5rem 0;
+}
+.checkin-saved.visible { display: block; animation: fadeIn 0.3s ease; }
+
+/* ─── CHECK-IN HISTORY (tracking) ─── */
+.checkin-history { display: flex; flex-direction: column; gap: 0.5rem; }
+.checkin-entry {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1rem; padding: 0.75rem 0.875rem;
+}
+.checkin-entry-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; }
+.checkin-entry-emoji { font-size: 1.1rem; }
+.checkin-entry-date { font-size: 0.72rem; color: var(--color-muted); }
+.checkin-entry-intensity {
+  margin-left: auto; font-family: var(--font-title); font-weight: 700; font-size: 0.85rem;
+  padding: 0.1rem 0.5rem; border-radius: 1rem; background: var(--color-primary-light); color: var(--color-primary);
+}
+.checkin-entry-note { font-size: 0.83rem; color: var(--color-text); margin-bottom: 0.3rem; line-height: 1.45; }
+.checkin-entry-symptoms { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.checkin-entry-symptoms span {
+  font-size: 0.68rem; color: var(--color-muted); background: var(--color-surface-2);
+  border-radius: 1rem; padding: 0.1rem 0.45rem;
+}
+
 /* ─── TRACKING ─── */
 .track-period-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
 .track-period-btn {
@@ -1132,9 +1170,20 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
       ❓ Tu ne sais pas par où commencer ? Explore.
     </button>
 
+    <div class="range-group mt-2">
+      <label for="checkinIntensity">Intensité de l'émotion <span class="range-val" id="checkinIntensityVal">5</span><span style="font-weight:400;color:var(--color-muted);font-size:0.8rem;">/10</span></label>
+      <input type="range" id="checkinIntensity" min="0" max="10" value="5" oninput="document.getElementById('checkinIntensityVal').textContent=this.value" aria-label="Intensité de 0 à 10">
+      <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--color-muted);margin-top:0.1rem;"><span>0 - aucune</span><span>10 - extrême</span></div>
+    </div>
+
     <div class="form-group">
-      <label class="form-label" for="triggerField">Qu'est-ce qui déclenche ça ?</label>
-      <textarea id="triggerField" rows="3" placeholder="Décris la situation en quelques mots…" aria-label="Déclencheur de l'émotion"></textarea>
+      <label class="form-label" for="triggerField">Qu'est-ce qui se passe ?</label>
+      <textarea id="triggerField" rows="3" placeholder="Décris la situation et ce qui te traverse l'esprit, en quelques mots…" aria-label="Description de la situation"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Symptômes ressentis <span style="font-weight:400;color:var(--color-muted);">(optionnel)</span></label>
+      <div class="symptom-chips" id="symptomChips" role="group" aria-label="Symptômes ressentis"></div>
     </div>
 
     <div class="suggestion-card" id="checkinSuggestion" aria-live="polite">
@@ -1145,9 +1194,10 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-primary" id="checkinContinueBtn" onclick="continueFromCheckin()" aria-label="Continuer">
-        Continuer →
+      <button class="btn btn-primary" onclick="saveCheckin()" aria-label="Enregistrer ce check-in">
+        Enregistrer ce check-in
       </button>
+      <div class="checkin-saved" id="checkinSaved" role="status" aria-live="polite"></div>
       <button class="btn btn-ghost mt-1" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
     </div>
   </div>
@@ -1679,6 +1729,11 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 
       <div class="divider"></div>
 
+      <div class="section-title">Derniers check-ins</div>
+      <div class="checkin-history" id="checkinHistory"></div>
+
+      <div class="divider"></div>
+
       <button class="btn" style="border:1px solid var(--color-border);color:var(--color-muted);background:none;width:100%;font-size:0.8rem;"
         onclick="clearAnxietyLog()" aria-label="Effacer toutes les données de suivi">
         Effacer les données de suivi
@@ -1961,6 +2016,7 @@ const navMap = {
   experiments: 'nav-schemas',
 };
 const screenInitFns = {
+  checkin: initCheckin,
   cards: renderCards,
   diary: renderDiary,
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
@@ -1998,7 +2054,7 @@ function navigateTo(screen) {
 function selectMood(mood) {
   document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
   document.querySelector(`[data-mood="${mood}"]`).classList.add('selected');
-  setTimeout(() => { selectEmotion(mood); navigateTo('checkin'); }, 200);
+  setTimeout(() => { resetCheckinForm(); selectEmotion(mood); navigateTo('checkin'); }, 200);
 }
 
 // ─── CHECK-IN ───
@@ -2044,19 +2100,89 @@ function selectEmotion(emotion) {
   ctaEl.textContent = s.cta;
   suggCtaScreen = s.ctaScreen;
   document.getElementById('checkinSuggestion').classList.add('visible');
-  const contBtn = document.getElementById('checkinContinueBtn');
-  contBtn.textContent = emotion === 'panique' ? 'Calme d\'abord →' : 'Continuer →';
 }
 
 function followSuggestion() {
-  if (suggCtaScreen) navigateTo(suggCtaScreen);
+  if (!suggCtaScreen) return;
+  if (suggCtaScreen === 'journal') {
+    const note = document.getElementById('triggerField').value.trim();
+    if (note) document.getElementById('situationField').value = note;
+  }
+  navigateTo(suggCtaScreen);
 }
 
-function continueFromCheckin() {
-  const trigger = document.getElementById('triggerField').value.trim();
-  if (trigger) document.getElementById('situationField').value = trigger;
-  const dest = state.selectedEmotion === 'panique' ? 'calm' : 'journal';
-  navigateTo(dest);
+// ─── CHECK-IN JOURNAL (intensité + description + symptômes) ───
+const symptomsList = [
+  '💓 Cœur qui s\'emballe', '💨 Respiration rapide', '🫁 Oppression thoracique',
+  '🌡️ Chaleur/froid', '💧 Transpiration', '👄 Bouche sèche',
+  '😣 Boule dans la gorge', '🤢 Estomac noué', '😵 Vertiges',
+  '💪 Tension musculaire', '🧠 Mal à me concentrer', '⚡ Sur le qui-vive',
+  '🌙 Sommeil perturbé', '🌀 Pensées qui s\'emballent', '🛑 Envie de fuir',
+];
+let selectedSymptoms = new Set();
+function renderSymptomChips() {
+  const c = document.getElementById('symptomChips');
+  if (!c) return;
+  c.innerHTML = symptomsList.map((s, i) =>
+    `<button type="button" class="symptom-chip${selectedSymptoms.has(s) ? ' selected' : ''}" onclick="toggleSymptom(${i})" aria-pressed="${selectedSymptoms.has(s)}" aria-label="${s}">${s}</button>`
+  ).join('');
+}
+function toggleSymptom(i) {
+  const s = symptomsList[i];
+  if (selectedSymptoms.has(s)) selectedSymptoms.delete(s); else selectedSymptoms.add(s);
+  renderSymptomChips();
+}
+function resetCheckinForm() {
+  selectedSymptoms = new Set();
+  const intens = document.getElementById('checkinIntensity');
+  if (intens) { intens.value = 5; document.getElementById('checkinIntensityVal').textContent = '5'; }
+  const note = document.getElementById('triggerField'); if (note) note.value = '';
+  const saved = document.getElementById('checkinSaved'); if (saved) saved.classList.remove('visible');
+  renderSymptomChips();
+}
+function initCheckin() {
+  const saved = document.getElementById('checkinSaved'); if (saved) saved.classList.remove('visible');
+  renderSymptomChips();
+}
+function loadCheckins() { return JSON.parse(localStorage.getItem('serein_checkins') || '[]'); }
+function saveCheckin() {
+  const intensity = +document.getElementById('checkinIntensity').value;
+  const note = document.getElementById('triggerField').value.trim();
+  const entry = {
+    ts: Date.now(),
+    date: new Date().toISOString().slice(0, 10),
+    emotion: state.selectedEmotion || null,
+    intensity, note, symptoms: [...selectedSymptoms],
+  };
+  const all = loadCheckins();
+  all.unshift(entry);
+  if (all.length > 90) all.pop();
+  localStorage.setItem('serein_checkins', JSON.stringify(all));
+  logAnxiety(intensity);     // garde le graphique et la carte quotidienne synchronisés
+  incrementSessions();
+  const saved = document.getElementById('checkinSaved');
+  saved.textContent = '✓ Check-in enregistré - retrouve ton évolution dans l\'onglet Suivi.';
+  saved.classList.add('visible');
+}
+function renderCheckinHistory() {
+  const el = document.getElementById('checkinHistory');
+  if (!el) return;
+  const all = loadCheckins().slice(0, 10);
+  if (!all.length) { el.innerHTML = '<p style="font-size:0.82rem;">Aucun check-in détaillé enregistré pour l\'instant. Choisis une humeur sur l\'accueil pour en créer un.</p>'; return; }
+  const emojiMap = { stress: '😤', rumination: '🌀', panique: '💨', aplat: '😶' };
+  el.innerHTML = all.map(e => {
+    const d = new Date(e.ts);
+    const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="checkin-entry">
+      <div class="checkin-entry-head">
+        <span class="checkin-entry-emoji">${emojiMap[e.emotion] || '📝'}</span>
+        <span class="checkin-entry-date">${dateStr}</span>
+        <span class="checkin-entry-intensity">${e.intensity}/10</span>
+      </div>
+      ${e.note ? `<div class="checkin-entry-note">${escHtml(e.note)}</div>` : ''}
+      ${e.symptoms && e.symptoms.length ? `<div class="checkin-entry-symptoms">${e.symptoms.map(s => `<span>${escHtml(s)}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 // ─── JOURNAL ───
@@ -2615,6 +2741,8 @@ function renderTracking() {
   const insight = document.getElementById('trackInsight');
   if (!container) return;
 
+  renderCheckinHistory();
+
   const log = loadAnxietyLog();
   const days = Array.from({ length: trackPeriod }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (trackPeriod - 1 - i));
@@ -2735,8 +2863,9 @@ function hideTrackTip() {
 }
 
 function clearAnxietyLog() {
-  if (!confirm('Effacer toutes les données de suivi ? Cette action est irréversible.')) return;
+  if (!confirm('Effacer toutes les données de suivi (intensités et check-ins) ? Cette action est irréversible.')) return;
   localStorage.removeItem(ANXIETY_KEY);
+  localStorage.removeItem('serein_checkins');
   renderTracking();
   renderDailyCheckinCard();
 }
@@ -2947,6 +3076,7 @@ function exportData() {
     coping_cards: JSON.parse(localStorage.getItem('serein_cards') || '[]'),
     positive_diary: JSON.parse(localStorage.getItem('serein_diary') || '[]'),
     anxiety_log: JSON.parse(localStorage.getItem('serein_anxiety_log') || '[]'),
+    checkins: JSON.parse(localStorage.getItem('serein_checkins') || '[]'),
     behavioral_experiments: JSON.parse(localStorage.getItem('serein_experiments') || '[]'),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });

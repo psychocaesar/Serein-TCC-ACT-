@@ -472,6 +472,30 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 .checkin-saved.visible { display: block; animation: fadeIn 0.3s ease; }
 
+/* ─── COPING PRESETS ─── */
+.coping-cat-chips { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.3rem; margin-bottom: 0.75rem; -webkit-overflow-scrolling: touch; }
+.coping-cat-chips::-webkit-scrollbar { display: none; }
+.coping-cat-chip {
+  white-space: nowrap; border: 1px solid var(--color-border); background: none; cursor: pointer;
+  border-radius: 1.5rem; padding: 0.4rem 0.8rem; font-size: 0.8rem; color: var(--color-muted);
+  font-family: var(--font-body); transition: all var(--transition); flex-shrink: 0;
+}
+.coping-cat-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
+.coping-deck { display: flex; gap: 0.625rem; overflow-x: auto; padding-bottom: 0.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.coping-deck::-webkit-scrollbar { display: none; }
+.coping-preset-card {
+  scroll-snap-align: center; flex: 0 0 80%; background: var(--gradient);
+  border-radius: var(--radius); padding: 1.25rem; min-height: 150px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.coping-preset-card p { color: #0d1b15; font-family: var(--font-title); font-weight: 600; font-size: 1rem; line-height: 1.4; margin: 0; }
+.coping-preset-add {
+  align-self: flex-start; margin-top: 0.875rem; background: rgba(13,27,21,0.13); border: none;
+  color: #0d1b15; font-weight: 600; font-size: 0.74rem; padding: 0.35rem 0.75rem;
+  border-radius: 1rem; cursor: pointer; font-family: var(--font-body); transition: background var(--transition);
+}
+.coping-preset-add:hover { background: rgba(13,27,21,0.22); }
+
 /* ─── CHECK-IN HISTORY (tracking) ─── */
 .checkin-history { display: flex; flex-direction: column; gap: 0.5rem; }
 .checkin-entry {
@@ -1594,8 +1618,15 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
       <div class="time-label">Cartes de coping</div>
       <h1>Tes <span>reformulations</span></h1>
     </div>
-    <p>Des fiches personnelles consultables rapidement en cas de pensée difficile.</p>
+    <p>Des phrases d'ancrage à relire quand une pensée difficile surgit. Inspire-toi des modèles, puis crée les tiennes.</p>
 
+    <div class="section-title mt-2">Modèles par thème</div>
+    <div class="coping-cat-chips" id="copingCatChips" role="group" aria-label="Thèmes de cartes de coping"></div>
+    <div class="coping-deck" id="copingDeck" role="list" aria-label="Cartes modèles"></div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Mes cartes</div>
     <div class="cards-list" id="cardsList"></div>
 
     <button class="btn btn-secondary mt-2" id="cardAddBtn" onclick="toggleCardForm()" aria-label="Ajouter une carte de coping">+ Nouvelle carte</button>
@@ -2017,7 +2048,7 @@ const navMap = {
 };
 const screenInitFns = {
   checkin: initCheckin,
-  cards: renderCards,
+  cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
   diary: renderDiary,
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
   quiz: initQuiz,
@@ -2522,6 +2553,73 @@ function nextAnchor() {
 function prevAnchor() {
   anchorIdx = (anchorIdx - 1 + anchorPhrases.length) % anchorPhrases.length;
   document.getElementById('crisisAnchor').textContent = anchorPhrases[anchorIdx];
+}
+
+// ─── COPING PRESETS (modèles par thème) ───
+const copingPresets = {
+  worry: { label: 'Inquiétude', emoji: '🌫️', cards: [
+    "Je n'ai pas à croire tout ce que je pense.",
+    "L'inquiétude ne change pas l'issue - elle ne fait que m'épuiser.",
+    "Je peux agir sur ce qui dépend de moi, et lâcher le reste.",
+    "La plupart de mes pires scénarios ne se sont jamais réalisés.",
+    "Une pensée n'est pas un fait : c'est un événement mental qui passe.",
+  ]},
+  social: { label: 'Anxiété sociale', emoji: '👥', cards: [
+    "Les autres sont bien moins concentrés sur moi que je ne l'imagine.",
+    "J'ai le droit de prendre de la place et de parler, même imparfaitement.",
+    "Le malaise est inconfortable, pas dangereux - il finit par redescendre.",
+    "Je ne peux pas lire les pensées : ce que je redoute n'est pas la réalité.",
+    "Être authentique vaut mieux qu'être parfait·e.",
+  ]},
+  perfectionism: { label: 'Perfectionnisme', emoji: '🎯', cards: [
+    "Fait vaut mieux que parfait.",
+    "Une erreur est une information, pas un verdict sur ma valeur.",
+    "Le « suffisamment bien » est souvent largement assez.",
+    "Mes standards ne sont pas la mesure de tout le monde.",
+    "Je m'autorise à être humain·e, donc faillible.",
+  ]},
+  panic: { label: 'Panique', emoji: '💨', cards: [
+    "Cette sensation va culminer puis redescendre. Je n'ai qu'à la laisser passer.",
+    "Mon corps déclenche une alarme, mais il n'y a pas de danger réel.",
+    "Je ralentis mon expiration : c'est mon levier sur la panique.",
+    "Ce n'est pas un danger vital, c'est de l'anxiété - et ça passe.",
+    "J'ai déjà traversé ça. Mon corps sait revenir au calme.",
+  ]},
+  phobias: { label: 'Phobies', emoji: '🪜', cards: [
+    "Éviter me soulage maintenant, mais nourrit la peur ensuite.",
+    "Chaque fois que je reste, j'apprends à mon cerveau que c'est sûr.",
+    "Je peux y aller par petits pas, à mon rythme.",
+    "L'anxiété baisse si je reste assez longtemps dans la situation.",
+    "Le courage, ce n'est pas l'absence de peur, c'est avancer avec elle.",
+  ]},
+};
+let copingCat = 'worry';
+function renderCopingCats() {
+  const c = document.getElementById('copingCatChips');
+  if (!c) return;
+  c.innerHTML = Object.entries(copingPresets).map(([k, v]) =>
+    `<button class="coping-cat-chip${k === copingCat ? ' active' : ''}" onclick="selectCopingCat('${k}')" aria-pressed="${k === copingCat}" aria-label="${v.label}">${v.emoji} ${v.label}</button>`
+  ).join('');
+}
+function selectCopingCat(k) { copingCat = k; renderCopingCats(); renderCopingDeck(); }
+function renderCopingDeck() {
+  const d = document.getElementById('copingDeck');
+  if (!d) return;
+  d.innerHTML = copingPresets[copingCat].cards.map(txt =>
+    `<div class="coping-preset-card" role="listitem">
+      <p>${escHtml(txt)}</p>
+      <button class="coping-preset-add" data-text="${escHtml(txt)}" onclick="useCopingPreset(this)" aria-label="Ajouter cette carte à mes cartes">+ Mes cartes</button>
+    </div>`
+  ).join('');
+}
+function useCopingPreset(btn) {
+  const txt = btn.getAttribute('data-text');
+  const form = document.getElementById('cardAddForm');
+  form.classList.add('visible');
+  document.getElementById('cardTrigger').value = '';
+  document.getElementById('cardThought').value = txt;
+  form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.getElementById('cardTrigger').focus();
 }
 
 // ─── COPING CARDS ───

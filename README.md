@@ -94,7 +94,6 @@ Idees d'ameliorations futures :
 - Tracker d'habitudes positives/negatives
 - Exercice PMR (relaxation musculaire progressive)
 - Service Worker pour mode offline complet
-- Traductions (EN, ES...)
 
 ---
 

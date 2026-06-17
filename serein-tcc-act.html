@@ -1659,6 +1659,7 @@ const screenInitFns = {
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
   quiz: initQuiz,
   schemas: () => renderDefusion(currentDefusion),
+  calm: loadBells,
 };
 
 function navigateTo(screen) {
@@ -1851,6 +1852,35 @@ function toggleFear(n) {
   if (allDone) incrementSessions();
 }
 
+// ─── BELLS (cohérence cardiaque) ───
+let bellCtx = null;
+let bellBufAigu = null;
+let bellBufGrave = null;
+let bellsLoading = false;
+
+async function loadBells() {
+  if (bellCtx || bellsLoading) return;
+  bellsLoading = true;
+  try {
+    const [r1, r2] = await Promise.all([fetch('./cloche.mp3'), fetch('./clochegrave.mp3')]);
+    if (!r1.ok || !r2.ok) return;
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const [ab1, ab2] = await Promise.all([r1.arrayBuffer(), r2.arrayBuffer()]);
+    [bellBufAigu, bellBufGrave] = await Promise.all([ctx.decodeAudioData(ab1), ctx.decodeAudioData(ab2)]);
+    bellCtx = ctx;
+  } catch(e) { /* sons non disponibles en file:// ou hors ligne */ }
+  bellsLoading = false;
+}
+
+function playBell(buf) {
+  if (!bellCtx || !buf) return;
+  if (bellCtx.state === 'suspended') bellCtx.resume();
+  const src = bellCtx.createBufferSource();
+  src.buffer = buf;
+  src.connect(bellCtx.destination);
+  src.start();
+}
+
 // ─── BREATHING ───
 const breathTechs = {
   coherence: { phases: [5, 5],    labels: ['Inspire', 'Expire'],           name: 'Cohérence cardiaque' },
@@ -1913,6 +1943,11 @@ function runBreathPhase() {
   const isExpire = label === 'Expire';
 
   document.getElementById('breathPhaseText').textContent = label;
+
+  if (breathTech === 'coherence') {
+    if (isInspire) playBell(bellBufAigu);
+    else if (isExpire) playBell(bellBufGrave);
+  }
 
   const c = document.getElementById('breathCircle');
   c.style.transition = `transform ${duration}s ease-in-out, box-shadow ${duration}s ease-in-out`;

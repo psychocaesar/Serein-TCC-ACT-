@@ -56,6 +56,67 @@ body {
   position: relative;
 }
 
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,0.72);
+  display: none;
+  align-items: flex-end;
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.3s ease;
+}
+.modal-overlay.visible { display: flex; }
+.modal-box {
+  background: var(--color-bg);
+  border-radius: 2rem 2rem 0 0;
+  border-top: 1px solid var(--color-border);
+  padding: 2rem 1.5rem 2.5rem;
+  width: 100%; max-width: 480px;
+  margin: 0 auto;
+  animation: slideUp 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.modal-box h2 { font-family: var(--font-title); font-size: 1.3rem; margin-bottom: 0.75rem; }
+.modal-box > p { margin-bottom: 0.75rem; font-size: 0.88rem; }
+.modal-disclaimer {
+  background: rgba(216,183,138,0.1);
+  border: 1px solid var(--color-primary-2);
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  line-height: 1.55;
+}
+.modal-disclaimer strong { color: var(--color-primary-2); }
+.modal-resources {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  display: flex; flex-direction: column; gap: 0.35rem;
+}
+.resource-item { font-size: 0.82rem; color: var(--color-muted); }
+.resource-item strong { color: var(--color-text); }
+
+/* ─── DISCLAIMER NOTE (home) ─── */
+.disclaimer-note {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  background: rgba(216,183,138,0.07);
+  border: 1px solid rgba(216,183,138,0.25);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.77rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+.disclaimer-note .dn-icon { flex-shrink: 0; margin-top: 0.05rem; }
+.disclaimer-note strong { color: var(--color-text); }
+.disclaimer-note a { color: var(--color-primary-2); text-decoration: none; font-weight: 600; }
+
 /* ─── HEADER ─── */
 .app-header {
   display: flex;
@@ -65,11 +126,7 @@ body {
   flex-shrink: 0;
   gap: 0.5rem;
 }
-.app-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+.app-logo { display: flex; align-items: center; gap: 0.5rem; }
 .app-logo svg { width: 28px; height: 28px; }
 .app-logo span {
   font-family: var(--font-title);
@@ -111,55 +168,40 @@ body {
   transition: opacity var(--transition), transform var(--transition);
   min-height: 100%;
 }
-.screen.active {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-.screen.entering {
-  display: block;
-  opacity: 0;
-  transform: translateY(8px);
-}
+.screen.active { display: block; opacity: 1; transform: translateY(0); }
+.screen.entering { display: block; opacity: 0; transform: translateY(8px); }
 
-/* ─── BOTTOM NAV ─── */
+/* ─── BOTTOM NAV (5 tabs) ─── */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 50%;
+  bottom: 0; left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
+  width: 100%; max-width: 480px;
   height: var(--nav-height);
   background: var(--color-surface-2);
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 0.5rem;
+  padding: 0 0.25rem;
   backdrop-filter: blur(16px);
   z-index: 100;
 }
 [data-theme="dark"] .bottom-nav { background: rgba(20,38,28,0.95); }
 .nav-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; cursor: pointer;
   color: var(--color-muted);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 0.4rem;
   border-radius: 1rem;
   transition: color var(--transition), background var(--transition);
-  min-width: 64px;
+  min-width: 52px; flex: 1;
 }
-.nav-btn svg { width: 22px; height: 22px; transition: transform var(--transition); }
-.nav-btn span { font-size: 0.65rem; font-family: var(--font-body); font-weight: 500; }
+.nav-btn svg { width: 20px; height: 20px; transition: transform var(--transition); }
+.nav-btn span { font-size: 0.6rem; font-family: var(--font-body); font-weight: 500; }
 .nav-btn.active { color: var(--color-primary); }
-.nav-btn.active svg { transform: scale(1.1); }
-.nav-btn.active span { font-weight: 600; }
+.nav-btn.active svg { transform: scale(1.12); }
+.nav-btn.active span { font-weight: 700; }
 
 /* ─── TYPOGRAPHY ─── */
 h1 { font-family: var(--font-title); font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
@@ -168,12 +210,9 @@ h3 { font-family: var(--font-title); font-size: 1rem; font-weight: 600; }
 p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .section-title {
   font-family: var(--font-title);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin-bottom: 0.75rem;
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--color-muted); margin-bottom: 0.75rem;
 }
 
 /* ─── CARDS ─── */
@@ -188,16 +227,10 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 
 /* ─── BUTTONS ─── */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   padding: 0.85rem 1.5rem;
-  border-radius: 2rem;
-  border: none;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 600;
+  border-radius: 2rem; border: none;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
 }
@@ -228,11 +261,8 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
   border-radius: 2rem;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text);
-  cursor: pointer;
+  font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+  color: var(--color-text); cursor: pointer;
   transition: background var(--transition), border-color var(--transition), transform var(--transition);
   backdrop-filter: blur(4px);
 }
@@ -250,18 +280,13 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 1.25rem;
-  padding: 1rem 0.75rem;
-  text-align: center;
+  padding: 1rem 0.75rem; text-align: center;
   backdrop-filter: blur(8px);
 }
 .stat-value {
-  font-family: var(--font-title);
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-family: var(--font-title); font-size: 1.75rem; font-weight: 700;
   background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   line-height: 1;
 }
 .stat-label { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.25rem; }
@@ -269,23 +294,18 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 /* ─── CAROUSEL ─── */
 .carousel-wrap { overflow: hidden; margin: 0 -1.25rem; }
 .carousel {
-  display: flex;
-  gap: 0.75rem;
+  display: flex; gap: 0.75rem;
   padding: 0.5rem 1.25rem 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 .carousel::-webkit-scrollbar { display: none; }
 .carousel-card {
-  flex-shrink: 0;
-  width: 160px;
+  flex-shrink: 0; width: 155px;
   scroll-snap-align: start;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1.25rem;
-  padding: 1rem;
+  border-radius: 1.25rem; padding: 1rem;
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition);
   backdrop-filter: blur(8px);
@@ -298,14 +318,9 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 /* ─── EMOTION GRID ─── */
 .emotion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
 .emotion-btn {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: 1.25rem;
-  padding: 1.25rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all var(--transition);
-  backdrop-filter: blur(8px);
+  background: var(--color-surface); border: 2px solid var(--color-border);
+  border-radius: 1.25rem; padding: 1.25rem 1rem; text-align: center;
+  cursor: pointer; transition: all var(--transition); backdrop-filter: blur(8px);
 }
 .emotion-btn:hover { border-color: var(--color-primary); background: var(--color-primary-light); }
 .emotion-btn.selected { border-color: var(--color-primary); background: var(--color-primary-light); }
@@ -316,53 +331,42 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 
 /* ─── SUGGESTION CARD ─── */
 .suggestion-card {
-  background: var(--color-primary-light);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  display: none;
-  animation: fadeIn 0.3s ease;
+  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius); padding: 1.25rem;
+  display: none; animation: fadeIn 0.3s ease;
 }
 .suggestion-card.visible { display: block; }
 .suggestion-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.9rem; }
-.suggestion-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+.suggestion-card .sugg-cta {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--color-primary); cursor: pointer; background: none; border: none;
+  padding: 0; text-decoration: underline; text-decoration-color: transparent;
+  transition: text-decoration-color var(--transition);
+}
+.suggestion-card .sugg-cta:hover { text-decoration-color: var(--color-primary); }
+.suggestion-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
 .tag {
-  padding: 0.3rem 0.75rem;
-  background: var(--color-surface);
-  border-radius: 2rem;
-  font-size: 0.75rem;
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  font-weight: 500;
+  padding: 0.3rem 0.75rem; background: var(--color-surface); border-radius: 2rem;
+  font-size: 0.75rem; color: var(--color-primary); border: 1px solid var(--color-primary); font-weight: 500;
 }
 
 /* ─── TEXTAREA / INPUT ─── */
 .form-group { margin: 1rem 0; }
 .form-label {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-muted);
-  margin-bottom: 0.4rem;
-  letter-spacing: 0.04em;
+  display: block; font-size: 0.8rem; font-weight: 600;
+  color: var(--color-muted); margin-bottom: 0.4rem; letter-spacing: 0.04em;
 }
 textarea, input[type="text"] {
-  width: 100%;
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  border-radius: 1rem;
+  width: 100%; background: var(--color-surface);
+  border: 1.5px solid var(--color-border); border-radius: 1rem;
   padding: 0.85rem 1rem;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-text);
-  resize: none;
-  transition: border-color var(--transition);
-  -webkit-appearance: none;
+  font-family: var(--font-body); font-size: 0.9rem; color: var(--color-text);
+  resize: none; transition: border-color var(--transition); -webkit-appearance: none;
 }
 textarea:focus, input[type="text"]:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  background: var(--color-primary-light);
+  outline: none; border-color: var(--color-primary); background: var(--color-primary-light);
 }
 textarea::placeholder, input[type="text"]::placeholder { color: var(--color-muted); }
 
@@ -372,16 +376,9 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
   display: flex; justify-content: space-between; align-items: center;
   font-size: 0.78rem; color: var(--color-muted); margin-bottom: 0.4rem;
 }
-.progress-bar {
-  height: 4px;
-  background: var(--color-border);
-  border-radius: 2px;
-  overflow: hidden;
-}
+.progress-bar { height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
 .progress-fill {
-  height: 100%;
-  background: var(--gradient);
-  border-radius: 2px;
+  height: 100%; background: var(--gradient); border-radius: 2px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -390,19 +387,12 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .step.active { display: block; }
 .step-num {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px;
-  background: var(--gradient);
-  border-radius: 50%;
-  font-size: 0.8rem; font-weight: 700; color: #0d1b15;
-  margin-bottom: 0.75rem;
+  width: 28px; height: 28px; background: var(--gradient); border-radius: 50%;
+  font-size: 0.8rem; font-weight: 700; color: #0d1b15; margin-bottom: 0.75rem;
 }
 .reformulation-card {
-  background: var(--color-surface);
-  border: 1px dashed var(--color-primary);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  margin-top: 1rem;
-  display: none;
+  background: var(--color-surface); border: 1px dashed var(--color-primary);
+  border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem; display: none;
 }
 .reformulation-card.visible { display: block; }
 .reformulation-card .before { color: var(--color-muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
@@ -412,31 +402,19 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 /* ─── SCHEMA GRID ─── */
 .schema-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
 .schema-btn {
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  border-radius: 1.25rem;
-  padding: 1rem;
-  cursor: pointer;
-  text-align: left;
-  transition: all var(--transition);
-  backdrop-filter: blur(8px);
+  background: var(--color-surface); border: 1.5px solid var(--color-border);
+  border-radius: 1.25rem; padding: 1rem; cursor: pointer; text-align: left;
+  transition: all var(--transition); backdrop-filter: blur(8px);
 }
-.schema-btn:hover, .schema-btn.active {
-  border-color: var(--color-primary-2);
-  background: rgba(216,183,138,0.1);
-}
+.schema-btn:hover, .schema-btn.active { border-color: var(--color-primary-2); background: rgba(216,183,138,0.1); }
 .schema-btn .schema-emoji { font-size: 1.5rem; display: block; margin-bottom: 0.4rem; }
 .schema-btn .schema-name { font-family: var(--font-title); font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
 
 /* ─── INSIGHT CARD ─── */
 .insight-card {
-  background: rgba(216,183,138,0.1);
-  border: 1.5px solid var(--color-primary-2);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  margin-top: 0.75rem;
-  display: none;
-  animation: fadeIn 0.3s ease;
+  background: rgba(216,183,138,0.1); border: 1.5px solid var(--color-primary-2);
+  border-radius: var(--radius); padding: 1.25rem; margin-top: 0.75rem;
+  display: none; animation: fadeIn 0.3s ease;
 }
 .insight-card.visible { display: block; }
 .insight-card h3 { color: var(--color-primary-2); margin-bottom: 0.5rem; }
@@ -446,17 +424,12 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .act-steps { display: flex; flex-direction: column; gap: 0.625rem; margin: 0.75rem 0; }
 .act-step {
   display: flex; align-items: flex-start; gap: 0.75rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 1rem;
-  padding: 1rem;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1rem; padding: 1rem;
 }
 .act-num {
-  flex-shrink: 0;
-  width: 24px; height: 24px;
-  background: var(--gradient);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; width: 24px; height: 24px; background: var(--gradient);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 0.72rem; font-weight: 700; color: #0d1b15;
 }
 .act-step p { font-size: 0.85rem; margin: 0; color: var(--color-text); }
@@ -465,55 +438,122 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .fear-level {
   display: flex; align-items: center; gap: 0.75rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 1rem;
-  padding: 1rem;
-  transition: all var(--transition);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: 1rem; padding: 1rem; transition: all var(--transition);
 }
-.fear-level.done {
-  border-color: var(--color-primary);
-  background: var(--color-primary-light);
-  opacity: 0.7;
-}
+.fear-level.done { border-color: var(--color-primary); background: var(--color-primary-light); opacity: 0.7; }
 .fear-num {
-  flex-shrink: 0;
-  width: 36px; height: 36px;
-  background: var(--color-surface-2);
-  border: 1.5px solid var(--color-border);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-title); font-size: 0.9rem; font-weight: 700;
-  color: var(--color-primary);
+  flex-shrink: 0; width: 36px; height: 36px;
+  background: var(--color-surface-2); border: 1.5px solid var(--color-border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-title); font-size: 0.9rem; font-weight: 700; color: var(--color-primary);
 }
 .fear-level.done .fear-num { background: var(--gradient); color: #0d1b15; border-color: transparent; }
 .fear-level-content { flex: 1; }
 .fear-level-content strong { font-size: 0.85rem; display: block; margin-bottom: 0.2rem; }
 .fear-level-content span { font-size: 0.78rem; color: var(--color-muted); }
 .fear-check {
-  width: 28px; height: 28px;
-  border-radius: 50%; border: 2px solid var(--color-border);
+  width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--color-border);
   background: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  color: var(--color-muted);
-  transition: all var(--transition);
-  flex-shrink: 0;
+  color: var(--color-muted); transition: all var(--transition); flex-shrink: 0;
 }
 .fear-check:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .fear-level.done .fear-check { border-color: var(--color-primary); color: var(--color-primary); }
 .closing-card {
-  background: var(--color-primary-light);
-  border: 1.5px solid var(--color-primary);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  text-align: center;
-  display: none;
-  margin-top: 1rem;
-  animation: fadeIn 0.4s ease;
+  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius); padding: 1.5rem; text-align: center;
+  display: none; margin-top: 1rem; animation: fadeIn 0.4s ease;
 }
 .closing-card.visible { display: block; }
 .closing-card .big-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .closing-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
+
+/* ─── BREATHING ─── */
+.breath-tech-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+.breath-tab {
+  padding: 0.4rem 0.9rem; border-radius: 2rem;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted); font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+  cursor: pointer; transition: all var(--transition);
+}
+.breath-tab.active { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+.breath-circle-container {
+  display: flex; flex-direction: column; align-items: center;
+  margin: 1.25rem 0 1rem; position: relative;
+}
+.breath-rings-wrap {
+  position: relative; width: 220px; height: 220px;
+  display: flex; align-items: center; justify-content: center;
+}
+.breath-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid var(--color-primary); opacity: 0; pointer-events: none;
+}
+.breath-ring-1 { width: 200px; height: 200px; animation: ringFade 3.5s ease-out infinite 0.4s; }
+.breath-ring-2 { width: 218px; height: 218px; animation: ringFade 3.5s ease-out infinite 1.1s; }
+@keyframes ringFade {
+  0%   { opacity: 0.35; transform: scale(0.88); }
+  100% { opacity: 0;    transform: scale(1.04); }
+}
+.breath-circle {
+  width: 160px; height: 160px; border-radius: 50%;
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-primary);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none;
+  transform: scale(0.72);
+  box-shadow: 0 0 0 0 rgba(147,201,172,0.2);
+  transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
+}
+.breath-phase-text {
+  font-family: var(--font-title); font-weight: 600; font-size: 0.88rem;
+  color: var(--color-primary); text-align: center; line-height: 1.3; padding: 0 0.5rem;
+}
+.breath-countdown {
+  font-family: var(--font-title); font-size: 2.2rem; font-weight: 700;
+  color: var(--color-text); line-height: 1; margin-top: 0.15rem;
+}
+.breath-info {
+  font-size: 0.78rem; color: var(--color-muted); margin-top: 0.6rem; text-align: center; min-height: 1.2em;
+}
+
+/* ─── GROUNDING ─── */
+.grounding-progress {
+  display: flex; gap: 0.5rem; justify-content: center; margin: 1rem 0 0.75rem;
+}
+.ground-dot {
+  width: 28px; height: 5px; border-radius: 3px;
+  background: var(--color-border); transition: background var(--transition);
+}
+.ground-dot.done { background: var(--color-primary); }
+.grounding-step-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1.5rem;
+  display: none; animation: fadeIn 0.3s ease;
+}
+.grounding-step-card.active { display: block; }
+.grounding-intro-num {
+  font-family: var(--font-title); font-size: 3.5rem; font-weight: 700;
+  background: var(--gradient); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; background-clip: text;
+  line-height: 1; text-align: center; margin-bottom: 0.5rem;
+}
+.grounding-sense {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-title); font-size: 1rem; font-weight: 600;
+  color: var(--color-primary); margin-bottom: 0.6rem;
+}
+.grounding-sense .sense-emoji { font-size: 1.5rem; }
+.grounding-done-card {
+  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius); padding: 1.5rem; text-align: center;
+  display: none; animation: fadeIn 0.4s ease; margin-top: 0.75rem;
+}
+.grounding-done-card.visible { display: block; }
+.grounding-done-card .big-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.grounding-done-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
 
 /* ─── GREETING ─── */
 .greeting-block { padding: 1.5rem 0 0.75rem; }
@@ -523,9 +563,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 .greeting-block h1 span {
   background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .sub-text { color: var(--color-muted); font-size: 0.88rem; margin-top: 0.4rem; }
 
@@ -541,16 +579,30 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 .badge {
   display: inline-flex; align-items: center; gap: 0.3rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 2rem;
+  padding: 0.2rem 0.6rem; border-radius: 2rem;
   font-size: 0.7rem; font-weight: 600;
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
+  background: var(--color-primary-light); color: var(--color-primary); border: 1px solid var(--color-primary);
 }
 </style>
 </head>
 <body>
+
+<!-- ─── DISCLAIMER MODAL (first launch) ─── -->
+<div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <div class="modal-emoji">🌿</div>
+    <h2 id="modalTitle">Bienvenue dans Serein TCC·ACT</h2>
+    <p>Cet outil propose des exercices inspirés des thérapies cognitivo-comportementales (TCC) et de l'ACT pour soutenir ton bien-être au quotidien.</p>
+    <div class="modal-disclaimer">
+      ⚠️ Il <strong>ne remplace pas</strong> un accompagnement psychologique ou psychiatrique. Si tu traverses une période difficile ou que tu as des pensées de te faire du mal, parle à un professionnel de santé.
+    </div>
+    <div class="modal-resources">
+      <span class="resource-item">🆘 Détresse psychologique : <strong>3114</strong> (numéro national, 24h/24)</span>
+      <span class="resource-item">🏥 Trouver un psy : <strong>monpsy.sante.gouv.fr</strong></span>
+    </div>
+    <button class="btn btn-primary" onclick="dismissDisclaimer()" aria-label="J'ai compris, accéder à l'application">J'ai compris →</button>
+  </div>
+</div>
 
 <!-- ─── HEADER ─── -->
 <header class="app-header">
@@ -628,9 +680,9 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     <div class="section-title">Outils suggérés</div>
     <div class="carousel-wrap">
       <div class="carousel" role="list" aria-label="Outils suggérés">
-        <div class="carousel-card" role="listitem" onclick="goToTool('breathing')" tabindex="0" aria-label="Respiration 4-7-8">
+        <div class="carousel-card" role="listitem" onclick="navigateTo('calm')" tabindex="0" aria-label="Respiration & ancrage">
           <div class="icon">🌬️</div>
-          <h3>Respiration 4-7-8</h3>
+          <h3>Respiration & ancrage</h3>
           <p>Calme l'anxiété en 2 min</p>
         </div>
         <div class="carousel-card" role="listitem" onclick="navigateTo('journal')" tabindex="0" aria-label="Journal TCC">
@@ -649,6 +701,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
           <p>Avance à ton rythme</p>
         </div>
       </div>
+    </div>
+
+    <div class="disclaimer-note" role="note">
+      <span class="dn-icon">🔔</span>
+      <span>Cet outil est un <strong>complément</strong>, pas un substitut à un suivi thérapeutique. Détresse : <a href="tel:3114"><strong>3114</strong></a> (24h/24).</span>
     </div>
   </div>
 
@@ -691,10 +748,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
       <h3 id="suggTitle">💡 Suggestion pour toi</h3>
       <p id="suggText"></p>
       <div class="suggestion-tags" id="suggTags"></div>
+      <button class="sugg-cta" id="suggCta" onclick="followSuggestion()"></button>
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-primary" onclick="continueToJournal()" aria-label="Continuer vers le journal TCC">
+      <button class="btn btn-primary" id="checkinContinueBtn" onclick="continueFromCheckin()" aria-label="Continuer">
         Continuer →
       </button>
     </div>
@@ -717,7 +775,6 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
       </div>
     </div>
 
-    <!-- Step 1 -->
     <div class="step active" id="step-1">
       <div class="step-num">1</div>
       <h2>La situation</h2>
@@ -727,12 +784,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <textarea id="situationField" rows="4" placeholder="Ex. : J'ai raté une réunion importante par oubli…" aria-label="Description de la situation"></textarea>
       </div>
       <div class="row mt-2">
-        <button class="btn btn-ghost" onclick="journalStep(0)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-ghost" onclick="journalStep(0)" aria-label="Retour">← Retour</button>
         <button class="btn btn-primary" onclick="journalStep(2)" aria-label="Étape suivante">Suivant →</button>
       </div>
     </div>
 
-    <!-- Step 2 -->
     <div class="step" id="step-2">
       <div class="step-num">2</div>
       <h2>La pensée automatique</h2>
@@ -742,12 +798,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Je suis incompétent·e, tout le monde l'a remarqué…" aria-label="Pensée automatique"></textarea>
       </div>
       <div class="row mt-2">
-        <button class="btn btn-ghost" onclick="journalStep(1)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-ghost" onclick="journalStep(1)" aria-label="Retour">← Retour</button>
         <button class="btn btn-primary" onclick="journalStep(3)" aria-label="Étape suivante">Suivant →</button>
       </div>
     </div>
 
-    <!-- Step 3 -->
     <div class="step" id="step-3">
       <div class="step-num">3</div>
       <h2>L'émotion & l'intensité</h2>
@@ -757,12 +812,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <textarea id="emotionField" rows="3" placeholder="Ex. : Honte 7/10, anxiété 8/10…" aria-label="Émotion et intensité"></textarea>
       </div>
       <div class="row mt-2">
-        <button class="btn btn-ghost" onclick="journalStep(2)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-ghost" onclick="journalStep(2)" aria-label="Retour">← Retour</button>
         <button class="btn btn-primary" onclick="journalStep(4)" aria-label="Étape suivante">Suivant →</button>
       </div>
     </div>
 
-    <!-- Step 4 -->
     <div class="step" id="step-4">
       <div class="step-num">4</div>
       <h2>La pensée équilibrée</h2>
@@ -771,22 +825,147 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <label class="form-label" for="balancedThoughtField">Pensée plus équilibrée</label>
         <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : J'ai oublié cette fois, ça ne fait pas de moi un·e mauvais·e professionnel·le…" aria-label="Pensée équilibrée" oninput="updateReformulation()"></textarea>
       </div>
-
       <div class="reformulation-card" id="reformulationCard">
         <div class="section-title">✨ Reformulation</div>
         <p class="before"><strong>Avant :</strong> <span id="reformBefore"></span></p>
         <div class="arrow-icon">↓</div>
         <p class="after"><strong>Après :</strong> <span id="reformAfter"></span></p>
       </div>
-
       <div class="row mt-2">
-        <button class="btn btn-ghost" onclick="journalStep(3)" aria-label="Étape précédente">← Retour</button>
-        <button class="btn btn-primary" onclick="finishJournal()" aria-label="Terminer et voir les schémas">Terminer ✓</button>
+        <button class="btn btn-ghost" onclick="journalStep(3)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="finishJournal()" aria-label="Terminer">Terminer ✓</button>
       </div>
     </div>
   </div>
 
-  <!-- ═══ SCREEN 4 : SCHÉMAS ═══ -->
+  <!-- ═══ SCREEN 4 : CALME ═══ -->
+  <div class="screen" id="screen-calm" role="main" aria-label="Espace calme — respiration et ancrage">
+    <div class="greeting-block">
+      <div class="time-label">Espace calme</div>
+      <h1>Reviens au <span>présent</span></h1>
+    </div>
+
+    <!-- BREATHING -->
+    <h2 class="mb-1">🌬️ Respiration guidée</h2>
+    <p>Choisis une technique. Appuie sur le cercle pour commencer.</p>
+
+    <div class="breath-tech-tabs" role="group" aria-label="Technique de respiration">
+      <button class="breath-tab active" onclick="selectBreathTech('coherence', this)" aria-pressed="true">Cohérence 5-5</button>
+      <button class="breath-tab" onclick="selectBreathTech('box', this)" aria-pressed="false">Boîte 4-4-4-4</button>
+      <button class="breath-tab" onclick="selectBreathTech('478', this)" aria-pressed="false">4-7-8</button>
+    </div>
+
+    <div class="breath-circle-container">
+      <div class="breath-rings-wrap">
+        <div class="breath-ring breath-ring-1"></div>
+        <div class="breath-ring breath-ring-2"></div>
+        <div class="breath-circle" id="breathCircle"
+          onclick="toggleBreathing()"
+          role="button"
+          tabindex="0"
+          aria-label="Appuyer pour démarrer ou arrêter la respiration guidée">
+          <span class="breath-phase-text" id="breathPhaseText">Appuie<br>pour commencer</span>
+          <span class="breath-countdown" id="breathCountdown"></span>
+        </div>
+      </div>
+      <div class="breath-info" id="breathInfo" aria-live="polite"></div>
+    </div>
+
+    <button class="btn btn-secondary mt-1" id="breathBtn" onclick="toggleBreathing()" aria-label="Démarrer la respiration guidée">▶ Commencer</button>
+
+    <div class="divider"></div>
+
+    <!-- GROUNDING -->
+    <h2 class="mb-1">🌍 Ancrage 5-4-3-2-1</h2>
+    <p>Pour revenir dans ton corps quand l'anxiété monte. Un sens à la fois.</p>
+
+    <div class="grounding-progress" id="groundingProgress" aria-label="Progression de l'ancrage" role="progressbar" aria-valuenow="0" aria-valuemax="5">
+      <div class="ground-dot" id="gdot-1"></div>
+      <div class="ground-dot" id="gdot-2"></div>
+      <div class="ground-dot" id="gdot-3"></div>
+      <div class="ground-dot" id="gdot-4"></div>
+      <div class="ground-dot" id="gdot-5"></div>
+    </div>
+
+    <!-- Step 0 : intro -->
+    <div class="grounding-step-card active" id="gstep-0">
+      <div class="grounding-intro-num">5·4·3·2·1</div>
+      <p style="text-align:center;margin-top:0.6rem;">Prends une grande inspiration. Cet exercice t'ancre dans le moment présent en sollicitant tes cinq sens.</p>
+      <button class="btn btn-primary mt-2" onclick="groundingStep(1)" aria-label="Commencer l'ancrage sensoriel">Commencer</button>
+    </div>
+
+    <!-- Step 1 : voir -->
+    <div class="grounding-step-card" id="gstep-1">
+      <div class="grounding-sense"><span class="sense-emoji">👁️</span>5 choses que tu <strong>vois</strong></div>
+      <p>Regarde autour de toi. Nomme 5 objets, couleurs ou détails visibles.</p>
+      <div class="form-group">
+        <textarea rows="3" placeholder="Ex. : une tasse, la lumière de la fenêtre, mon bureau…" aria-label="5 choses que tu vois"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="groundingStep(2)" aria-label="Étape suivante">Suivant →</button>
+    </div>
+
+    <!-- Step 2 : entendre -->
+    <div class="grounding-step-card" id="gstep-2">
+      <div class="grounding-sense"><span class="sense-emoji">👂</span>4 choses que tu <strong>entends</strong></div>
+      <p>Ferme les yeux un instant. Quels sons perçois-tu ?</p>
+      <div class="form-group">
+        <textarea rows="3" placeholder="Ex. : des voix au loin, le vent, le bourdonnement d'un appareil…" aria-label="4 choses que tu entends"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="groundingStep(1)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="groundingStep(3)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 : toucher -->
+    <div class="grounding-step-card" id="gstep-3">
+      <div class="grounding-sense"><span class="sense-emoji">🤚</span>3 choses que tu <strong>touches</strong></div>
+      <p>Sens les textures : chaise, tissu, sol, air sur ta peau.</p>
+      <div class="form-group">
+        <textarea rows="3" placeholder="Ex. : le tissu de mon vêtement, le bureau lisse, l'air frais…" aria-label="3 choses que tu touches"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="groundingStep(2)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="groundingStep(4)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 4 : sentir -->
+    <div class="grounding-step-card" id="gstep-4">
+      <div class="grounding-sense"><span class="sense-emoji">👃</span>2 choses que tu <strong>sens</strong></div>
+      <p>Inspire doucement. Quelles odeurs remarques-tu dans l'espace ?</p>
+      <div class="form-group">
+        <textarea rows="3" placeholder="Ex. : le café, l'air, un parfum…" aria-label="2 choses que tu sens"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="groundingStep(3)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="groundingStep(5)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 5 : goûter -->
+    <div class="grounding-step-card" id="gstep-5">
+      <div class="grounding-sense"><span class="sense-emoji">👅</span>1 chose que tu <strong>goûtes</strong></div>
+      <p>Quel goût as-tu en bouche en ce moment ?</p>
+      <div class="form-group">
+        <textarea rows="2" placeholder="Ex. : le goût du café, rien de particulier…" aria-label="1 chose que tu goûtes"></textarea>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="groundingStep(4)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="groundingStep(6)" aria-label="Terminer l'ancrage">Terminer ✓</button>
+      </div>
+    </div>
+
+    <!-- Done -->
+    <div class="grounding-done-card" id="groundingDone">
+      <div class="big-emoji">🌿</div>
+      <h3>Tu es là, dans le présent.</h3>
+      <p>L'ancrage sensoriel interrompt la spirale anxieuse en ramenant l'attention sur ce qui est réel et immédiat. Bien joué.</p>
+      <button class="btn btn-secondary mt-2" onclick="resetGrounding()" aria-label="Recommencer l'ancrage">Recommencer</button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 5 : SCHÉMAS ═══ -->
   <div class="screen" id="screen-schemas" role="main" aria-label="Schémas de pensée">
     <div class="greeting-block">
       <div class="time-label">Schémas cognitifs</div>
@@ -796,27 +975,27 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     <p>Clique sur un schéma pour le reconnaître et trouver une reformulation.</p>
 
     <div class="schema-grid mt-2" role="group" aria-label="Schémas de pensée">
-      <button class="schema-btn" onclick="showSchema('catastrophisme')" aria-label="Catastrophisme">
+      <button class="schema-btn" onclick="showSchema('catastrophisme', this)" aria-label="Catastrophisme">
         <span class="schema-emoji">⚡</span>
         <span class="schema-name">Catastrophisme</span>
       </button>
-      <button class="schema-btn" onclick="showSchema('lecture')" aria-label="Lecture de pensée">
+      <button class="schema-btn" onclick="showSchema('lecture', this)" aria-label="Lecture de pensée">
         <span class="schema-emoji">🔮</span>
         <span class="schema-name">Lecture de pensée</span>
       </button>
-      <button class="schema-btn" onclick="showSchema('toutourien')" aria-label="Tout ou rien">
+      <button class="schema-btn" onclick="showSchema('toutourien', this)" aria-label="Tout ou rien">
         <span class="schema-emoji">⚖️</span>
         <span class="schema-name">Tout ou rien</span>
       </button>
-      <button class="schema-btn" onclick="showSchema('surgen')" aria-label="Surgénéralisation">
+      <button class="schema-btn" onclick="showSchema('surgen', this)" aria-label="Surgénéralisation">
         <span class="schema-emoji">🌐</span>
         <span class="schema-name">Surgénéralisation</span>
       </button>
-      <button class="schema-btn" onclick="showSchema('filtre')" aria-label="Filtre mental">
+      <button class="schema-btn" onclick="showSchema('filtre', this)" aria-label="Filtre mental">
         <span class="schema-emoji">🔍</span>
         <span class="schema-name">Filtre mental</span>
       </button>
-      <button class="schema-btn" onclick="showSchema('personnalisation')" aria-label="Personnalisation">
+      <button class="schema-btn" onclick="showSchema('personnalisation', this)" aria-label="Personnalisation">
         <span class="schema-emoji">🎯</span>
         <span class="schema-name">Personnalisation</span>
       </button>
@@ -853,13 +1032,13 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-primary" onclick="navigateTo('ladder')" aria-label="Aller vers l'échelle d'exposition">
+      <button class="btn btn-primary" onclick="navigateTo('ladder')" aria-label="Aller vers l'exposition graduelle">
         Exposition douce →
       </button>
     </div>
   </div>
 
-  <!-- ═══ SCREEN 5 : FEAR LADDER ═══ -->
+  <!-- ═══ SCREEN 6 : FEAR LADDER ═══ -->
   <div class="screen" id="screen-ladder" role="main" aria-label="Exposition graduelle">
     <div class="greeting-block">
       <div class="time-label">Exposition douce</div>
@@ -870,7 +1049,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 
     <div class="form-group mt-2">
       <label class="form-label" for="fearField">Situation que tu évites</label>
-      <input type="text" id="fearField" placeholder="Ex. : Prendre la parole en réunion…" aria-label="Situation évitée" oninput="updateFearLadder()">
+      <input type="text" id="fearField" placeholder="Ex. : Prendre la parole en réunion…" aria-label="Situation évitée">
     </div>
 
     <div class="fear-levels" id="fearLevels">
@@ -931,7 +1110,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 
 </div><!-- end screen-container -->
 
-<!-- ─── BOTTOM NAV ─── -->
+<!-- ─── BOTTOM NAV (5 tabs) ─── -->
 <nav class="bottom-nav" aria-label="Navigation principale">
   <button class="nav-btn active" id="nav-home" onclick="navigateTo('home')" aria-label="Accueil" aria-current="page">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -951,6 +1130,12 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </svg>
     <span>Journal</span>
   </button>
+  <button class="nav-btn" id="nav-calm" onclick="navigateTo('calm')" aria-label="Espace calme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+    </svg>
+    <span>Calme</span>
+  </button>
   <button class="nav-btn" id="nav-schemas" onclick="navigateTo('schemas')" aria-label="Schémas & exposition">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -968,18 +1153,28 @@ const state = {
   fearDone: { 1: false, 2: false, 3: false, 4: false },
 };
 
+// ─── DISCLAIMER ───
+function initDisclaimer() {
+  if (!localStorage.getItem('serein_disclaimer_seen')) {
+    document.getElementById('disclaimerModal').classList.add('visible');
+  }
+}
+function dismissDisclaimer() {
+  localStorage.setItem('serein_disclaimer_seen', '1');
+  const m = document.getElementById('disclaimerModal');
+  m.style.transition = 'opacity 0.3s ease';
+  m.style.opacity = '0';
+  setTimeout(() => m.classList.remove('visible'), 300);
+}
+
 // ─── STATS ───
 function loadStats() {
   const today = new Date().toDateString();
   const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
-  const lastDay = data.lastDay || null;
-  let streak = data.streak || 0;
-  if (lastDay !== today) {
+  if (data.lastDay !== today) {
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    if (lastDay === yesterday.toDateString()) { streak += 1; }
-    else if (lastDay !== today) { streak = 1; }
+    data.streak = (data.lastDay === yesterday.toDateString()) ? (data.streak || 0) + 1 : 1;
     data.lastDay = today;
-    data.streak = streak;
     localStorage.setItem('serein_tcc_stats', JSON.stringify(data));
   }
   document.getElementById('statStreak').textContent = data.streak || 0;
@@ -987,11 +1182,9 @@ function loadStats() {
   const moods = data.moods || [];
   if (moods.length > 0) {
     const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
-    const emojis = ['😶','😕','😐','🙂','😊'];
-    document.getElementById('statMood').textContent = emojis[Math.min(4, Math.round(avg / 2))];
+    document.getElementById('statMood').textContent = ['😶','😕','😐','🙂','😊'][Math.min(4, Math.round(avg / 2))];
   }
 }
-
 function incrementSessions() {
   const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
   data.sessions = (data.sessions || 0) + 1;
@@ -1006,52 +1199,34 @@ function initTheme() {
   updateThemeIcon(saved);
 }
 function toggleTheme() {
-  const curr = document.documentElement.getAttribute('data-theme');
-  const next = curr === 'dark' ? 'light' : 'dark';
+  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('serein_theme', next);
   updateThemeIcon(next);
 }
 function updateThemeIcon(theme) {
-  const icon = document.getElementById('themeIcon');
-  if (theme === 'light') {
-    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-  } else {
-    icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
-  }
+  document.getElementById('themeIcon').innerHTML = theme === 'light'
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
 }
 
 // ─── GREETING ───
 function setGreeting() {
   const h = new Date().getHours();
-  const labels = [
-    [5, 'Bonjour ☀️', 'Commence la journée avec clarté.'],
-    [12, 'Bon après-midi 🌤️', 'Prends un moment pour toi.'],
-    [18, 'Bonne soirée 🌙', 'Comment s\'est passée ta journée ?'],
-    [24, 'Bonne nuit 🌟', 'Prends soin de toi.'],
-  ];
-  let label = 'Bonjour ☀️', sub = '';
-  for (const [end, l, s] of labels) {
-    if (h < end) { label = l; sub = s; break; }
-  }
+  const slots = [[5,'Bonjour ☀️','Commence la journée avec clarté.'],[12,'Bon après-midi 🌤️','Prends un moment pour toi.'],[18,'Bonne soirée 🌙','Comment s\'est passée ta journée ?'],[24,'Bonne nuit 🌟','Prends soin de toi.']];
+  const [, label, sub] = slots.find(([end]) => h < end) || slots[slots.length - 1];
   document.getElementById('timeLabel').textContent = label;
   document.querySelector('#screen-home .sub-text').textContent = sub;
 }
 
 // ─── NAVIGATION ───
 const screenMap = {
-  home: 'screen-home',
-  checkin: 'screen-checkin',
-  journal: 'screen-journal',
-  schemas: 'screen-schemas',
-  ladder: 'screen-ladder',
+  home: 'screen-home', checkin: 'screen-checkin', journal: 'screen-journal',
+  calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
 };
 const navMap = {
-  home: 'nav-home',
-  checkin: 'nav-checkin',
-  journal: 'nav-journal',
-  schemas: 'nav-schemas',
-  ladder: 'nav-schemas',
+  home: 'nav-home', checkin: 'nav-checkin', journal: 'nav-journal',
+  calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
 };
 
 function navigateTo(screen) {
@@ -1059,46 +1234,27 @@ function navigateTo(screen) {
   const oldEl = document.getElementById(screenMap[state.currentScreen]);
   const newEl = document.getElementById(screenMap[screen]);
   if (!newEl) return;
-
   oldEl.classList.remove('active');
   oldEl.style.display = 'none';
-
   newEl.style.display = 'block';
   newEl.classList.add('entering');
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      newEl.classList.remove('entering');
-      newEl.classList.add('active');
-    });
-  });
-
-  // update nav
-  document.querySelectorAll('.nav-btn').forEach(b => {
-    b.classList.remove('active');
-    b.removeAttribute('aria-current');
-  });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    newEl.classList.remove('entering');
+    newEl.classList.add('active');
+  }));
+  document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
   const navEl = document.getElementById(navMap[screen]);
-  if (navEl) {
-    navEl.classList.add('active');
-    navEl.setAttribute('aria-current', 'page');
-  }
-
-  // scroll to top
+  if (navEl) { navEl.classList.add('active'); navEl.setAttribute('aria-current', 'page'); }
   document.querySelector('.screen-container').scrollTo(0, 0);
   state.currentScreen = screen;
+  if (screen !== 'calm' && breathActive) stopBreathing();
 }
 
-// ─── MOOD CHIPS (Home) ───
-const moodToScreen = { stress: 'checkin', rumination: 'checkin', panique: 'checkin', aplat: 'checkin' };
-const moodToEmotion = { stress: 'stress', rumination: 'rumination', panique: 'panique', aplat: 'aplat' };
-
+// ─── MOOD CHIPS ───
 function selectMood(mood) {
   document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
   document.querySelector(`[data-mood="${mood}"]`).classList.add('selected');
-  setTimeout(() => {
-    selectEmotion(moodToEmotion[mood]);
-    navigateTo('checkin');
-  }, 200);
+  setTimeout(() => { selectEmotion(mood); navigateTo('checkin'); }, 200);
 }
 
 // ─── CHECK-IN ───
@@ -1107,23 +1263,29 @@ const emotionSuggestions = {
     title: '💡 Pour le stress',
     text: 'Le stress naît souvent d\'une surcharge cognitive. Le journal TCC t\'aide à démêler les pensées ; une micro-exposition réduit l\'évitement.',
     tags: ['Journal TCC', 'Micro-exposition'],
+    cta: 'Ouvrir le journal →', ctaScreen: 'journal',
   },
   rumination: {
     title: '🌀 Pour la rumination',
     text: 'Les pensées en boucle s\'alimentent elles-mêmes. Identifier les schémas cognitifs et pratiquer la défusion ACT interrompt le cycle.',
     tags: ['Schémas cognitifs', 'Exercice ACT'],
+    cta: 'Voir les schémas →', ctaScreen: 'schemas',
   },
   panique: {
     title: '💨 Pour la panique',
-    text: 'Commence par stabiliser ton système nerveux avec la respiration 4-7-8. Une fois calme, explore les pensées sous-jacentes.',
-    tags: ['Respiration 4-7-8', 'Journal après'],
+    text: 'Commence d\'abord par stabiliser ton système nerveux. La respiration guidée et l\'ancrage 5-4-3-2-1 interrompent la montée de panique.',
+    tags: ['Respiration guidée', 'Ancrage 5-4-3-2-1'],
+    cta: 'Aller à l\'espace calme →', ctaScreen: 'calm',
   },
   aplat: {
     title: '😶 Pour le vide / à plat',
     text: 'L\'activation comportementale aide à rompre le cycle de retrait. Une micro-action suffit pour relancer l\'élan.',
     tags: ['Activation', 'Action courte'],
+    cta: 'Exposition douce →', ctaScreen: 'ladder',
   },
 };
+
+let suggCtaScreen = null;
 
 function selectEmotion(emotion) {
   state.selectedEmotion = emotion;
@@ -1133,20 +1295,27 @@ function selectEmotion(emotion) {
   const s = emotionSuggestions[emotion];
   document.getElementById('suggTitle').textContent = s.title;
   document.getElementById('suggText').textContent = s.text;
-  const tagsEl = document.getElementById('suggTags');
-  tagsEl.innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('suggTags').innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  const ctaEl = document.getElementById('suggCta');
+  ctaEl.textContent = s.cta;
+  suggCtaScreen = s.ctaScreen;
   document.getElementById('checkinSuggestion').classList.add('visible');
+  const contBtn = document.getElementById('checkinContinueBtn');
+  contBtn.textContent = emotion === 'panique' ? 'Calme d\'abord →' : 'Continuer →';
 }
 
-function continueToJournal() {
+function followSuggestion() {
+  if (suggCtaScreen) navigateTo(suggCtaScreen);
+}
+
+function continueFromCheckin() {
   const trigger = document.getElementById('triggerField').value.trim();
-  if (trigger) {
-    document.getElementById('situationField').value = trigger;
-  }
-  navigateTo('journal');
+  if (trigger) document.getElementById('situationField').value = trigger;
+  const dest = state.selectedEmotion === 'panique' ? 'calm' : 'journal';
+  navigateTo(dest);
 }
 
-// ─── JOURNAL STEPS ───
+// ─── JOURNAL ───
 const stepLabels = ['', 'Situation', 'Pensée automatique', 'Émotion', 'Pensée équilibrée'];
 const progressPct = ['', '25', '50', '75', '100'];
 
@@ -1161,7 +1330,6 @@ function journalStep(n) {
   document.getElementById('journalProgress').style.width = progressPct[n] + '%';
   document.getElementById('journalProgress').parentElement.setAttribute('aria-valuenow', progressPct[n]);
 }
-
 function updateReformulation() {
   const auto = document.getElementById('autoThoughtField').value.trim();
   const balanced = document.getElementById('balancedThoughtField').value.trim();
@@ -1170,53 +1338,22 @@ function updateReformulation() {
     document.getElementById('reformBefore').textContent = auto;
     document.getElementById('reformAfter').textContent = balanced;
     card.classList.add('visible');
-  } else {
-    card.classList.remove('visible');
-  }
+  } else { card.classList.remove('visible'); }
 }
-
-function finishJournal() {
-  incrementSessions();
-  navigateTo('schemas');
-}
+function finishJournal() { incrementSessions(); navigateTo('schemas'); }
 
 // ─── SCHEMAS ───
 const schemas = {
-  catastrophisme: {
-    title: '⚡ Catastrophisme',
-    desc: 'Tu imagines le pire scénario possible, même si la probabilité est faible.',
-    reform: '💬 Demande-toi : "Quelle est la probabilité réelle que ça se passe ainsi ? Et si ça arrivait, comment j\'y ferais face ?"',
-  },
-  lecture: {
-    title: '🔮 Lecture de pensée',
-    desc: 'Tu crois savoir ce que les autres pensent de toi, sans preuve.',
-    reform: '💬 "Je ne peux pas lire les pensées. Quelle preuve concrète j\'ai de cette interprétation ?"',
-  },
-  toutourien: {
-    title: '⚖️ Tout ou rien',
-    desc: 'Tu vois les situations en noir ou blanc, sans nuances.',
-    reform: '💬 "Y a-t-il une zone grise ? Suis-je vraiment 100 % en échec, ou est-ce que j\'exagère ?"',
-  },
-  surgen: {
-    title: '🌐 Surgénéralisation',
-    desc: 'Un événement négatif devient une règle universelle ("toujours", "jamais").',
-    reform: '💬 "Est-ce que c\'est vraiment TOUJOURS comme ça ? Quand ça s\'est passé différemment ?"',
-  },
-  filtre: {
-    title: '🔍 Filtre mental',
-    desc: 'Tu te concentres uniquement sur les aspects négatifs en ignorant le reste.',
-    reform: '💬 "Quels éléments positifs est-ce que j\'écarte ? Est-ce que j\'aurais le même regard sur un ami ?"',
-  },
-  personnalisation: {
-    title: '🎯 Personnalisation',
-    desc: 'Tu te tiens responsable de choses hors de ton contrôle.',
-    reform: '💬 "Quels autres facteurs ont contribué à cette situation ? Est-ce vraiment uniquement ma faute ?"',
-  },
+  catastrophisme: { title: '⚡ Catastrophisme', desc: 'Tu imagines le pire scénario possible, même si la probabilité est faible.', reform: '💬 "Quelle est la probabilité réelle que ça se passe ainsi ? Et si ça arrivait, comment j\'y ferais face ?"' },
+  lecture: { title: '🔮 Lecture de pensée', desc: 'Tu crois savoir ce que les autres pensent de toi, sans preuve.', reform: '💬 "Je ne peux pas lire les pensées. Quelle preuve concrète j\'ai de cette interprétation ?"' },
+  toutourien: { title: '⚖️ Tout ou rien', desc: 'Tu vois les situations en noir ou blanc, sans nuances.', reform: '💬 "Y a-t-il une zone grise ? Suis-je vraiment 100 % en échec, ou est-ce que j\'exagère ?"' },
+  surgen: { title: '🌐 Surgénéralisation', desc: 'Un événement négatif devient une règle universelle ("toujours", "jamais").', reform: '💬 "Est-ce que c\'est vraiment TOUJOURS comme ça ? Quand ça s\'est passé différemment ?"' },
+  filtre: { title: '🔍 Filtre mental', desc: 'Tu te concentres uniquement sur les aspects négatifs en ignorant le reste.', reform: '💬 "Quels éléments positifs est-ce que j\'écarte ? Aurais-je le même regard sur un ami ?"' },
+  personnalisation: { title: '🎯 Personnalisation', desc: 'Tu te tiens responsable de choses hors de ton contrôle.', reform: '💬 "Quels autres facteurs ont contribué à cette situation ? Est-ce vraiment uniquement ma faute ?"' },
 };
-
-function showSchema(key) {
+function showSchema(key, el) {
   document.querySelectorAll('.schema-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  el.classList.add('active');
   const s = schemas[key];
   document.getElementById('insightTitle').textContent = s.title;
   document.getElementById('insightDesc').textContent = s.desc;
@@ -1227,31 +1364,141 @@ function showSchema(key) {
 }
 
 // ─── FEAR LADDER ───
-function updateFearLadder() {
-  // Could update per-level descriptions based on the fear field — minimal version keeps generic
-}
-
 function toggleFear(n) {
   state.fearDone[n] = !state.fearDone[n];
-  const el = document.getElementById(`fear-${n}`);
-  el.classList.toggle('done', state.fearDone[n]);
+  document.getElementById(`fear-${n}`).classList.toggle('done', state.fearDone[n]);
   const allDone = Object.values(state.fearDone).every(Boolean);
   document.getElementById('closingCard').classList.toggle('visible', allDone);
   if (allDone) incrementSessions();
 }
 
-// ─── TOOL NAV ───
-function goToTool(tool) {
-  if (tool === 'breathing') {
-    // Embedded mini breathing guide in alert for now
-    alert('🌬️ Respiration 4-7-8\n\n1. Inspire par le nez → 4 secondes\n2. Bloque → 7 secondes\n3. Expire lentement → 8 secondes\n\nRépète 4 cycles. Cette technique active le système parasympathique.');
+// ─── BREATHING ───
+const breathTechs = {
+  coherence: { phases: [5, 5],    labels: ['Inspire', 'Expire'],           name: 'Cohérence cardiaque' },
+  box:       { phases: [4, 4, 4, 4], labels: ['Inspire', 'Retiens', 'Expire', 'Retiens'], name: 'Respiration en boîte' },
+  '478':     { phases: [4, 7, 8], labels: ['Inspire', 'Retiens', 'Expire'], name: 'Technique 4-7-8' },
+};
+let breathActive = false;
+let breathTech = 'coherence';
+let breathPhaseIdx = 0;
+let breathSecondsLeft = 0;
+let breathCycles = 0;
+let breathTimer = null;
+
+function selectBreathTech(tech, el) {
+  if (breathActive) stopBreathing();
+  breathTech = tech;
+  document.querySelectorAll('.breath-tab').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+  el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
+  resetBreathCircle();
+}
+
+function toggleBreathing() {
+  breathActive ? stopBreathing() : startBreathing();
+}
+
+function startBreathing() {
+  breathActive = true;
+  breathPhaseIdx = 0;
+  breathCycles = 0;
+  document.getElementById('breathBtn').textContent = '⏹ Arrêter';
+  document.getElementById('breathBtn').setAttribute('aria-label', 'Arrêter la respiration guidée');
+  runBreathPhase();
+}
+
+function stopBreathing() {
+  breathActive = false;
+  clearTimeout(breathTimer);
+  document.getElementById('breathBtn').textContent = '▶ Commencer';
+  document.getElementById('breathBtn').setAttribute('aria-label', 'Démarrer la respiration guidée');
+  resetBreathCircle();
+}
+
+function resetBreathCircle() {
+  const c = document.getElementById('breathCircle');
+  c.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
+  c.style.transform = 'scale(0.72)';
+  c.style.boxShadow = '0 0 0 0 rgba(147,201,172,0.2)';
+  document.getElementById('breathPhaseText').innerHTML = 'Appuie<br>pour commencer';
+  document.getElementById('breathCountdown').textContent = '';
+  document.getElementById('breathInfo').textContent = '';
+}
+
+function runBreathPhase() {
+  if (!breathActive) return;
+  const tech = breathTechs[breathTech];
+  const duration = tech.phases[breathPhaseIdx];
+  const label = tech.labels[breathPhaseIdx];
+  const isInspire = label === 'Inspire';
+  const isExpire = label === 'Expire';
+
+  document.getElementById('breathPhaseText').textContent = label;
+
+  const c = document.getElementById('breathCircle');
+  c.style.transition = `transform ${duration}s ease-in-out, box-shadow ${duration}s ease-in-out`;
+  if (isInspire) {
+    c.style.transform = 'scale(1)';
+    c.style.boxShadow = '0 0 50px 16px rgba(147,201,172,0.18)';
+  } else if (isExpire) {
+    c.style.transform = 'scale(0.72)';
+    c.style.boxShadow = '0 0 0 0 rgba(147,201,172,0.2)';
   }
+
+  breathSecondsLeft = duration;
+  tickBreath();
+}
+
+function tickBreath() {
+  if (!breathActive) return;
+  if (breathSecondsLeft <= 0) { advanceBreathPhase(); return; }
+  document.getElementById('breathCountdown').textContent = breathSecondsLeft;
+  breathSecondsLeft--;
+  breathTimer = setTimeout(tickBreath, 1000);
+}
+
+function advanceBreathPhase() {
+  if (!breathActive) return;
+  const tech = breathTechs[breathTech];
+  breathPhaseIdx = (breathPhaseIdx + 1) % tech.phases.length;
+  if (breathPhaseIdx === 0) {
+    breathCycles++;
+    document.getElementById('breathInfo').textContent = breathCycles === 1 ? '1 cycle complété' : `${breathCycles} cycles complétés`;
+    if (breathCycles >= 4) { incrementSessions(); }
+  }
+  runBreathPhase();
+}
+
+// ─── GROUNDING ───
+function groundingStep(n) {
+  document.querySelectorAll('.grounding-step-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('groundingDone').classList.remove('visible');
+
+  if (n <= 5) {
+    document.getElementById(`gstep-${n}`).classList.add('active');
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById(`gdot-${i}`).classList.toggle('done', i < n);
+    }
+    document.getElementById('groundingProgress').setAttribute('aria-valuenow', n - 1);
+  } else {
+    for (let i = 1; i <= 5; i++) document.getElementById(`gdot-${i}`).classList.add('done');
+    document.getElementById('groundingProgress').setAttribute('aria-valuenow', 5);
+    document.getElementById('groundingDone').classList.add('visible');
+    incrementSessions();
+  }
+}
+
+function resetGrounding() {
+  document.querySelectorAll('#screen-calm textarea').forEach(t => t.value = '');
+  for (let i = 1; i <= 5; i++) document.getElementById(`gdot-${i}`).classList.remove('done');
+  groundingStep(0);
 }
 
 // ─── INIT ───
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-// Carousel card keyboard nav
+document.getElementById('breathCircle').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBreathing(); }
+});
 document.querySelectorAll('.carousel-card').forEach(c => {
   c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
 });
@@ -1259,6 +1506,7 @@ document.querySelectorAll('.carousel-card').forEach(c => {
 initTheme();
 setGreeting();
 loadStats();
+initDisclaimer();
 </script>
 </body>
 </html>

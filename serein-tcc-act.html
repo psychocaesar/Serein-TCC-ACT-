@@ -1003,21 +1003,6 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     <div class="section-title">Outils suggérés</div>
     <div class="carousel-wrap">
       <div class="carousel" role="list" aria-label="Outils suggérés">
-        <div class="carousel-card" role="listitem" onclick="navigateTo('calm')" tabindex="0" aria-label="Respiration & ancrage">
-          <div class="icon">🌬️</div>
-          <h3>Respiration & ancrage</h3>
-          <p>Calme l'anxiété en 2 min</p>
-        </div>
-        <div class="carousel-card" role="listitem" onclick="navigateTo('journal')" tabindex="0" aria-label="Journal TCC">
-          <div class="icon">📓</div>
-          <h3>Journal TCC</h3>
-          <p>Restructure tes pensées</p>
-        </div>
-        <div class="carousel-card" role="listitem" onclick="navigateTo('schemas')" tabindex="0" aria-label="Défusion cognitive">
-          <div class="icon">🌊</div>
-          <h3>Défusion cognitive</h3>
-          <p>3 exercices ACT guidés</p>
-        </div>
         <div class="carousel-card" role="listitem" onclick="navigateTo('ladder')" tabindex="0" aria-label="Exposition douce">
           <div class="icon">🪜</div>
           <h3>Exposition douce</h3>
@@ -1032,16 +1017,6 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
           <div class="icon">📗</div>
           <h3>Journal positif</h3>
           <p>Contrebalance le filtre négatif</p>
-        </div>
-        <div class="carousel-card" role="listitem" onclick="navigateTo('whatup')" tabindex="0" aria-label="Qu'est-ce qui se passe ?">
-          <div class="icon">❓</div>
-          <h3>Qu'est-ce qui se passe ?</h3>
-          <p>40 questions d'exploration</p>
-        </div>
-        <div class="carousel-card" role="listitem" onclick="navigateTo('quiz')" tabindex="0" aria-label="Quiz TCC">
-          <div class="icon">🎯</div>
-          <h3>Quiz schémas</h3>
-          <p>Entraîne ton oeil critique</p>
         </div>
       </div>
     </div>
@@ -1091,6 +1066,10 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
         <span class="desc">Vide, démotivé·e, fatigue</span>
       </button>
     </div>
+
+    <button class="btn btn-ghost mt-1" onclick="navigateTo('whatup')" aria-label="Explorer avec des questions quand on ne sait pas ce qu'on ressent" style="font-size:0.82rem;">
+      ❓ Tu ne sais pas par où commencer ? Explore.
+    </button>
 
     <div class="form-group">
       <label class="form-label" for="triggerField">Qu'est-ce qui déclenche ça ?</label>
@@ -1381,6 +1360,17 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
     <div id="defusionSteps" class="act-steps mt-1"></div>
 
+    <div class="divider"></div>
+
+    <h2 class="mb-1">🎯 Entraîne ton œil critique</h2>
+    <p>Un quiz court pour t'exercer à repérer les schémas dans des pensées du quotidien.</p>
+
+    <div class="mt-2">
+      <button class="btn btn-secondary" onclick="navigateTo('quiz')" aria-label="Démarrer le quiz d'identification des schémas">
+        🎯 Démarrer le quiz
+      </button>
+    </div>
+
     <div class="mt-3">
       <button class="btn btn-primary" onclick="navigateTo('ladder')" aria-label="Aller vers l'exposition graduelle">
         Exposition douce →
@@ -1533,11 +1523,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
       <div class="time-label">Exploration</div>
       <h1>Qu'est-ce qui se <span>passe</span> ?</h1>
     </div>
-    <p>40 questions pour nommer ce que tu ressens vraiment quand tu ne sais pas par où commencer.</p>
+    <p>30 questions pour nommer ce que tu ressens vraiment quand tu ne sais pas par où commencer.</p>
 
     <div class="flashcard-wrap mt-2">
       <div class="flashcard" id="flashcard" role="article" aria-live="polite">
-        <span class="flashcard-num" id="fcNum">1 / 40</span>
+        <span class="flashcard-num" id="fcNum">1 / 30</span>
         <div class="flashcard-question" id="fcQuestion">Chargement...</div>
       </div>
       <div class="fc-count" id="fcSeen"></div>
@@ -1552,7 +1542,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+      <button class="btn btn-ghost" onclick="navigateTo('checkin')" aria-label="Retour au check-in">← Check-in</button>
     </div>
   </div>
 
@@ -1587,7 +1577,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
 
     <div class="mt-3">
-      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+      <button class="btn btn-ghost" onclick="navigateTo('schemas')" aria-label="Retour aux schémas">← Schémas</button>
     </div>
   </div>
 
@@ -1748,7 +1738,7 @@ const screenMap = {
 const navMap = {
   home: 'nav-home', checkin: 'nav-checkin', journal: 'nav-journal',
   calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
-  cards: 'nav-home', diary: 'nav-home', whatup: 'nav-home', quiz: 'nav-schemas',
+  cards: 'nav-home', diary: 'nav-home', whatup: 'nav-checkin', quiz: 'nav-schemas',
   tracking: 'nav-tracking',
 };
 const screenInitFns = {

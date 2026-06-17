@@ -481,6 +481,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
   font-family: var(--font-body); transition: all var(--transition); flex-shrink: 0;
 }
 .coping-cat-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
+.coping-mechanism { font-size: 0.78rem; color: var(--color-muted); font-style: italic; line-height: 1.45; margin-bottom: 0.75rem; }
 .coping-deck { display: flex; gap: 0.625rem; overflow-x: auto; padding-bottom: 0.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 .coping-deck::-webkit-scrollbar { display: none; }
 .coping-preset-card {
@@ -1622,6 +1623,7 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 
     <div class="section-title mt-2">Modèles par thème</div>
     <div class="coping-cat-chips" id="copingCatChips" role="group" aria-label="Thèmes de cartes de coping"></div>
+    <div class="coping-mechanism" id="copingMechanism" aria-live="polite"></div>
     <div class="coping-deck" id="copingDeck" role="list" aria-label="Cartes modèles"></div>
 
     <div class="divider"></div>
@@ -2557,40 +2559,55 @@ function prevAnchor() {
 
 // ─── COPING PRESETS (modèles par thème) ───
 const copingPresets = {
-  worry: { label: 'Inquiétude', emoji: '🌫️', cards: [
-    "Je n'ai pas à croire tout ce que je pense.",
-    "L'inquiétude ne change pas l'issue - elle ne fait que m'épuiser.",
-    "Je peux agir sur ce qui dépend de moi, et lâcher le reste.",
-    "La plupart de mes pires scénarios ne se sont jamais réalisés.",
-    "Une pensée n'est pas un fait : c'est un événement mental qui passe.",
+  worry: { label: 'Inquiétude', emoji: '🌫️',
+    mechanism: "Contrer l'intolérance à l'incertitude et la fusion avec les scénarios catastrophes : se distancer de ses pensées (les pensées ne sont pas des faits) et se réancrer dans le présent.",
+    cards: [
+    "Je remarque que j'ai la pensée que le pire va arriver ; ce n'est qu'une pensée, pas une prédiction.",
+    "Mon esprit essaie de me protéger en imaginant des catastrophes. Je le remercie, mais je choisis de revenir au moment présent.",
+    "Je n'ai pas besoin d'être sûr·e à 100 % pour avancer ; j'accepte cette part d'incertitude qui fait partie de la vie.",
+    "Est-ce que m'accrocher à cette inquiétude m'aide à agir, ou m'éloigne de ce qui compte pour moi ?",
+    "Je laisse cette pensée d'inquiétude traverser mon esprit, comme une feuille qui flotte sur un cours d'eau.",
+    "Je ne peux pas contrôler l'avenir, mais je peux contrôler ce que je fais ici et maintenant.",
   ]},
-  social: { label: 'Anxiété sociale', emoji: '👥', cards: [
-    "Les autres sont bien moins concentrés sur moi que je ne l'imagine.",
-    "J'ai le droit de prendre de la place et de parler, même imparfaitement.",
-    "Le malaise est inconfortable, pas dangereux - il finit par redescendre.",
-    "Je ne peux pas lire les pensées : ce que je redoute n'est pas la réalité.",
-    "Être authentique vaut mieux qu'être parfait·e.",
+  social: { label: 'Anxiété sociale', emoji: '👥',
+    mechanism: "Assouplir la « lecture de pensée » et l'hypervigilance : favoriser la décentration et l'acceptation de l'imperfection humaine.",
+    cards: [
+    "Je ne peux pas lire dans les pensées des autres ; mes impressions de rejet ne sont pas des faits prouvés.",
+    "Il est humain et normal de ressentir de la gêne ou de rougir - ce n'est pas une preuve de faiblesse.",
+    "Les autres ont leurs propres préoccupations ; ils ne font pas autant attention à mes moindres gestes que je ne le crains.",
+    "Si je fais une erreur ou si je parais maladroit·e, ce sera inconfortable, mais je suis capable de le gérer.",
+    "Je choisis d'être moi-même ; j'accepte que tout le monde ne puisse pas m'apprécier, et ce n'est pas grave.",
+    "Cette interaction est juste une discussion, pas un examen qui définit ma valeur personnelle.",
   ]},
-  perfectionism: { label: 'Perfectionnisme', emoji: '🎯', cards: [
-    "Fait vaut mieux que parfait.",
-    "Une erreur est une information, pas un verdict sur ma valeur.",
-    "Le « suffisamment bien » est souvent largement assez.",
-    "Mes standards ne sont pas la mesure de tout le monde.",
-    "Je m'autorise à être humain·e, donc faillible.",
+  perfectionism: { label: 'Perfectionnisme', emoji: '🎯',
+    mechanism: "Cibler la pensée dichotomique (tout ou rien) et les impératifs rigides (« je dois », « il faut ») : introduire de la flexibilité et valoriser l'effort plutôt que le résultat absolu.",
+    cards: [
+    "Je remplace « je dois être parfait·e » par « j'aimerais bien faire » : la perfection n'est pas nécessaire pour réussir.",
+    "Si le résultat n'est pas parfait, ce n'est pas un échec total ; j'accepte de voir les nuances et les réussites partielles.",
+    "Faire des erreurs fait partie de l'apprentissage ; cela ne prouve pas que je suis incompétent·e.",
+    "Ce que j'ai fait est suffisamment bien ; je n'ai pas besoin d'aller jusqu'à l'épuisement pour prouver ma valeur.",
+    "Je fais de mon mieux avec l'énergie et les informations que j'ai aujourd'hui, et c'est suffisant.",
+    "J'observe cette règle mentale très stricte qui me met la pression, et je choisis d'avancer à mon rythme.",
   ]},
-  panic: { label: 'Panique', emoji: '💨', cards: [
-    "Cette sensation va culminer puis redescendre. Je n'ai qu'à la laisser passer.",
-    "Mon corps déclenche une alarme, mais il n'y a pas de danger réel.",
-    "Je ralentis mon expiration : c'est mon levier sur la panique.",
-    "Ce n'est pas un danger vital, c'est de l'anxiété - et ça passe.",
-    "J'ai déjà traversé ça. Mon corps sait revenir au calme.",
+  panic: { label: 'Panique', emoji: '💨',
+    mechanism: "Désamorcer l'interprétation catastrophique des sensations corporelles : accepter l'activation physiologique sans chercher à la fuir.",
+    cards: [
+    "Mon cœur bat très vite parce que mon corps sécrète du stress - ce n'est pas une crise cardiaque.",
+    "Ces sensations sont intenses et très inconfortables, mais elles sont inoffensives et ne me mettent pas en danger.",
+    "J'accueille cette vague d'angoisse sans lutter ; comme toute vague, elle va monter puis redescendre naturellement.",
+    "Je ne suis pas en train de m'étouffer : mon corps réagit simplement à une fausse alarme.",
+    "Je fais de la place à ces sensations désagréables au lieu de dépenser mon énergie à les combattre.",
+    "Je jette l'ancre : je ressens ma peur, je respire, et je sens le contact de mes pieds bien posés sur le sol.",
   ]},
-  phobias: { label: 'Phobies', emoji: '🪜', cards: [
-    "Éviter me soulage maintenant, mais nourrit la peur ensuite.",
-    "Chaque fois que je reste, j'apprends à mon cerveau que c'est sûr.",
-    "Je peux y aller par petits pas, à mon rythme.",
-    "L'anxiété baisse si je reste assez longtemps dans la situation.",
-    "Le courage, ce n'est pas l'absence de peur, c'est avancer avec elle.",
+  phobias: { label: 'Phobies', emoji: '🪜',
+    mechanism: "Enrayer le renforcement négatif (l'évitement qui soulage à court terme mais aggrave la peur) : agir en direction de ses valeurs malgré l'inconfort.",
+    cards: [
+    "Fuir ou éviter me soulagerait tout de suite, mais me rendrait encore plus prisonnier·ère demain.",
+    "J'accepte de prendre cette peur sous le bras pour faire ce qui compte réellement dans ma vie.",
+    "Plus je m'expose à cette situation, plus mon cerveau finira par s'y habituer et ma peur diminuera.",
+    "Je peux ressentir une peur intense et quand même agir ; l'émotion ne paralyse pas mes muscles.",
+    "Cet inconfort très fort que je traverse maintenant est le prix à payer pour regagner ma liberté.",
+    "Je fais juste un petit pas en avant : une action concrète et engagée pour reprendre le contrôle de mon quotidien.",
   ]},
 };
 let copingCat = 'worry';
@@ -2605,6 +2622,8 @@ function selectCopingCat(k) { copingCat = k; renderCopingCats(); renderCopingDec
 function renderCopingDeck() {
   const d = document.getElementById('copingDeck');
   if (!d) return;
+  const mech = document.getElementById('copingMechanism');
+  if (mech) mech.textContent = copingPresets[copingCat].mechanism || '';
   d.innerHTML = copingPresets[copingCat].cards.map(txt =>
     `<div class="coping-preset-card" role="listitem">
       <p>${escHtml(txt)}</p>

@@ -12,7 +12,7 @@ Extension de [Serein](https://sereinapp.fr) - application de meditation open sou
 Si tu traverses une periode difficile ou que tu as des pensees de te faire du mal, consulte un professionnel de sante.
 
 - Detresse psychologique : **3114** (numero national, 24h/24)
-- Trouver un psy : [monpsy.sante.gouv.fr]([https://monsoutienpsy.ameli.fr/recherche-psychologue]))
+- Trouver un psy : [monpsy.sante.gouv.fr]([https://monsoutienpsy.ameli.fr/recherche-psychologue])
 
 ---
 

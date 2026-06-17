@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Serein TCC·ACT — Soutien émotionnel offline-first, sans pub, sans compte">
+<meta name="theme-color" content="#0d1b15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Serein TCC·ACT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-bg: #0d1b15;
+  --color-surface: rgba(28,49,39,0.6);
+  --color-surface-2: #1c3127;
+  --color-primary: #93c9ac;
+  --color-primary-2: #d8b78a;
+  --color-primary-light: rgba(147,201,172,0.13);
+  --color-text: #f0f4f0;
+  --color-muted: #93a89b;
+  --color-border: rgba(255,255,255,0.08);
+  --radius: 1.625rem;
+  --gradient: linear-gradient(120deg, #93c9ac, #d8b78a);
+  --nav-height: 72px;
+  --font-title: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'Hanken Grotesk', sans-serif;
+  --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-theme="light"] {
+  --color-bg: #f4f2ec;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0ede4;
+  --color-primary: #2f6b50;
+  --color-primary-2: #c0883e;
+  --color-primary-light: rgba(47,107,80,0.1);
+  --color-text: #1b2a20;
+  --color-muted: #5d7066;
+  --color-border: rgba(0,0,0,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow: hidden;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ─── HEADER ─── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.5rem;
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.app-logo svg { width: 28px; height: 28px; }
+.app-logo span {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.header-actions { display: flex; gap: 0.5rem; }
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+  backdrop-filter: blur(8px);
+}
+.icon-btn:hover { background: var(--color-primary-light); transform: scale(1.05); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+/* ─── SCREENS ─── */
+.screen-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 1.25rem calc(var(--nav-height) + 1rem);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--transition), transform var(--transition);
+  min-height: 100%;
+}
+.screen.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+.screen.entering {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: var(--nav-height);
+  background: var(--color-surface-2);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 0.5rem;
+  backdrop-filter: blur(16px);
+  z-index: 100;
+}
+[data-theme="dark"] .bottom-nav { background: rgba(20,38,28,0.95); }
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 1rem;
+  transition: color var(--transition), background var(--transition);
+  min-width: 64px;
+}
+.nav-btn svg { width: 22px; height: 22px; transition: transform var(--transition); }
+.nav-btn span { font-size: 0.65rem; font-family: var(--font-body); font-weight: 500; }
+.nav-btn.active { color: var(--color-primary); }
+.nav-btn.active svg { transform: scale(1.1); }
+.nav-btn.active span { font-weight: 600; }
+
+/* ─── TYPOGRAPHY ─── */
+h1 { font-family: var(--font-title); font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+h2 { font-family: var(--font-title); font-size: 1.2rem; font-weight: 600; }
+h3 { font-family: var(--font-title); font-size: 1rem; font-weight: 600; }
+p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
+.section-title {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 0.75rem;
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  backdrop-filter: blur(8px);
+}
+.card + .card { margin-top: 0.75rem; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 2rem;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--gradient);
+  color: #0d1b15;
+  box-shadow: 0 4px 20px rgba(147,201,172,0.25);
+  width: 100%;
+}
+.btn-secondary {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+.btn-ghost {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+}
+
+/* ─── MOOD CHIPS ─── */
+.mood-chips { display: flex; flex-wrap: wrap; gap: 0.625rem; margin: 1rem 0; }
+.mood-chip {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 2rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  backdrop-filter: blur(4px);
+}
+.mood-chip:hover, .mood-chip.selected {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: scale(1.03);
+}
+.mood-chip .emoji { font-size: 1.1rem; }
+
+/* ─── STATS GRID ─── */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin: 1rem 0; }
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+.stat-value {
+  font-family: var(--font-title);
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.stat-label { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.25rem; }
+
+/* ─── CAROUSEL ─── */
+.carousel-wrap { overflow: hidden; margin: 0 -1.25rem; }
+.carousel {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.carousel::-webkit-scrollbar { display: none; }
+.carousel-card {
+  flex-shrink: 0;
+  width: 160px;
+  scroll-snap-align: start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  backdrop-filter: blur(8px);
+}
+.carousel-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.carousel-card .icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.carousel-card h3 { font-size: 0.85rem; color: var(--color-text); }
+.carousel-card p { font-size: 0.75rem; margin-top: 0.25rem; }
+
+/* ─── EMOTION GRID ─── */
+.emotion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+.emotion-btn {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  backdrop-filter: blur(8px);
+}
+.emotion-btn:hover { border-color: var(--color-primary); background: var(--color-primary-light); }
+.emotion-btn.selected { border-color: var(--color-primary); background: var(--color-primary-light); }
+.emotion-btn .emoji { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
+.emotion-btn .label { font-family: var(--font-title); font-weight: 600; font-size: 0.9rem; color: var(--color-text); }
+.emotion-btn .desc { font-size: 0.72rem; color: var(--color-muted); margin-top: 0.2rem; }
+.emotion-btn.selected .label { color: var(--color-primary); }
+
+/* ─── SUGGESTION CARD ─── */
+.suggestion-card {
+  background: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.suggestion-card.visible { display: block; }
+.suggestion-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.9rem; }
+.suggestion-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+.tag {
+  padding: 0.3rem 0.75rem;
+  background: var(--color-surface);
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  font-weight: 500;
+}
+
+/* ─── TEXTAREA / INPUT ─── */
+.form-group { margin: 1rem 0; }
+.form-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.04em;
+}
+textarea, input[type="text"] {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  resize: none;
+  transition: border-color var(--transition);
+  -webkit-appearance: none;
+}
+textarea:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+textarea::placeholder, input[type="text"]::placeholder { color: var(--color-muted); }
+
+/* ─── PROGRESS BAR ─── */
+.progress-wrap { margin: 1rem 0; }
+.progress-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.78rem; color: var(--color-muted); margin-bottom: 0.4rem;
+}
+.progress-bar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--gradient);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── JOURNAL STEPS ─── */
+.step { display: none; }
+.step.active { display: block; }
+.step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  background: var(--gradient);
+  border-radius: 50%;
+  font-size: 0.8rem; font-weight: 700; color: #0d1b15;
+  margin-bottom: 0.75rem;
+}
+.reformulation-card {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-top: 1rem;
+  display: none;
+}
+.reformulation-card.visible { display: block; }
+.reformulation-card .before { color: var(--color-muted); font-size: 0.85rem; margin-bottom: 0.5rem; }
+.reformulation-card .after { color: var(--color-primary); font-size: 0.9rem; font-weight: 500; }
+.arrow-icon { color: var(--color-primary-2); margin: 0.25rem 0; font-size: 1.2rem; }
+
+/* ─── SCHEMA GRID ─── */
+.schema-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+.schema-btn {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition);
+  backdrop-filter: blur(8px);
+}
+.schema-btn:hover, .schema-btn.active {
+  border-color: var(--color-primary-2);
+  background: rgba(216,183,138,0.1);
+}
+.schema-btn .schema-emoji { font-size: 1.5rem; display: block; margin-bottom: 0.4rem; }
+.schema-btn .schema-name { font-family: var(--font-title); font-size: 0.85rem; font-weight: 600; color: var(--color-text); }
+
+/* ─── INSIGHT CARD ─── */
+.insight-card {
+  background: rgba(216,183,138,0.1);
+  border: 1.5px solid var(--color-primary-2);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-top: 0.75rem;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.insight-card.visible { display: block; }
+.insight-card h3 { color: var(--color-primary-2); margin-bottom: 0.5rem; }
+.insight-card p { font-size: 0.88rem; }
+
+/* ─── ACT STEPS ─── */
+.act-steps { display: flex; flex-direction: column; gap: 0.625rem; margin: 0.75rem 0; }
+.act-step {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.act-num {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  background: var(--gradient);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; color: #0d1b15;
+}
+.act-step p { font-size: 0.85rem; margin: 0; color: var(--color-text); }
+
+/* ─── FEAR LADDER ─── */
+.fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
+.fear-level {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  transition: all var(--transition);
+}
+.fear-level.done {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  opacity: 0.7;
+}
+.fear-num {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-title); font-size: 0.9rem; font-weight: 700;
+  color: var(--color-primary);
+}
+.fear-level.done .fear-num { background: var(--gradient); color: #0d1b15; border-color: transparent; }
+.fear-level-content { flex: 1; }
+.fear-level-content strong { font-size: 0.85rem; display: block; margin-bottom: 0.2rem; }
+.fear-level-content span { font-size: 0.78rem; color: var(--color-muted); }
+.fear-check {
+  width: 28px; height: 28px;
+  border-radius: 50%; border: 2px solid var(--color-border);
+  background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-muted);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.fear-check:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.fear-level.done .fear-check { border-color: var(--color-primary); color: var(--color-primary); }
+.closing-card {
+  background: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  display: none;
+  margin-top: 1rem;
+  animation: fadeIn 0.4s ease;
+}
+.closing-card.visible { display: block; }
+.closing-card .big-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.closing-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
+
+/* ─── GREETING ─── */
+.greeting-block { padding: 1.5rem 0 0.75rem; }
+.greeting-block .time-label {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.25rem;
+}
+.greeting-block h1 span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sub-text { color: var(--color-muted); font-size: 0.88rem; margin-top: 0.4rem; }
+
+/* ─── UTILITIES ─── */
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.row { display: flex; gap: 0.625rem; }
+.row .btn { flex: 1; }
+.divider { height: 1px; background: var(--color-border); margin: 1.25rem 0; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.badge {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 2rem;
+  font-size: 0.7rem; font-weight: 600;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header class="app-header">
+  <div class="app-logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="16" cy="16" r="15" stroke="url(#lg1)" stroke-width="2"/>
+      <path d="M10 16c2-4 4-6 6-6s4 2 6 6-2 8-6 8-8-4-6-8z" fill="url(#lg2)" opacity="0.7"/>
+      <circle cx="16" cy="13" r="2.5" fill="url(#lg1)"/>
+      <defs>
+        <linearGradient id="lg1" x1="6" y1="6" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#93c9ac"/><stop offset="1" stop-color="#d8b78a"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="10" y1="10" x2="22" y2="24" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#93c9ac"/><stop offset="1" stop-color="#d8b78a"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span>Serein TCC·ACT</span>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="themeToggle" aria-label="Basculer thème clair / sombre">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ─── SCREEN CONTAINER ─── -->
+<div class="screen-container">
+
+  <!-- ═══ SCREEN 1 : ACCUEIL ═══ -->
+  <div class="screen active" id="screen-home" role="main" aria-label="Accueil">
+    <div class="greeting-block">
+      <div class="time-label" id="timeLabel">Bonjour</div>
+      <h1>Comment tu te <span>sens</span> ?</h1>
+      <p class="sub-text">Choisis ce qui résonne le mieux maintenant.</p>
+    </div>
+
+    <div class="mood-chips" role="group" aria-label="Comment tu te sens ?">
+      <button class="mood-chip" data-mood="stress" aria-label="Stressé·e" onclick="selectMood('stress')">
+        <span class="emoji">😤</span> Stressé·e
+      </button>
+      <button class="mood-chip" data-mood="rumination" aria-label="Je rumine" onclick="selectMood('rumination')">
+        <span class="emoji">🌀</span> Je rumine
+      </button>
+      <button class="mood-chip" data-mood="panique" aria-label="Panique" onclick="selectMood('panique')">
+        <span class="emoji">💨</span> Panique
+      </button>
+      <button class="mood-chip" data-mood="aplat" aria-label="À plat" onclick="selectMood('aplat')">
+        <span class="emoji">😶</span> À plat
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Ton parcours</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statStreak">0</div>
+        <div class="stat-label">Jours consécutifs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSessions">0</div>
+        <div class="stat-label">Séances</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statMood">—</div>
+        <div class="stat-label">Humeur moy.</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-title">Outils suggérés</div>
+    <div class="carousel-wrap">
+      <div class="carousel" role="list" aria-label="Outils suggérés">
+        <div class="carousel-card" role="listitem" onclick="goToTool('breathing')" tabindex="0" aria-label="Respiration 4-7-8">
+          <div class="icon">🌬️</div>
+          <h3>Respiration 4-7-8</h3>
+          <p>Calme l'anxiété en 2 min</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('journal')" tabindex="0" aria-label="Journal TCC">
+          <div class="icon">📓</div>
+          <h3>Journal TCC</h3>
+          <p>Restructure tes pensées</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('schemas')" tabindex="0" aria-label="Faire de la place">
+          <div class="icon">🌊</div>
+          <h3>Faire de la place</h3>
+          <p>Exercice ACT de défusion</p>
+        </div>
+        <div class="carousel-card" role="listitem" onclick="navigateTo('ladder')" tabindex="0" aria-label="Exposition douce">
+          <div class="icon">🪜</div>
+          <h3>Exposition douce</h3>
+          <p>Avance à ton rythme</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 2 : CHECK-IN ═══ -->
+  <div class="screen" id="screen-checkin" role="main" aria-label="Check-in émotionnel">
+    <div class="greeting-block">
+      <div class="time-label">Étape 1</div>
+      <h1>Comment tu te <span>portes</span> ?</h1>
+    </div>
+
+    <div class="emotion-grid" role="group" aria-label="Choix de l'émotion">
+      <button class="emotion-btn" data-emotion="stress" onclick="selectEmotion('stress')" aria-label="Stressé·e">
+        <span class="emoji">😤</span>
+        <span class="label">Stressé·e</span>
+        <span class="desc">Tension, urgence, surcharge</span>
+      </button>
+      <button class="emotion-btn" data-emotion="rumination" onclick="selectEmotion('rumination')" aria-label="Je rumine">
+        <span class="emoji">🌀</span>
+        <span class="label">Je rumine</span>
+        <span class="desc">Pensées en boucle, passé</span>
+      </button>
+      <button class="emotion-btn" data-emotion="panique" onclick="selectEmotion('panique')" aria-label="Panique">
+        <span class="emoji">💨</span>
+        <span class="label">Panique</span>
+        <span class="desc">Cœur rapide, essoufflement</span>
+      </button>
+      <button class="emotion-btn" data-emotion="aplat" onclick="selectEmotion('aplat')" aria-label="À plat">
+        <span class="emoji">😶</span>
+        <span class="label">À plat</span>
+        <span class="desc">Vide, démotivé·e, fatigue</span>
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="triggerField">Qu'est-ce qui déclenche ça ?</label>
+      <textarea id="triggerField" rows="3" placeholder="Décris la situation en quelques mots…" aria-label="Déclencheur de l'émotion"></textarea>
+    </div>
+
+    <div class="suggestion-card" id="checkinSuggestion" aria-live="polite">
+      <h3 id="suggTitle">💡 Suggestion pour toi</h3>
+      <p id="suggText"></p>
+      <div class="suggestion-tags" id="suggTags"></div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-primary" onclick="continueToJournal()" aria-label="Continuer vers le journal TCC">
+        Continuer →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 3 : JOURNAL TCC ═══ -->
+  <div class="screen" id="screen-journal" role="main" aria-label="Journal TCC">
+    <div class="greeting-block">
+      <div class="time-label">Journal TCC</div>
+      <h1>Restructure ta <span>pensée</span></h1>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="journalStepLabel">Étape 1 / 4</span>
+        <span id="journalStepName">Situation</span>
+      </div>
+      <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du journal">
+        <div class="progress-fill" id="journalProgress" style="width: 25%"></div>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step active" id="step-1">
+      <div class="step-num">1</div>
+      <h2>La situation</h2>
+      <p class="mb-1">Décris objectivement ce qui s'est passé, sans interprétation.</p>
+      <div class="form-group">
+        <label class="form-label" for="situationField">Situation</label>
+        <textarea id="situationField" rows="4" placeholder="Ex. : J'ai raté une réunion importante par oubli…" aria-label="Description de la situation"></textarea>
+      </div>
+      <div class="row mt-2">
+        <button class="btn btn-ghost" onclick="journalStep(0)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-primary" onclick="journalStep(2)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step-2">
+      <div class="step-num">2</div>
+      <h2>La pensée automatique</h2>
+      <p class="mb-1">Quelle pensée négative t'est venue spontanément ?</p>
+      <div class="form-group">
+        <label class="form-label" for="autoThoughtField">Pensée automatique</label>
+        <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Je suis incompétent·e, tout le monde l'a remarqué…" aria-label="Pensée automatique"></textarea>
+      </div>
+      <div class="row mt-2">
+        <button class="btn btn-ghost" onclick="journalStep(1)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-primary" onclick="journalStep(3)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" id="step-3">
+      <div class="step-num">3</div>
+      <h2>L'émotion & l'intensité</h2>
+      <p class="mb-1">Quelle émotion ressens-tu ? Note son intensité de 0 à 10.</p>
+      <div class="form-group">
+        <label class="form-label" for="emotionField">Émotion & intensité</label>
+        <textarea id="emotionField" rows="3" placeholder="Ex. : Honte 7/10, anxiété 8/10…" aria-label="Émotion et intensité"></textarea>
+      </div>
+      <div class="row mt-2">
+        <button class="btn btn-ghost" onclick="journalStep(2)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-primary" onclick="journalStep(4)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step" id="step-4">
+      <div class="step-num">4</div>
+      <h2>La pensée équilibrée</h2>
+      <p class="mb-1">Quelle perspective plus réaliste et bienveillante peux-tu adopter ?</p>
+      <div class="form-group">
+        <label class="form-label" for="balancedThoughtField">Pensée plus équilibrée</label>
+        <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : J'ai oublié cette fois, ça ne fait pas de moi un·e mauvais·e professionnel·le…" aria-label="Pensée équilibrée" oninput="updateReformulation()"></textarea>
+      </div>
+
+      <div class="reformulation-card" id="reformulationCard">
+        <div class="section-title">✨ Reformulation</div>
+        <p class="before"><strong>Avant :</strong> <span id="reformBefore"></span></p>
+        <div class="arrow-icon">↓</div>
+        <p class="after"><strong>Après :</strong> <span id="reformAfter"></span></p>
+      </div>
+
+      <div class="row mt-2">
+        <button class="btn btn-ghost" onclick="journalStep(3)" aria-label="Étape précédente">← Retour</button>
+        <button class="btn btn-primary" onclick="finishJournal()" aria-label="Terminer et voir les schémas">Terminer ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 4 : SCHÉMAS ═══ -->
+  <div class="screen" id="screen-schemas" role="main" aria-label="Schémas de pensée">
+    <div class="greeting-block">
+      <div class="time-label">Schémas cognitifs</div>
+      <h1>Reconnais tes <span>patterns</span></h1>
+    </div>
+
+    <p>Clique sur un schéma pour le reconnaître et trouver une reformulation.</p>
+
+    <div class="schema-grid mt-2" role="group" aria-label="Schémas de pensée">
+      <button class="schema-btn" onclick="showSchema('catastrophisme')" aria-label="Catastrophisme">
+        <span class="schema-emoji">⚡</span>
+        <span class="schema-name">Catastrophisme</span>
+      </button>
+      <button class="schema-btn" onclick="showSchema('lecture')" aria-label="Lecture de pensée">
+        <span class="schema-emoji">🔮</span>
+        <span class="schema-name">Lecture de pensée</span>
+      </button>
+      <button class="schema-btn" onclick="showSchema('toutourien')" aria-label="Tout ou rien">
+        <span class="schema-emoji">⚖️</span>
+        <span class="schema-name">Tout ou rien</span>
+      </button>
+      <button class="schema-btn" onclick="showSchema('surgen')" aria-label="Surgénéralisation">
+        <span class="schema-emoji">🌐</span>
+        <span class="schema-name">Surgénéralisation</span>
+      </button>
+      <button class="schema-btn" onclick="showSchema('filtre')" aria-label="Filtre mental">
+        <span class="schema-emoji">🔍</span>
+        <span class="schema-name">Filtre mental</span>
+      </button>
+      <button class="schema-btn" onclick="showSchema('personnalisation')" aria-label="Personnalisation">
+        <span class="schema-emoji">🎯</span>
+        <span class="schema-name">Personnalisation</span>
+      </button>
+    </div>
+
+    <div class="insight-card" id="insightCard" aria-live="polite">
+      <h3 id="insightTitle"></h3>
+      <p id="insightDesc"></p>
+      <div class="mt-1" id="insightReform"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2 class="mb-1">🌊 Faire de la place <span class="badge">ACT</span></h2>
+    <p>Exercice de défusion cognitive — observe ta pensée sans t'y fusionner.</p>
+
+    <div class="act-steps mt-2">
+      <div class="act-step">
+        <div class="act-num">1</div>
+        <p><strong>Observe</strong> — Remarque la pensée qui revient : "Je pense que je suis…" plutôt que "Je suis…"</p>
+      </div>
+      <div class="act-step">
+        <div class="act-num">2</div>
+        <p><strong>Nomme-la</strong> — "C'est mon cerveau qui me raconte l'histoire de l'incompétence."</p>
+      </div>
+      <div class="act-step">
+        <div class="act-num">3</div>
+        <p><strong>Accueille</strong> — Tu n'as pas à te battre contre elle. Laisse-la passer comme un nuage.</p>
+      </div>
+      <div class="act-step">
+        <div class="act-num">4</div>
+        <p><strong>Reviens</strong> — Qu'est-ce qui compte vraiment pour toi maintenant ?</p>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-primary" onclick="navigateTo('ladder')" aria-label="Aller vers l'échelle d'exposition">
+        Exposition douce →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ SCREEN 5 : FEAR LADDER ═══ -->
+  <div class="screen" id="screen-ladder" role="main" aria-label="Exposition graduelle">
+    <div class="greeting-block">
+      <div class="time-label">Exposition douce</div>
+      <h1>Avance à ton <span>rythme</span></h1>
+    </div>
+
+    <p>Identifie la situation que tu évites, puis progresse palier par palier.</p>
+
+    <div class="form-group mt-2">
+      <label class="form-label" for="fearField">Situation que tu évites</label>
+      <input type="text" id="fearField" placeholder="Ex. : Prendre la parole en réunion…" aria-label="Situation évitée" oninput="updateFearLadder()">
+    </div>
+
+    <div class="fear-levels" id="fearLevels">
+      <div class="fear-level" id="fear-1">
+        <div class="fear-num">1</div>
+        <div class="fear-level-content">
+          <strong>Imaginer la scène</strong>
+          <span>Ferme les yeux 30 sec et visualise la situation</span>
+        </div>
+        <button class="fear-check" onclick="toggleFear(1)" aria-label="Marquer l'étape 1 comme accomplie">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+      <div class="fear-level" id="fear-2">
+        <div class="fear-num">2</div>
+        <div class="fear-level-content">
+          <strong>Micro-action préparatoire</strong>
+          <span>Ex. : Rédige ce que tu dirais, parle-en à quelqu'un</span>
+        </div>
+        <button class="fear-check" onclick="toggleFear(2)" aria-label="Marquer l'étape 2 comme accomplie">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+      <div class="fear-level" id="fear-3">
+        <div class="fear-num">3</div>
+        <div class="fear-level-content">
+          <strong>Action réelle courte</strong>
+          <span>Fais-le pendant 2 min, puis arrête-toi</span>
+        </div>
+        <button class="fear-check" onclick="toggleFear(3)" aria-label="Marquer l'étape 3 comme accomplie">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+      <div class="fear-level" id="fear-4">
+        <div class="fear-num">4</div>
+        <div class="fear-level-content">
+          <strong>Répétition avec durée allongée</strong>
+          <span>Même situation, mais reste plus longtemps</span>
+        </div>
+        <button class="fear-check" onclick="toggleFear(4)" aria-label="Marquer l'étape 4 comme accomplie">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="closing-card" id="closingCard">
+      <div class="big-emoji">🌱</div>
+      <h3>Tu l'as fait !</h3>
+      <p>Chaque pas compte. L'évitement maintient l'anxiété — l'action la réduit progressivement. Reviens demain pour continuer.</p>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-primary" onclick="navigateTo('home')" aria-label="Retourner à l'accueil">
+        ← Retour à l'accueil
+      </button>
+    </div>
+  </div>
+
+</div><!-- end screen-container -->
+
+<!-- ─── BOTTOM NAV ─── -->
+<nav class="bottom-nav" aria-label="Navigation principale">
+  <button class="nav-btn active" id="nav-home" onclick="navigateTo('home')" aria-label="Accueil" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Accueil</span>
+  </button>
+  <button class="nav-btn" id="nav-checkin" onclick="navigateTo('checkin')" aria-label="Check-in émotionnel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+    </svg>
+    <span>Check-in</span>
+  </button>
+  <button class="nav-btn" id="nav-journal" onclick="navigateTo('journal')" aria-label="Journal TCC">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+    </svg>
+    <span>Journal</span>
+  </button>
+  <button class="nav-btn" id="nav-schemas" onclick="navigateTo('schemas')" aria-label="Schémas & exposition">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+    <span>Schémas</span>
+  </button>
+</nav>
+
+<script>
+// ─── STATE ───
+const state = {
+  currentScreen: 'home',
+  selectedEmotion: null,
+  journalStep: 1,
+  fearDone: { 1: false, 2: false, 3: false, 4: false },
+};
+
+// ─── STATS ───
+function loadStats() {
+  const today = new Date().toDateString();
+  const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  const lastDay = data.lastDay || null;
+  let streak = data.streak || 0;
+  if (lastDay !== today) {
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+    if (lastDay === yesterday.toDateString()) { streak += 1; }
+    else if (lastDay !== today) { streak = 1; }
+    data.lastDay = today;
+    data.streak = streak;
+    localStorage.setItem('serein_tcc_stats', JSON.stringify(data));
+  }
+  document.getElementById('statStreak').textContent = data.streak || 0;
+  document.getElementById('statSessions').textContent = data.sessions || 0;
+  const moods = data.moods || [];
+  if (moods.length > 0) {
+    const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
+    const emojis = ['😶','😕','😐','🙂','😊'];
+    document.getElementById('statMood').textContent = emojis[Math.min(4, Math.round(avg / 2))];
+  }
+}
+
+function incrementSessions() {
+  const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  data.sessions = (data.sessions || 0) + 1;
+  localStorage.setItem('serein_tcc_stats', JSON.stringify(data));
+  document.getElementById('statSessions').textContent = data.sessions;
+}
+
+// ─── THEME ───
+function initTheme() {
+  const saved = localStorage.getItem('serein_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcon(saved);
+}
+function toggleTheme() {
+  const curr = document.documentElement.getAttribute('data-theme');
+  const next = curr === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('serein_theme', next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  const icon = document.getElementById('themeIcon');
+  if (theme === 'light') {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  } else {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  }
+}
+
+// ─── GREETING ───
+function setGreeting() {
+  const h = new Date().getHours();
+  const labels = [
+    [5, 'Bonjour ☀️', 'Commence la journée avec clarté.'],
+    [12, 'Bon après-midi 🌤️', 'Prends un moment pour toi.'],
+    [18, 'Bonne soirée 🌙', 'Comment s\'est passée ta journée ?'],
+    [24, 'Bonne nuit 🌟', 'Prends soin de toi.'],
+  ];
+  let label = 'Bonjour ☀️', sub = '';
+  for (const [end, l, s] of labels) {
+    if (h < end) { label = l; sub = s; break; }
+  }
+  document.getElementById('timeLabel').textContent = label;
+  document.querySelector('#screen-home .sub-text').textContent = sub;
+}
+
+// ─── NAVIGATION ───
+const screenMap = {
+  home: 'screen-home',
+  checkin: 'screen-checkin',
+  journal: 'screen-journal',
+  schemas: 'screen-schemas',
+  ladder: 'screen-ladder',
+};
+const navMap = {
+  home: 'nav-home',
+  checkin: 'nav-checkin',
+  journal: 'nav-journal',
+  schemas: 'nav-schemas',
+  ladder: 'nav-schemas',
+};
+
+function navigateTo(screen) {
+  if (state.currentScreen === screen) return;
+  const oldEl = document.getElementById(screenMap[state.currentScreen]);
+  const newEl = document.getElementById(screenMap[screen]);
+  if (!newEl) return;
+
+  oldEl.classList.remove('active');
+  oldEl.style.display = 'none';
+
+  newEl.style.display = 'block';
+  newEl.classList.add('entering');
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      newEl.classList.remove('entering');
+      newEl.classList.add('active');
+    });
+  });
+
+  // update nav
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+    b.removeAttribute('aria-current');
+  });
+  const navEl = document.getElementById(navMap[screen]);
+  if (navEl) {
+    navEl.classList.add('active');
+    navEl.setAttribute('aria-current', 'page');
+  }
+
+  // scroll to top
+  document.querySelector('.screen-container').scrollTo(0, 0);
+  state.currentScreen = screen;
+}
+
+// ─── MOOD CHIPS (Home) ───
+const moodToScreen = { stress: 'checkin', rumination: 'checkin', panique: 'checkin', aplat: 'checkin' };
+const moodToEmotion = { stress: 'stress', rumination: 'rumination', panique: 'panique', aplat: 'aplat' };
+
+function selectMood(mood) {
+  document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-mood="${mood}"]`).classList.add('selected');
+  setTimeout(() => {
+    selectEmotion(moodToEmotion[mood]);
+    navigateTo('checkin');
+  }, 200);
+}
+
+// ─── CHECK-IN ───
+const emotionSuggestions = {
+  stress: {
+    title: '💡 Pour le stress',
+    text: 'Le stress naît souvent d\'une surcharge cognitive. Le journal TCC t\'aide à démêler les pensées ; une micro-exposition réduit l\'évitement.',
+    tags: ['Journal TCC', 'Micro-exposition'],
+  },
+  rumination: {
+    title: '🌀 Pour la rumination',
+    text: 'Les pensées en boucle s\'alimentent elles-mêmes. Identifier les schémas cognitifs et pratiquer la défusion ACT interrompt le cycle.',
+    tags: ['Schémas cognitifs', 'Exercice ACT'],
+  },
+  panique: {
+    title: '💨 Pour la panique',
+    text: 'Commence par stabiliser ton système nerveux avec la respiration 4-7-8. Une fois calme, explore les pensées sous-jacentes.',
+    tags: ['Respiration 4-7-8', 'Journal après'],
+  },
+  aplat: {
+    title: '😶 Pour le vide / à plat',
+    text: 'L\'activation comportementale aide à rompre le cycle de retrait. Une micro-action suffit pour relancer l\'élan.',
+    tags: ['Activation', 'Action courte'],
+  },
+};
+
+function selectEmotion(emotion) {
+  state.selectedEmotion = emotion;
+  document.querySelectorAll('.emotion-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.querySelector(`[data-emotion="${emotion}"]`);
+  if (btn) btn.classList.add('selected');
+  const s = emotionSuggestions[emotion];
+  document.getElementById('suggTitle').textContent = s.title;
+  document.getElementById('suggText').textContent = s.text;
+  const tagsEl = document.getElementById('suggTags');
+  tagsEl.innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  document.getElementById('checkinSuggestion').classList.add('visible');
+}
+
+function continueToJournal() {
+  const trigger = document.getElementById('triggerField').value.trim();
+  if (trigger) {
+    document.getElementById('situationField').value = trigger;
+  }
+  navigateTo('journal');
+}
+
+// ─── JOURNAL STEPS ───
+const stepLabels = ['', 'Situation', 'Pensée automatique', 'Émotion', 'Pensée équilibrée'];
+const progressPct = ['', '25', '50', '75', '100'];
+
+function journalStep(n) {
+  if (n < 1) { navigateTo('checkin'); return; }
+  if (n > 4) { finishJournal(); return; }
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step-${n}`).classList.add('active');
+  state.journalStep = n;
+  document.getElementById('journalStepLabel').textContent = `Étape ${n} / 4`;
+  document.getElementById('journalStepName').textContent = stepLabels[n];
+  document.getElementById('journalProgress').style.width = progressPct[n] + '%';
+  document.getElementById('journalProgress').parentElement.setAttribute('aria-valuenow', progressPct[n]);
+}
+
+function updateReformulation() {
+  const auto = document.getElementById('autoThoughtField').value.trim();
+  const balanced = document.getElementById('balancedThoughtField').value.trim();
+  const card = document.getElementById('reformulationCard');
+  if (auto && balanced) {
+    document.getElementById('reformBefore').textContent = auto;
+    document.getElementById('reformAfter').textContent = balanced;
+    card.classList.add('visible');
+  } else {
+    card.classList.remove('visible');
+  }
+}
+
+function finishJournal() {
+  incrementSessions();
+  navigateTo('schemas');
+}
+
+// ─── SCHEMAS ───
+const schemas = {
+  catastrophisme: {
+    title: '⚡ Catastrophisme',
+    desc: 'Tu imagines le pire scénario possible, même si la probabilité est faible.',
+    reform: '💬 Demande-toi : "Quelle est la probabilité réelle que ça se passe ainsi ? Et si ça arrivait, comment j\'y ferais face ?"',
+  },
+  lecture: {
+    title: '🔮 Lecture de pensée',
+    desc: 'Tu crois savoir ce que les autres pensent de toi, sans preuve.',
+    reform: '💬 "Je ne peux pas lire les pensées. Quelle preuve concrète j\'ai de cette interprétation ?"',
+  },
+  toutourien: {
+    title: '⚖️ Tout ou rien',
+    desc: 'Tu vois les situations en noir ou blanc, sans nuances.',
+    reform: '💬 "Y a-t-il une zone grise ? Suis-je vraiment 100 % en échec, ou est-ce que j\'exagère ?"',
+  },
+  surgen: {
+    title: '🌐 Surgénéralisation',
+    desc: 'Un événement négatif devient une règle universelle ("toujours", "jamais").',
+    reform: '💬 "Est-ce que c\'est vraiment TOUJOURS comme ça ? Quand ça s\'est passé différemment ?"',
+  },
+  filtre: {
+    title: '🔍 Filtre mental',
+    desc: 'Tu te concentres uniquement sur les aspects négatifs en ignorant le reste.',
+    reform: '💬 "Quels éléments positifs est-ce que j\'écarte ? Est-ce que j\'aurais le même regard sur un ami ?"',
+  },
+  personnalisation: {
+    title: '🎯 Personnalisation',
+    desc: 'Tu te tiens responsable de choses hors de ton contrôle.',
+    reform: '💬 "Quels autres facteurs ont contribué à cette situation ? Est-ce vraiment uniquement ma faute ?"',
+  },
+};
+
+function showSchema(key) {
+  document.querySelectorAll('.schema-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const s = schemas[key];
+  document.getElementById('insightTitle').textContent = s.title;
+  document.getElementById('insightDesc').textContent = s.desc;
+  document.getElementById('insightReform').innerHTML = `<p style="color:var(--color-primary-2);font-size:0.85rem;margin-top:0.5rem;">${s.reform}</p>`;
+  const card = document.getElementById('insightCard');
+  card.classList.remove('visible');
+  requestAnimationFrame(() => card.classList.add('visible'));
+}
+
+// ─── FEAR LADDER ───
+function updateFearLadder() {
+  // Could update per-level descriptions based on the fear field — minimal version keeps generic
+}
+
+function toggleFear(n) {
+  state.fearDone[n] = !state.fearDone[n];
+  const el = document.getElementById(`fear-${n}`);
+  el.classList.toggle('done', state.fearDone[n]);
+  const allDone = Object.values(state.fearDone).every(Boolean);
+  document.getElementById('closingCard').classList.toggle('visible', allDone);
+  if (allDone) incrementSessions();
+}
+
+// ─── TOOL NAV ───
+function goToTool(tool) {
+  if (tool === 'breathing') {
+    // Embedded mini breathing guide in alert for now
+    alert('🌬️ Respiration 4-7-8\n\n1. Inspire par le nez → 4 secondes\n2. Bloque → 7 secondes\n3. Expire lentement → 8 secondes\n\nRépète 4 cycles. Cette technique active le système parasympathique.');
+  }
+}
+
+// ─── INIT ───
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+// Carousel card keyboard nav
+document.querySelectorAll('.carousel-card').forEach(c => {
+  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
+});
+
+initTheme();
+setGreeting();
+loadStats();
+</script>
+</body>
+</html>

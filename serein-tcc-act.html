@@ -800,22 +800,22 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 
     <div class="onboarding-slide active" id="obslide-1">
       <div class="onboarding-emoji">🧠</div>
-      <h2 id="obTitle">La Thérapie Cognitivo-Comportementale</h2>
-      <p>La TCC part d'un constat simple : nos pensées influencent nos émotions, qui influencent nos actions. En apprenant à identifier et questionner les pensées automatiques, on peut changer la façon dont on se sent.</p>
-      <div class="onboarding-tip">Ex. "Je rate tout" devient "J'ai raté cette fois — qu'est-ce que j'en apprends ?"</div>
+      <h2 id="obTitle">Le triangle TCC</h2>
+      <p>La TCC repose sur une observation fondamentale : une même situation peut être vécue de façons très différentes selon la pensée qu'on y associe. La pensée influence l'émotion, l'émotion influence le comportement - et le comportement renforce souvent la pensée.</p>
+      <div class="onboarding-tip">Ex. Situation : un ami ne répond pas. Pensée : "Il m'en veut." - Émotion : anxiété. - Comportement : tu n'oses pas réécrire. En changeant la pensée, tout le reste peut changer.</div>
     </div>
 
     <div class="onboarding-slide" id="obslide-2">
       <div class="onboarding-emoji">🌊</div>
-      <h2>L'Acceptance et l'Engagement (ACT)</h2>
-      <p>L'ACT ne cherche pas à supprimer les pensées difficiles, mais à changer notre relation à elles. Observer une pensée sans la croire aveuglément, c'est déjà reprendre le contrôle.</p>
-      <div class="onboarding-tip">"J'ai la pensée que je suis nul·le" - plutôt que - "Je suis nul·le."</div>
+      <h2>L'ACT : ne pas lutter</h2>
+      <p>L'ACT ne cherche pas à supprimer les pensées difficiles - c'est souvent impossible et épuisant. L'objectif est de changer la relation qu'on entretient avec elles : les observer sans s'y fusionner, faire de la place aux émotions inconfortables, et continuer d'avancer vers ce qui compte vraiment.</p>
+      <div class="onboarding-tip">Plutôt que "Je suis nul·le", essaie : "Je remarque la pensée que je suis nul·le." Cette petite distance cognitive change beaucoup.</div>
     </div>
 
     <div class="onboarding-slide" id="obslide-3">
       <div class="onboarding-emoji">🗺️</div>
-      <h2>Comment utiliser cette app</h2>
-      <p>Commence par le <strong>Check-in</strong> pour nommer ce que tu ressens. Utilise le <strong>Journal TCC</strong> pour restructurer une pensée, l'<strong>Espace calme</strong> pour les moments de crise, et les <strong>Cartes de coping</strong> pour tes reformulations préférées.</p>
+      <h2>Un compagnon, pas un thérapeute</h2>
+      <p>Cet outil s'utilise entre deux séances, dans les moments difficiles du quotidien, ou pour mieux te connaître. Il est conçu pour t'aider à t'entraîner - repérer tes pensées automatiques, nommer tes émotions, et prendre soin de toi au jour le jour. Il ne remplace pas un suivi professionnel.</p>
       <div class="onboarding-tip">Tout est stocké localement. Aucune donnée ne quitte ton appareil.</div>
     </div>
 
@@ -953,10 +953,10 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
           <h3>Journal TCC</h3>
           <p>Restructure tes pensées</p>
         </div>
-        <div class="carousel-card" role="listitem" onclick="navigateTo('schemas')" tabindex="0" aria-label="Faire de la place">
+        <div class="carousel-card" role="listitem" onclick="navigateTo('schemas')" tabindex="0" aria-label="Défusion cognitive">
           <div class="icon">🌊</div>
-          <h3>Faire de la place</h3>
-          <p>Exercice ACT de défusion</p>
+          <h3>Défusion cognitive</h3>
+          <p>3 exercices ACT guidés</p>
         </div>
         <div class="carousel-card" role="listitem" onclick="navigateTo('ladder')" tabindex="0" aria-label="Exposition douce">
           <div class="icon">🪜</div>
@@ -1302,27 +1302,15 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 
     <div class="divider"></div>
 
-    <h2 class="mb-1">🌊 Faire de la place <span class="badge">ACT</span></h2>
-    <p>Exercice de défusion cognitive - observe ta pensée sans t'y fusionner.</p>
+    <h2 class="mb-1">🌊 Défusion cognitive <span class="badge">ACT</span></h2>
+    <p>Observe ta pensée sans t'y fusionner. Choisis un exercice :</p>
 
-    <div class="act-steps mt-2">
-      <div class="act-step">
-        <div class="act-num">1</div>
-        <p><strong>Observe</strong> - Remarque la pensée qui revient : "Je pense que je suis…" plutôt que "Je suis…"</p>
-      </div>
-      <div class="act-step">
-        <div class="act-num">2</div>
-        <p><strong>Nomme-la</strong> - "C'est mon cerveau qui me raconte l'histoire de l'incompétence."</p>
-      </div>
-      <div class="act-step">
-        <div class="act-num">3</div>
-        <p><strong>Accueille</strong> - Tu n'as pas à te battre contre elle. Laisse-la passer comme un nuage.</p>
-      </div>
-      <div class="act-step">
-        <div class="act-num">4</div>
-        <p><strong>Reviens</strong> - Qu'est-ce qui compte vraiment pour toi maintenant ?</p>
-      </div>
+    <div class="breath-tech-tabs mt-1" role="group" aria-label="Exercice de défusion">
+      <button class="breath-tab active" onclick="selectDefusion(0,this)" aria-label="Feuilles sur le ruisseau">🍂 Feuilles</button>
+      <button class="breath-tab" onclick="selectDefusion(1,this)" aria-label="Passagers du bus">🚌 Bus</button>
+      <button class="breath-tab" onclick="selectDefusion(2,this)" aria-label="Perte de sens du mot">🔤 Son</button>
     </div>
+    <div id="defusionSteps" class="act-steps mt-1"></div>
 
     <div class="mt-3">
       <button class="btn btn-primary" onclick="navigateTo('ladder')" aria-label="Aller vers l'exposition graduelle">
@@ -1648,6 +1636,7 @@ const screenInitFns = {
   diary: renderDiary,
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
   quiz: initQuiz,
+  schemas: () => renderDefusion(currentDefusion),
 };
 
 function navigateTo(screen) {
@@ -1764,14 +1753,60 @@ function updateReformulation() {
 }
 function finishJournal() { incrementSessions(); navigateTo('schemas'); }
 
+// ─── DEFUSION EXERCISES ───
+const defusionExercises = [
+  {
+    title: 'Les feuilles sur le ruisseau',
+    steps: [
+      '<strong>Installe-toi confortablement</strong> et ferme les yeux si tu le souhaites. Imagine un ruisseau qui coule lentement, avec des feuilles qui flottent à la surface.',
+      '<strong>Remarque la pensée</strong> qui capte ton attention en ce moment. Plutôt que de t\'y plonger, place-la sur une feuille.',
+      '<strong>Observe la feuille</strong> dériver doucement au fil de l\'eau, sans accélérer ni retenir sa course. Tu n\'as rien à faire.',
+      '<strong>Répète l\'opération</strong> pour chaque pensée ou sensation qui surgit - juge, doute, souvenir. Chacune prend sa feuille et continue son chemin.',
+    ]
+  },
+  {
+    title: 'Les passagers du bus',
+    steps: [
+      '<strong>Imagine que tu conduis un bus</strong>. Tu es au volant - tu tiens la direction. Les pensées difficiles sont des passagers assis à l\'arrière.',
+      '<strong>Ils peuvent parler</strong>, critiquer, faire du bruit. C\'est leur droit. Mais ce sont eux les passagers, et toi le conducteur.',
+      '<strong>Rappelle-toi ta destination</strong> : qu\'est-ce qui compte vraiment pour toi dans ta vie ? C\'est là que tu vas, quoi qu\'ils disent.',
+      '<strong>Continue de conduire</strong>. Tu n\'as pas à expulser les passagers difficiles - juste à ne pas leur laisser le volant.',
+    ]
+  },
+  {
+    title: 'La perte de sens du mot',
+    steps: [
+      '<strong>Identifie le mot</strong> qui résume la pensée douloureuse - "nul·le", "raté·e", "rejeté·e". Un seul mot suffit.',
+      '<strong>Répète ce mot à voix haute</strong>, rapidement, pendant 30 secondes. Laisse-le se vider de son sens au fur et à mesure.',
+      '<strong>Observe ce qui se passe</strong> : le mot devient progressivement un simple son, une suite de syllabes sans le poids émotionnel habituel.',
+      '<strong>Reviens au présent</strong>. Ce mot n\'est qu\'une étiquette que ton cerveau a collée sur toi - pas une vérité sur qui tu es.',
+    ]
+  },
+];
+let currentDefusion = 0;
+function selectDefusion(idx, el) {
+  document.querySelectorAll('[onclick^="selectDefusion"]').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentDefusion = idx;
+  renderDefusion(idx);
+}
+function renderDefusion(idx) {
+  const ex = defusionExercises[idx];
+  const container = document.getElementById('defusionSteps');
+  if (!container) return;
+  container.innerHTML = ex.steps.map((s, i) =>
+    `<div class="act-step"><div class="act-num">${i + 1}</div><p>${s}</p></div>`
+  ).join('');
+}
+
 // ─── SCHEMAS ───
 const schemas = {
-  catastrophisme: { title: '⚡ Catastrophisme', desc: 'Tu imagines le pire scénario possible, même si la probabilité est faible.', reform: '💬 "Quelle est la probabilité réelle que ça se passe ainsi ? Et si ça arrivait, comment j\'y ferais face ?"' },
-  lecture: { title: '🔮 Lecture de pensée', desc: 'Tu crois savoir ce que les autres pensent de toi, sans preuve.', reform: '💬 "Je ne peux pas lire les pensées. Quelle preuve concrète j\'ai de cette interprétation ?"' },
-  toutourien: { title: '⚖️ Tout ou rien', desc: 'Tu vois les situations en noir ou blanc, sans nuances.', reform: '💬 "Y a-t-il une zone grise ? Suis-je vraiment 100 % en échec, ou est-ce que j\'exagère ?"' },
-  surgen: { title: '🌐 Surgénéralisation', desc: 'Un événement négatif devient une règle universelle ("toujours", "jamais").', reform: '💬 "Est-ce que c\'est vraiment TOUJOURS comme ça ? Quand ça s\'est passé différemment ?"' },
-  filtre: { title: '🔍 Filtre mental', desc: 'Tu te concentres uniquement sur les aspects négatifs en ignorant le reste.', reform: '💬 "Quels éléments positifs est-ce que j\'écarte ? Aurais-je le même regard sur un ami ?"' },
-  personnalisation: { title: '🎯 Personnalisation', desc: 'Tu te tiens responsable de choses hors de ton contrôle.', reform: '💬 "Quels autres facteurs ont contribué à cette situation ? Est-ce vraiment uniquement ma faute ?"' },
+  catastrophisme: { title: '⚡ Catastrophisme', desc: 'C\'est la tendance automatique à anticiper le pire scénario possible face à une situation incertaine, en amplifiant les conséquences négatives au-delà de ce que les faits permettent d\'affirmer.', reform: '💬 "Quel est vraiment le pire qui pourrait arriver - et si cela se produisait, quelles seraient mes ressources pour y faire face ?"' },
+  lecture: { title: '🔮 Lecture de pensée', desc: 'Ce biais pousse à croire que l\'on peut deviner ce que les autres pensent, le plus souvent de façon négative sur soi, sans aucune preuve concrète ou vérification possible.', reform: '💬 "Ai-je des éléments concrets et factuels qui prouvent que cette personne pense cela, ou est-ce une interprétation guidée par mes craintes ?"' },
+  toutourien: { title: '⚖️ Tout ou rien', desc: 'C\'est un raisonnement sans nuances qui consiste à n\'envisager que les extrêmes - succès total ou échec complet - sans accorder de place à la réussite partielle ou à la nuance.', reform: '💬 "Cette situation n\'est-elle vraiment qu\'un échec total, ou puis-je observer des réussites partielles en l\'évaluant sur une échelle de 1 à 10 ?"' },
+  surgen: { title: '🌐 Surgénéralisation', desc: 'C\'est le processus qui consiste à tirer une conclusion globale et définitive à partir d\'un seul événement ponctuel, transformant une expérience isolée en règle permanente sur soi ou sur la vie.', reform: '💬 "Est-ce que cet événement unique suffit à définir toutes mes capacités, ou existe-t-il des expériences passées qui démontrent le contraire ?"' },
+  filtre: { title: '🔍 Filtre mental', desc: 'C\'est une erreur d\'attention qui amène à se concentrer exclusivement sur un détail négatif en ignorant l\'ensemble des informations disponibles - positives ou neutres - comme si un filtre obscurcissait le reste.', reform: '💬 "Si je prends du recul pour regarder l\'ensemble de la situation, quels éléments positifs ou neutres suis-je en train d\'ignorer ?"' },
+  personnalisation: { title: '🎯 Personnalisation', desc: 'C\'est le fait de se sentir directement et exclusivement responsable d\'événements fâcheux ou des états émotionnels d\'autrui, sur lesquels on n\'a pourtant qu\'un contrôle partiel ou nul.', reform: '💬 "Existe-t-il d\'autres facteurs extérieurs ou des concours de circonstances qui pourraient expliquer cette situation, en dehors de ma seule responsabilité ?"' },
 };
 function showSchema(key, el) {
   document.querySelectorAll('.schema-btn').forEach(b => b.classList.remove('active'));
@@ -1944,11 +1979,14 @@ function onboardingNext() {
 
 // ─── CRISIS MODE ───
 const anchorPhrases = [
-  "Cette sensation va passer. Tu as déjà traversé des moments difficiles.",
-  "Concentre-toi sur ta respiration. C'est tout ce que tu as à faire maintenant.",
-  "Tu es en sécurité. Ton cerveau exagère le danger - c'est sa façon de te protéger.",
-  "Tu n'es pas seul·e. Des gens tiennent à toi.",
-  "Dans quelques minutes, l'intensité aura baissé. Reste avec ta respiration.",
+  "L'anxiété est un simple système d'alarme du corps, pas une prédiction de l'avenir.",
+  "Cette tension intense peut être observée sans qu'il soit nécessaire d'y réagir dans l'immédiat.",
+  "L'agitation de l'esprit est un événement physiologique passager - il a un début et une fin.",
+  "L'inconfort émotionnel a le droit de faire partie de cet instant. Pas d'urgence à l'effacer.",
+  "Le stress est une réaction automatique de l'organisme - il ne demande aucune décision ni action de ta part maintenant.",
+  "Tu peux faire de la place à cette sensation physique sans chercher à lutter contre elle.",
+  "L'anxiété est profondément inconfortable, mais elle ne met pas ton corps en danger.",
+  "Le contact de tes pieds sur le sol est là. L'ancrage est toujours présent, même quand les vagues sont fortes.",
 ];
 let anchorIdx = 0;
 let crisisInterval = null;
@@ -2075,46 +2113,36 @@ function renderDiary() {
 
 // ─── WHAT'S UP QUESTIONS ───
 const allQuestions = [
-  "Qu'est-ce qui se passe vraiment en ce moment ?",
-  "De quoi as-tu le plus besoin maintenant ?",
-  "Si tu parlais à un ami qui ressent ce que tu ressens, que lui dirais-tu ?",
-  "Qu'est-ce que cette émotion essaie de te dire ?",
-  "Y a-t-il quelque chose que tu évites de regarder en face ?",
-  "Cette pensée te rapproche-t-elle de ce qui compte pour toi, ou t'en éloigne-t-elle ?",
-  "Comment ton corps exprime-t-il ce que tu ressens ?",
-  "Qu'est-ce qui te ferait du bien maintenant, même une toute petite chose ?",
-  "Est-ce que tu essaies de contrôler quelque chose qui est hors de ta portée ?",
-  "Qui pourrait te comprendre dans ce que tu traverses ?",
-  "Qu'est-ce qui était vrai il y a 5 ans et qui ne l'est plus aujourd'hui ?",
-  "Qu'est-ce que tu n'as pas dit et qui pèse ?",
-  "Y a-t-il une différence entre ce que tu ressens et ce que tu penses devoir ressentir ?",
-  "Qu'est-ce qui te donnerait l'impression de progresser, même légèrement ?",
-  "De quoi es-tu fier·e en ce moment, même d'une petite chose ?",
-  "Quelle serait la prochaine étape la plus simple ?",
-  "Y a-t-il une croyance sur toi-même qui te limite ?",
-  "Qu'est-ce qui te rechargait en énergie avant, que tu ne fais plus ?",
-  "Si tu n'avais pas peur du jugement, qu'est-ce que tu ferais ?",
-  "Qu'est-ce qui te semble trop lourd à affronter seul·e ?",
-  "Est-ce que tu te traites avec la même bienveillance qu'un ami ?",
-  "Qu'est-ce que tu attends de toi-même que personne d'autre n'attend ?",
-  "Dans quel domaine de ta vie te sens-tu le plus en sécurité ?",
-  "Qu'est-ce qui te manque en ce moment ?",
-  "Quand as-tu ri pour la dernière fois ? De quoi ?",
-  "Y a-t-il quelque chose que tu te reproches injustement ?",
-  "Qu'est-ce que «aller bien» signifie pour toi en ce moment ?",
-  "Si tu pouvais changer une seule chose dans ta journée, laquelle ?",
-  "Quand tu es seul·e avec toi-même, qu'est-ce que tu ressens ?",
-  "Qu'est-ce qui reste vrai même dans les moments difficiles ?",
-  "Comment te parles-tu intérieurement quand tu fais une erreur ?",
-  "Y a-t-il quelque chose que tu fais par obligation mais qui ne te ressemble pas ?",
-  "Qu'est-ce que tu veux que les autres comprennent de toi ?",
-  "Quelle serait la version de toi dont tu serais le plus fier·e ?",
-  "Est-ce que tu te permets de ne pas savoir ?",
-  "Qu'est-ce qui compte vraiment pour toi, au fond ?",
-  "Qu'est-ce que tu voudrais te dire maintenant ?",
-  "Quelle émotion as-tu du mal à accepter en toi ?",
-  "Y a-t-il une situation que tu dois lâcher ?",
-  "Qu'est-ce qui te donne encore de l'espoir ?",
+  "Qu'est-ce qui est le plus important pour toi en ce moment précis ?",
+  "Si tu continues dans cette direction, comment imagines-tu ta vie dans quelques années ?",
+  "Qu'est-ce qui pourrait s'améliorer pour toi si tu décidais de faire un petit pas vers le changement ?",
+  "As-tu déjà réussi à surmonter une situation difficile similaire par le passé, et quelles forces avais-tu utilisées ?",
+  "Sur une échelle de 0 à 10, où situes-tu ta motivation à prendre soin de toi aujourd'hui - et pourquoi ce chiffre n'est-il pas plus bas ?",
+  "Quel genre de personne, d'ami·e ou de partenaire aimerais-tu être face à cet obstacle ?",
+  "Si cette émotion difficile ne te freinait plus, que ferais-tu de plus dans ta journée ?",
+  "Si tu étais la boussole de ta propre vie, quelle direction fondamentale choisirais-tu de suivre ?",
+  "Est-ce que le fait de t'accrocher à cette pensée te rapproche ou t'éloigne de la vie que tu souhaites ?",
+  "Peux-tu observer cette pensée simplement comme un événement passager qui traverse ton esprit ?",
+  "Si tu regardais cette situation depuis la position d'un observateur calme et détaché, que verrais-tu ?",
+  "Que se passerait-il si tu laissais cette tension exister en toi, sans dépenser d'énergie pour lutter contre elle ?",
+  "Quelles sont les preuves concrètes et factuelles qui démontrent que cette pensée est absolument vraie ?",
+  "Y a-t-il des éléments positifs ou neutres dans cette situation que tu pourrais être en train de mettre de côté ?",
+  "Si une personne que tu aimes profondément avait cette même pensée, que lui dirais-tu pour l'aider à prendre du recul ?",
+  "Existe-t-il une autre façon, peut-être un peu plus nuancée, d'interpréter ce qui vient de se passer ?",
+  "Au pire, si ce scénario inconfortable se produisait, quelles ressources pourrais-tu mobiliser pour y faire face ?",
+  "Est-ce que ton jugement actuel s'appuie sur des faits extérieurs ou sur l'intensité de l'émotion que tu ressens ?",
+  "Que se passerait-il de différent si tu acceptais que cette situation n'a pas besoin d'être absolument parfaite ?",
+  "As-tu l'impression de tirer une conclusion générale sur toi-même à partir d'un seul moment isolé ?",
+  "Qu'est-ce qui te donne encore de l'espoir, même une toute petite chose ?",
+  "Si tu n'avais pas peur du jugement des autres, qu'est-ce que tu ferais différemment ?",
+  "Qu'est-ce que tu n'as pas dit et qui pèse en toi en ce moment ?",
+  "Y a-t-il une croyance sur toi-même que tu portes depuis longtemps et qui te limite ?",
+  "Comment te parles-tu intérieurement quand tu fais une erreur - est-ce que tu accepterais ce discours de la part d'un ami ?",
+  "Qu'est-ce qui te rechargait en énergie avant, que tu ne fais plus ou plus assez ?",
+  "De quoi es-tu fier·e en ce moment, même d'une toute petite chose ?",
+  "Qu'est-ce que «aller bien» signifie concrètement pour toi en ce moment ?",
+  "Y a-t-il une situation sur laquelle tu n'as aucun contrôle et que tu pourrais accepter de lâcher ?",
+  "Qu'est-ce que cette émotion difficile essaie de te dire sur ce qui compte pour toi ?",
 ];
 let fcQuestions = [...allQuestions];
 let fcIdx = 0;
@@ -2141,18 +2169,18 @@ function fcAction(type) {
 
 // ─── QUIZ ───
 const quizData = [
-  { thought: "J'ai raté une question - tout l'exam est foutu.", schema: 'toutourien', explain: "C'est du tout ou rien : une erreur ne définit pas l'ensemble du résultat." },
-  { thought: "Je sens qu'ils me trouvent tous ridicule.", schema: 'lecture', explain: "Tu lis les pensées des autres sans preuve - c'est de la lecture de pensée." },
-  { thought: "Si je rate cet entretien, ma vie sera fichue.", schema: 'catastrophisme', explain: "Tu projettes le pire scénario sur toute ta vie - c'est du catastrophisme." },
-  { thought: "Je fais toujours tout de travers.", schema: 'surgen', explain: "Le mot «toujours» transforme un événement en règle universelle - surgénéralisation." },
-  { thought: "Toute la réunion s'est mal passée. (Les 3 points réussis ? Oubliés.)", schema: 'filtre', explain: "Tu filtres le positif pour ne garder que le négatif - c'est le filtre mental." },
-  { thought: "Mon chef est de mauvaise humeur - c'est forcément à cause de moi.", schema: 'personnalisation', explain: "Tu te tiens responsable de quelque chose qui dépend d'autres facteurs." },
-  { thought: "Si ce n'est pas parfait, ça ne sert à rien de le faire.", schema: 'toutourien', explain: "Parfait ou rien - c'est une pensée tout ou rien classique." },
-  { thought: "Ça va forcément mal se terminer.", schema: 'catastrophisme', explain: "Tu anticipes le pire sans élément concret - c'est du catastrophisme." },
-  { thought: "Je ne réussis jamais à m'en sortir.", schema: 'surgen', explain: "«Jamais» généralise un ressenti à toute ta vie - surgénéralisation." },
-  { thought: "Mon ami ne m'a pas répondu - il est sûrement fâché contre moi.", schema: 'lecture', explain: "Tu interprètes le silence sans preuve réelle - lecture de pensée." },
-  { thought: "Je ne retiens que ce qui cloche dans ma journée.", schema: 'filtre', explain: "Tu appliques un filtre mental qui ne laisse passer que le négatif." },
-  { thought: "L'ambiance tendue au bureau, c'est à cause de moi.", schema: 'personnalisation', explain: "Tu t'attribues une responsabilité sur quelque chose qui ne dépend pas que de toi." },
+  { thought: "Si je ne réussis pas ce projet de manière irréprochable, c'est que je suis un échec total.", schema: 'toutourien', explain: "Cette pensée réduit une situation complexe à deux extrêmes sans laisser de place à la nuance ou à la réussite partielle." },
+  { thought: "Mon collègue a été distant ce matin - il doit forcément m'en vouloir pour quelque chose.", schema: 'lecture', explain: "Ce biais consiste à s'imaginer savoir ce que les autres pensent, souvent négativement, sans aucune preuve objective." },
+  { thought: "J'ai fait une petite erreur dans ma présentation - je vais me faire renvoyer et ma carrière est finie.", schema: 'catastrophisme', explain: "Ce mécanisme pousse à anticiper systématiquement le pire scénario possible face à une situation incertaine." },
+  { thought: "La personne avec qui j'avais rendez-vous ne m'a pas rappelé - personne ne s'intéressera jamais à moi.", schema: 'surgen', explain: "Cette distorsion transforme un événement unique et ponctuel en une règle générale et définitive pour l'avenir." },
+  { thought: "J'ai reçu de nombreux compliments, mais une personne a critiqué mon travail - donc mon travail est mauvais.", schema: 'filtre', explain: "Cette erreur d'attention amène à se focaliser exclusivement sur un détail négatif en ignorant les informations positives." },
+  { thought: "S'il pleut pendant notre pique-nique, c'est de ma faute - j'aurais dû choisir une autre date.", schema: 'personnalisation', explain: "Ce biais pousse à se sentir responsable d'événements extérieurs sur lesquels on n'a aucun contrôle direct." },
+  { thought: "Si ce n'est pas parfait, ça ne sert à rien de le faire.", schema: 'toutourien', explain: "Parfait ou rien - c'est une pensée tout ou rien classique qui élimine toute zone intermédiaire." },
+  { thought: "Ça va forcément mal se terminer, je le sens.", schema: 'catastrophisme', explain: "Tu anticipes le pire sans élément concret - le ressenti prend la place des faits." },
+  { thought: "Je ne réussis jamais à m'en sortir dans ces situations.", schema: 'surgen', explain: "«Jamais» généralise un ressenti ponctuel à toute une vie - c'est de la surgénéralisation." },
+  { thought: "Mon ami ne m'a pas répondu - il est sûrement fâché contre moi.", schema: 'lecture', explain: "Tu interprètes le silence sans preuve réelle - ton cerveau comble le vide avec ce qu'il craint." },
+  { thought: "La journée a été difficile. (Les 3 bons moments ? Pas comptés.)", schema: 'filtre', explain: "Le filtre mental ne laisse passer que les informations négatives et écarte automatiquement le reste." },
+  { thought: "L'ambiance tendue au bureau aujourd'hui, c'est à cause de moi.", schema: 'personnalisation', explain: "Tu t'attribues la responsabilité d'une situation qui dépend de nombreux autres facteurs." },
 ];
 const schemaLabels = {
   toutourien: '⚖️ Tout ou rien',

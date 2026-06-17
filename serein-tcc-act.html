@@ -1113,10 +1113,19 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     <div class="step" id="step-4">
       <div class="step-num">4</div>
       <h2>La pensée équilibrée</h2>
-      <p class="mb-1">Quelle perspective plus réaliste et bienveillante peux-tu adopter ?</p>
+      <p class="mb-1">Reformule la pensée de façon <strong>réaliste</strong> - pas positive. L'objectif est de "penser juste", pas de voir la vie en rose.</p>
+      <details class="onboarding-tip" style="cursor:pointer;margin-bottom:0.75rem;">
+        <summary style="font-weight:600;list-style:none;display:flex;align-items:center;gap:0.4rem;">✅ Vérifier que ma pensée est équilibrée</summary>
+        <ul style="margin:0.6rem 0 0;padding-left:1.1rem;font-size:0.83rem;display:flex;flex-direction:column;gap:0.4rem;">
+          <li>Quelles preuves <em>réelles et objectives</em> valident ou invalident cette nouvelle pensée ?</li>
+          <li>Est-ce que j'ignore des éléments contraires pour me rassurer, ou ai-je pris en compte tous les faits ?</li>
+          <li>Si mon meilleur ami avait cette pensée dans la même situation, est-ce que je lui dirais que c'est réaliste ?</li>
+          <li>Cette pensée m'aide-t-elle à avancer vers mes objectifs, ou évite-t-elle simplement une émotion désagréable ?</li>
+        </ul>
+      </details>
       <div class="form-group">
-        <label class="form-label" for="balancedThoughtField">Pensée plus équilibrée</label>
-        <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : J'ai oublié cette fois, ça ne fait pas de moi un·e mauvais·e professionnel·le…" aria-label="Pensée équilibrée" oninput="updateReformulation()"></textarea>
+        <label class="form-label" for="balancedThoughtField">Pensée équilibrée</label>
+        <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : Cet examen est difficile et je peux faire des erreurs, mais je me suis préparé - je vais faire de mon mieux." aria-label="Pensée équilibrée" oninput="updateReformulation()"></textarea>
       </div>
       <div class="reformulation-card" id="reformulationCard">
         <div class="section-title">✨ Reformulation</div>
@@ -1327,6 +1336,19 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
     </div>
 
     <p>Identifie la situation que tu évites, puis progresse palier par palier.</p>
+
+    <details class="onboarding-tip" style="cursor:pointer;margin-bottom:1rem;">
+      <summary style="font-weight:600;list-style:none;display:flex;align-items:center;gap:0.4rem;">🧠 Pourquoi ça fonctionne</summary>
+      <div style="margin-top:0.6rem;font-size:0.83rem;display:flex;flex-direction:column;gap:0.5rem;">
+        <p style="margin:0;">L'évitement soulage l'anxiété <em>immédiatement</em>, mais apprend à ton cerveau que fuir est la seule solution. À force, la peur grandit. L'exposition graduelle rompt ce cycle : en restant dans la situation, tu découvres que l'anxiété culmine puis redescend naturellement - et que tes prédictions catastrophistes ne se réalisent pas.</p>
+        <p style="margin:0;font-weight:600;">3 règles pour que ça fonctionne :</p>
+        <ul style="margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:0.3rem;">
+          <li><strong>Progressive</strong> - commence par ce qui fait <em>un peu</em> peur, pas par ce qui terrifie</li>
+          <li><strong>Prolongée</strong> - reste assez longtemps pour que l'anxiété ait le temps de redescendre</li>
+          <li><strong>Complète</strong> - évite les "grigris" discrets (téléphone en main, se distraire mentalement) qui empêchent l'apprentissage</li>
+        </ul>
+      </div>
+    </details>
 
     <div class="form-group mt-2">
       <label class="form-label" for="fearField">Situation que tu évites</label>

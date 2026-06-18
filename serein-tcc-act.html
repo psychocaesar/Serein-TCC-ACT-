@@ -497,6 +497,26 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 .coping-preset-add:hover { background: rgba(13,27,21,0.22); }
 
+/* ─── JOURNAL TRAPS & HISTORY ─── */
+.trap-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
+.trap-chip { border: 1px solid var(--color-border); background: none; cursor: pointer; border-radius: 1.5rem; padding: 0.45rem 0.8rem; font-size: 0.82rem; color: var(--color-muted); font-family: var(--font-body); transition: all var(--transition); }
+.trap-chip.selected { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
+.trap-hint { font-size: 0.74rem; color: var(--color-muted); margin-top: 0.4rem; }
+.trap-examples { display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 0.875rem; }
+.trap-example { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; padding: 0.875rem; }
+.trap-example-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; }
+.trap-example-row { display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 0.3rem; }
+.trap-example-row p { margin: 0; font-size: 0.82rem; color: var(--color-text); flex: 1; line-height: 1.4; }
+.te-label { flex-shrink: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.15rem 0.45rem; border-radius: 1rem; margin-top: 0.1rem; }
+.te-bad { background: rgba(224,112,112,0.15); color: #e07070; }
+.te-good { background: var(--color-primary-light); color: var(--color-primary); }
+.journal-entry { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1rem 1.125rem; margin-bottom: 0.75rem; }
+.journal-entry-date { font-size: 0.72rem; color: var(--color-muted); margin-bottom: 0.4rem; }
+.journal-entry-thought { font-size: 0.84rem; color: var(--color-muted); text-decoration: line-through; margin-bottom: 0.3rem; line-height: 1.4; }
+.journal-entry-balanced { font-size: 0.9rem; color: var(--color-text); font-weight: 500; margin-bottom: 0.5rem; line-height: 1.45; }
+.journal-entry-traps { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.5rem; }
+.journal-entry-traps span { font-size: 0.68rem; color: var(--color-primary); background: var(--color-primary-light); border-radius: 1rem; padding: 0.1rem 0.5rem; }
+
 /* ─── CHECK-IN HISTORY (tracking) ─── */
 .checkin-history { display: flex; flex-direction: column; gap: 0.5rem; }
 .checkin-entry {
@@ -1234,13 +1254,17 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
       <h1>Restructure ta <span>pensée</span></h1>
     </div>
 
+    <button class="btn btn-ghost" onclick="navigateTo('jhistory')" aria-label="Voir mes entrées de journal" style="font-size:0.82rem;margin-bottom:0.5rem;">
+      📓 Mes entrées
+    </button>
+
     <div class="progress-wrap">
       <div class="progress-label">
-        <span id="journalStepLabel">Étape 1 / 4</span>
+        <span id="journalStepLabel">Étape 1 / 5</span>
         <span id="journalStepName">Situation</span>
       </div>
-      <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du journal">
-        <div class="progress-fill" id="journalProgress" style="width: 25%"></div>
+      <div class="progress-bar" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Progression du journal">
+        <div class="progress-fill" id="journalProgress" style="width: 20%"></div>
       </div>
     </div>
 
@@ -1288,8 +1312,21 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 
     <div class="step" id="step-4">
       <div class="step-num">4</div>
+      <h2>Les pièges de pensée</h2>
+      <p class="mb-1">Quels schémas reconnais-tu dans ta pensée automatique ? Sélectionne-en jusqu'à 3.</p>
+      <div class="trap-chips" id="journalTrapChips" role="group" aria-label="Pièges de pensée"></div>
+      <div class="trap-hint" id="journalTrapHint"></div>
+      <div class="row mt-2">
+        <button class="btn btn-ghost" onclick="journalStep(3)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-primary" onclick="journalStep(5)" aria-label="Étape suivante">Suivant →</button>
+      </div>
+    </div>
+
+    <div class="step" id="step-5">
+      <div class="step-num">5</div>
       <h2>La pensée équilibrée</h2>
       <p class="mb-1">Reformule la pensée de façon <strong>réaliste</strong> - pas positive. L'objectif est de "penser juste", pas de voir la vie en rose.</p>
+      <div class="trap-examples" id="trapExamples" style="display:none;"></div>
       <details class="onboarding-tip" style="cursor:pointer;margin-bottom:0.75rem;">
         <summary style="font-weight:600;list-style:none;display:flex;align-items:center;gap:0.4rem;">✅ Vérifier que ma pensée est équilibrée</summary>
         <ul style="margin:0.6rem 0 0;padding-left:1.1rem;font-size:0.83rem;display:flex;flex-direction:column;gap:0.4rem;">
@@ -1310,7 +1347,7 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
         <p class="after"><strong>Après :</strong> <span id="reformAfter"></span></p>
       </div>
       <div class="row mt-2">
-        <button class="btn btn-ghost" onclick="journalStep(3)" aria-label="Retour">← Retour</button>
+        <button class="btn btn-ghost" onclick="journalStep(4)" aria-label="Retour">← Retour</button>
         <button class="btn btn-primary" onclick="finishJournal()" aria-label="Terminer">Terminer ✓</button>
       </div>
     </div>
@@ -1774,6 +1811,23 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
     </div>
   </div>
 
+  <!-- ═══ SCREEN : HISTORIQUE DU JOURNAL ═══ -->
+  <div class="screen" id="screen-jhistory" role="main" aria-label="Historique du journal">
+    <div class="greeting-block">
+      <div class="time-label">Journal TCC</div>
+      <h1>Mes <span>entrées</span></h1>
+    </div>
+    <p>Tes restructurations enregistrées. Relis-les pour ancrer tes pensées équilibrées.</p>
+
+    <button class="btn btn-primary mt-2" onclick="startNewJournal()" aria-label="Nouvelle entrée de journal">+ Nouvelle entrée</button>
+
+    <div class="mt-2" id="journalHistoryList"></div>
+
+    <div class="mt-3">
+      <button class="btn btn-ghost" onclick="navigateTo('home')" aria-label="Retour à l'accueil">← Accueil</button>
+    </div>
+  </div>
+
   <!-- ═══ SCREEN : ÉCHELLE DE CATASTROPHE ═══ -->
   <div class="screen" id="screen-catastrophe" role="main" aria-label="Échelle de catastrophe">
     <div class="greeting-block">
@@ -1963,6 +2017,7 @@ const state = {
   currentScreen: 'home',
   selectedEmotion: null,
   journalStep: 1,
+  journalTraps: [],
   fearDone: { 1: false, 2: false, 3: false, 4: false },
 };
 
@@ -2039,14 +2094,14 @@ const screenMap = {
   calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
   cards: 'screen-cards', diary: 'screen-diary', whatup: 'screen-whatup', quiz: 'screen-quiz',
   tracking: 'screen-tracking', catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
-  experiments: 'screen-experiments',
+  experiments: 'screen-experiments', jhistory: 'screen-jhistory',
 };
 const navMap = {
   home: 'nav-home', checkin: 'nav-home', journal: 'nav-journal',
   calm: 'nav-calm', schemas: 'nav-schemas', ladder: 'nav-schemas',
   cards: 'nav-home', diary: 'nav-home', whatup: 'nav-home', quiz: 'nav-schemas',
   tracking: 'nav-tracking', catastrophe: 'nav-schemas', metaphores: 'nav-schemas',
-  experiments: 'nav-schemas',
+  experiments: 'nav-schemas', jhistory: 'nav-journal',
 };
 const screenInitFns = {
   checkin: initCheckin,
@@ -2059,6 +2114,7 @@ const screenInitFns = {
   tracking: renderTracking,
   catastrophe: initCatastrophe,
   experiments: renderExperiments,
+  jhistory: renderJournalHistory,
 };
 
 function navigateTo(screen) {
@@ -2219,19 +2275,61 @@ function renderCheckinHistory() {
 }
 
 // ─── JOURNAL ───
-const stepLabels = ['', 'Situation', 'Pensée automatique', 'Émotion', 'Pensée équilibrée'];
-const progressPct = ['', '25', '50', '75', '100'];
+const stepLabels = ['', 'Situation', 'Pensée automatique', 'Émotion', 'Pièges de pensée', 'Pensée équilibrée'];
+const progressPct = ['', '20', '40', '60', '80', '100'];
+const JOURNAL_STEPS = 5;
+
+// Exemples déséquilibré -> équilibré par schéma (guident la restructuration)
+const schemaExamples = {
+  catastrophisme: { unbalanced: "Si je rate cette présentation, ma carrière est finie.", balanced: "Une présentation moyenne reste un événement isolé ; je peux me rattraper et progresser." },
+  lecture: { unbalanced: "Mon silence l'a vexé, il me trouve nul·le.", balanced: "Je ne connais pas ses pensées ; il peut simplement être fatigué ou occupé." },
+  toutourien: { unbalanced: "Soit je réussis tout, soit je suis un échec.", balanced: "Je peux réussir certaines parties et en rater d'autres - c'est le cas de la plupart des choses." },
+  surgen: { unbalanced: "Je rate toujours tout.", balanced: "J'ai raté cette fois, mais j'ai aussi réussi à d'autres moments." },
+  filtre: { unbalanced: "Toute la journée a été nulle.", balanced: "Un moment difficile ne résume pas la journée ; il y a aussi eu des instants neutres ou bons." },
+  personnalisation: { unbalanced: "Si l'ambiance est tendue, c'est forcément à cause de moi.", balanced: "Beaucoup de facteurs influencent l'ambiance ; je n'en suis pas la seule cause." },
+};
 
 function journalStep(n) {
   if (n < 1) { navigateTo('checkin'); return; }
-  if (n > 4) { finishJournal(); return; }
-  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  if (n > JOURNAL_STEPS) { finishJournal(); return; }
+  document.querySelectorAll('#screen-journal .step').forEach(s => s.classList.remove('active'));
   document.getElementById(`step-${n}`).classList.add('active');
   state.journalStep = n;
-  document.getElementById('journalStepLabel').textContent = `Étape ${n} / 4`;
+  document.getElementById('journalStepLabel').textContent = `Étape ${n} / ${JOURNAL_STEPS}`;
   document.getElementById('journalStepName').textContent = stepLabels[n];
   document.getElementById('journalProgress').style.width = progressPct[n] + '%';
   document.getElementById('journalProgress').parentElement.setAttribute('aria-valuenow', progressPct[n]);
+  if (n === 4) renderJournalTrapChips();
+  if (n === 5) renderTrapExamples();
+}
+function renderJournalTrapChips() {
+  const c = document.getElementById('journalTrapChips');
+  if (!c) return;
+  c.innerHTML = Object.entries(schemas).map(([k, v]) =>
+    `<button type="button" class="trap-chip${state.journalTraps.includes(k) ? ' selected' : ''}" onclick="toggleJournalTrap('${k}')" aria-pressed="${state.journalTraps.includes(k)}" aria-label="${v.title}">${v.title}</button>`
+  ).join('');
+  const hint = document.getElementById('journalTrapHint');
+  if (hint) hint.textContent = state.journalTraps.length >= 3 ? 'Maximum de 3 pièges atteint.' : `${state.journalTraps.length} / 3 sélectionné(s)`;
+}
+function toggleJournalTrap(k) {
+  const i = state.journalTraps.indexOf(k);
+  if (i >= 0) state.journalTraps.splice(i, 1);
+  else { if (state.journalTraps.length >= 3) return; state.journalTraps.push(k); }
+  renderJournalTrapChips();
+}
+function renderTrapExamples() {
+  const box = document.getElementById('trapExamples');
+  if (!box) return;
+  if (!state.journalTraps.length) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'flex';
+  box.innerHTML = state.journalTraps.map(k => {
+    const ex = schemaExamples[k], s = schemas[k];
+    return `<div class="trap-example">
+      <div class="trap-example-title">${s.title}</div>
+      <div class="trap-example-row"><span class="te-label te-bad">Déséquilibré</span><p>${escHtml(ex.unbalanced)}</p></div>
+      <div class="trap-example-row"><span class="te-label te-good">Équilibré</span><p>${escHtml(ex.balanced)}</p></div>
+    </div>`;
+  }).join('');
 }
 function updateReformulation() {
   const auto = document.getElementById('autoThoughtField').value.trim();
@@ -2243,7 +2341,55 @@ function updateReformulation() {
     card.classList.add('visible');
   } else { card.classList.remove('visible'); }
 }
-function finishJournal() { incrementSessions(); navigateTo('schemas'); }
+function loadJournalEntries() { return JSON.parse(localStorage.getItem('serein_journal') || '[]'); }
+function resetJournal() {
+  ['situationField', 'autoThoughtField', 'emotionField', 'balancedThoughtField'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  state.journalTraps = [];
+  const ref = document.getElementById('reformulationCard'); if (ref) ref.classList.remove('visible');
+  const tex = document.getElementById('trapExamples'); if (tex) { tex.style.display = 'none'; tex.innerHTML = ''; }
+  journalStep(1);
+}
+function startNewJournal() { resetJournal(); navigateTo('journal'); }
+function finishJournal() {
+  const situation = document.getElementById('situationField').value.trim();
+  const thought = document.getElementById('autoThoughtField').value.trim();
+  const emotion = document.getElementById('emotionField').value.trim();
+  const balanced = document.getElementById('balancedThoughtField').value.trim();
+  if (situation || thought || balanced) {
+    const all = loadJournalEntries();
+    all.unshift({ ts: Date.now(), date: new Date().toLocaleDateString('fr-FR'), situation, thought, emotion, traps: [...state.journalTraps], balanced });
+    if (all.length > 90) all.pop();
+    localStorage.setItem('serein_journal', JSON.stringify(all));
+  }
+  incrementSessions();
+  resetJournal();
+  navigateTo('jhistory');
+}
+function renderJournalHistory() {
+  const list = document.getElementById('journalHistoryList');
+  if (!list) return;
+  const all = loadJournalEntries();
+  if (!all.length) {
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">📓</div><p>Aucune entrée pour l\'instant.<br>Restructure une pensée pour commencer.</p></div>';
+    return;
+  }
+  list.innerHTML = all.map(e => {
+    const d = new Date(e.ts);
+    const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const traps = (e.traps || []).map(k => schemas[k] ? `<span>${schemas[k].title}</span>` : '').join('');
+    return `<div class="journal-entry">
+      <div class="journal-entry-date">${dateStr}</div>
+      ${e.thought ? `<div class="journal-entry-thought">${escHtml(e.thought)}</div>` : ''}
+      ${e.balanced ? `<div class="journal-entry-balanced">✨ ${escHtml(e.balanced)}</div>` : ''}
+      ${traps ? `<div class="journal-entry-traps">${traps}</div>` : ''}
+      <button class="btn btn-ghost" style="font-size:0.78rem;padding:0.3rem 0.7rem;" onclick="deleteJournalEntry(${e.ts})" aria-label="Supprimer cette entrée">Supprimer</button>
+    </div>`;
+  }).join('');
+}
+function deleteJournalEntry(ts) {
+  localStorage.setItem('serein_journal', JSON.stringify(loadJournalEntries().filter(e => e.ts !== ts)));
+  renderJournalHistory();
+}
 
 // ─── DEFUSION EXERCISES ───
 const defusionExercises = [
@@ -3194,6 +3340,7 @@ function exportData() {
     positive_diary: JSON.parse(localStorage.getItem('serein_diary') || '[]'),
     anxiety_log: JSON.parse(localStorage.getItem('serein_anxiety_log') || '[]'),
     checkins: JSON.parse(localStorage.getItem('serein_checkins') || '[]'),
+    thought_journal: JSON.parse(localStorage.getItem('serein_journal') || '[]'),
     behavioral_experiments: JSON.parse(localStorage.getItem('serein_experiments') || '[]'),
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });

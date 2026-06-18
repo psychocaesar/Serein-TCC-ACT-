@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="Serein TCC·ACT - Soutien émotionnel offline-first, sans pub, sans compte">
 <meta name="theme-color" content="#0d1b15">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -124,8 +124,8 @@ body {
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.25rem 0.5rem;
+  justify-content: flex-end;
+  padding: calc(env(safe-area-inset-top) + 0.5rem) 1rem 0.25rem;
   flex-shrink: 0;
   gap: 0.5rem;
 }
@@ -160,7 +160,7 @@ body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 1.25rem calc(var(--nav-height) + 1rem);
+  padding: 0 1.25rem calc(var(--nav-height) + env(safe-area-inset-bottom) + 1rem);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
@@ -180,13 +180,13 @@ body {
   bottom: 0; left: 50%;
   transform: translateX(-50%);
   width: 100%; max-width: 480px;
-  height: var(--nav-height);
+  min-height: var(--nav-height);
   background: var(--color-surface-2);
   border-top: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 0.25rem;
+  padding: 0 0.25rem env(safe-area-inset-bottom);
   backdrop-filter: blur(16px);
   z-index: 100;
 }
@@ -763,7 +763,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 /* ─── SOS FAB ─── */
 .fab-sos {
   position: fixed;
-  bottom: calc(var(--nav-height) + 0.75rem); right: 1rem;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem); right: 1rem;
   z-index: 90;
   background: linear-gradient(135deg, #c0504a, #e07060);
   color: #fff; border: none; border-radius: 2rem;
@@ -1086,22 +1086,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
 <!-- ─── HEADER ─── -->
 <header class="app-header">
-  <div class="app-logo">
-    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="16" cy="16" r="15" stroke="url(#lg1)" stroke-width="2"/>
-      <path d="M10 16c2-4 4-6 6-6s4 2 6 6-2 8-6 8-8-4-6-8z" fill="url(#lg2)" opacity="0.7"/>
-      <circle cx="16" cy="13" r="2.5" fill="url(#lg1)"/>
-      <defs>
-        <linearGradient id="lg1" x1="6" y1="6" x2="26" y2="26" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#93c9ac"/><stop offset="1" stop-color="#d8b78a"/>
-        </linearGradient>
-        <linearGradient id="lg2" x1="10" y1="10" x2="22" y2="24" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#93c9ac"/><stop offset="1" stop-color="#d8b78a"/>
-        </linearGradient>
-      </defs>
-    </svg>
-    <span>Serein TCC·ACT</span>
-  </div>
   <div class="header-actions">
     <button class="icon-btn" id="themeToggle" aria-label="Basculer thème clair / sombre">
       <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2120,7 +2104,7 @@ function updateThemeIcon(theme) {
 // ─── GREETING ───
 function setGreeting() {
   const h = new Date().getHours();
-  const slots = [[5,'Bonjour ☀️','Commence la journée avec clarté.'],[12,'Bon après-midi 🌤️','Prends un moment pour toi.'],[18,'Bonne soirée 🌙','Comment s\'est passée ta journée ?'],[24,'Bonne nuit 🌟','Prends soin de toi.']];
+  const slots = [[5,'Bonne nuit 🌟','Prends soin de toi.'],[12,'Bonjour ☀️','Commence la journée avec clarté.'],[18,'Bon après-midi 🌤️','Prends un moment pour toi.'],[24,'Bonne soirée 🌙','Comment s\'est passée ta journée ?']];
   const [, label, sub] = slots.find(([end]) => h < end) || slots[slots.length - 1];
   document.getElementById('timeLabel').textContent = label;
   document.querySelector('#screen-home .sub-text').textContent = sub;
@@ -3522,6 +3506,14 @@ document.getElementById('breathCircle').addEventListener('keydown', e => {
 });
 document.querySelectorAll('.carousel-card').forEach(c => {
   c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
+});
+
+// ─── CLAVIER : garder le champ actif visible quand le clavier s'ouvre ───
+document.addEventListener('focusin', (e) => {
+  const el = e.target;
+  if (el && el.matches && el.matches('input, textarea, [contenteditable="true"]')) {
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 280);
+  }
 });
 
 initTheme();

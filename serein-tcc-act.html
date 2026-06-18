@@ -1980,7 +1980,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="greeting-block">
       <div class="time-label">🧭 Comprendre</div>
       <h1>Travailler sur tes <span>pensées</span></h1>
-      <p class="sub-text">Démêler, identifier, tester — à ton rythme.</p>
+      <p class="sub-text">Démêler, identifier, tester - à ton rythme.</p>
     </div>
     <div class="hub-list">
       <button class="hub-card" onclick="navigateTo('journal')" aria-label="Journal de pensées">
@@ -2079,19 +2079,19 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </svg>
     <span>Accueil</span>
   </button>
-  <button class="nav-btn" id="nav-apaiser" onclick="navigateTo('apaiser')" aria-label="Apaiser — revenir au calme">
+  <button class="nav-btn" id="nav-apaiser" onclick="navigateTo('apaiser')" aria-label="Apaiser - revenir au calme">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
     </svg>
     <span>Apaiser</span>
   </button>
-  <button class="nav-btn" id="nav-comprendre" onclick="navigateTo('comprendre')" aria-label="Comprendre — travailler sur mes pensées">
+  <button class="nav-btn" id="nav-comprendre" onclick="navigateTo('comprendre')" aria-label="Comprendre - travailler sur mes pensées">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
     </svg>
     <span>Comprendre</span>
   </button>
-  <button class="nav-btn" id="nav-parcours" onclick="navigateTo('parcours')" aria-label="Mon parcours — suivi et données">
+  <button class="nav-btn" id="nav-parcours" onclick="navigateTo('parcours')" aria-label="Mon parcours - suivi et données">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
     </svg>
@@ -2170,7 +2170,7 @@ function updateThemeIcon(theme) {
 // ─── GREETING ───
 function setGreeting() {
   const h = new Date().getHours();
-  const slots = [[5,'Bonne nuit 🌟','Prends soin de toi.'],[12,'Bonjour ☀️','Commence la journée avec clarté.'],[18,'Bon après-midi 🌤️','Prends un moment pour toi.'],[24,'Bonne soirée 🌙','Comment s\'est passée ta journée ?']];
+  const slots = [[5,'Bonne nuit 🌟','Prends soin de toi.'],[12,'Bonjour ☀️','Commence la journée avec clarté.'],[18,'Bon après-midi 🌤️','Prends un moment pour toi.'],[24,'Bonne soirée 🌙','Prends un moment pour faire le point.']];
   const [, label, sub] = slots.find(([end]) => h < end) || slots[slots.length - 1];
   document.getElementById('timeLabel').textContent = label;
   document.querySelector('#screen-home .sub-text').textContent = sub;
@@ -3071,7 +3071,7 @@ function renderDailyCheckinCardForm() {
     { e: '😰', l: 'Intense', v: 10 },
   ];
   card.innerHTML = `
-    <h3>Comment tu te sens maintenant ?</h3>
+    <h3>Note ton niveau du jour</h3>
     <div class="intensity-chips" role="group" aria-label="Intensité ressentie de 1 à 10">
       ${chips.map(c => `<button class="intensity-chip" onclick="logAnxiety(${c.v})" aria-label="${c.l}, intensité ${c.v} sur 10"><span class="ic-emoji">${c.e}</span><span>${c.l}</span></button>`).join('')}
     </div>`;

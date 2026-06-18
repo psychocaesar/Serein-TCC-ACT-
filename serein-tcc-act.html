@@ -645,6 +645,8 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 .exp-area-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
 .exp-area-hint { font-size: 0.74rem; color: var(--color-muted); font-style: italic; margin: 0.4rem 0 0.2rem; min-height: 0.9rem; }
 input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid var(--color-border); border-radius: 0.875rem; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 0.9rem; }
+.exp-notif-note { font-size: 0.8rem; color: var(--color-muted); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.875rem; padding: 0.7rem 0.875rem; line-height: 1.45; }
+.exp-notif-note.granted { color: var(--color-primary); border-color: var(--color-primary); background: var(--color-primary-light); }
 
 /* ─── FEAR LADDER ─── */
 .fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
@@ -1967,6 +1969,8 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
     <button class="btn btn-secondary" id="expAddBtn" onclick="toggleExpForm()" aria-label="Nouvelle expérience">+ Nouvelle expérience</button>
 
+    <div id="expNotifRow" class="mt-2"></div>
+
     <div class="card-add-form" id="expAddForm">
       <div class="form-group">
         <label class="form-label">Domaine de vie concerné</label>
@@ -2144,7 +2148,7 @@ const screenInitFns = {
   calm: loadBells,
   tracking: renderTracking,
   catastrophe: initCatastrophe,
-  experiments: renderExperiments,
+  experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
 };
 
@@ -3192,6 +3196,74 @@ function computeCatastrophe() {
   document.getElementById('cataResult').classList.add('visible');
 }
 
+// ─── NOTIFICATIONS (Capacitor LocalNotifications + fallback web) ───
+const Notify = {
+  isCap() { return !!(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications); },
+  cap() { return window.Capacitor.Plugins.LocalNotifications; },
+  supported() { return this.isCap() || ('Notification' in window); },
+  async permission() {
+    if (this.isCap()) { try { return (await this.cap().checkPermissions()).display; } catch (e) { return 'denied'; } }
+    if ('Notification' in window) { const p = Notification.permission; return p === 'granted' ? 'granted' : (p === 'denied' ? 'denied' : 'prompt'); }
+    return 'denied';
+  },
+  async request() {
+    if (this.isCap()) { try { return (await this.cap().requestPermissions()).display === 'granted'; } catch (e) { return false; } }
+    if ('Notification' in window) { try { return (await Notification.requestPermission()) === 'granted'; } catch (e) { return false; } }
+    return false;
+  },
+  async schedule(id, title, body, atDate) {
+    if (atDate.getTime() <= Date.now()) return;
+    if (this.isCap()) { try { await this.cap().schedule({ notifications: [{ id, title, body, schedule: { at: atDate } }] }); } catch (e) {} return; }
+    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]');
+    q.push({ id, title, body, at: atDate.getTime(), shown: false });
+    localStorage.setItem('serein_notif_queue', JSON.stringify(q));
+  },
+  async cancel(ids) {
+    if (!ids || !ids.length) return;
+    if (this.isCap()) { try { await this.cap().cancel({ notifications: ids.map(id => ({ id })) }); } catch (e) {} return; }
+    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]').filter(n => !ids.includes(n.id));
+    localStorage.setItem('serein_notif_queue', JSON.stringify(q));
+  },
+  // Fallback web : déclenche les rappels échus à l'ouverture de l'app
+  flushWeb() {
+    if (this.isCap() || !('Notification' in window) || Notification.permission !== 'granted') return;
+    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]');
+    const now = Date.now(); let changed = false;
+    q.forEach(n => { if (!n.shown && n.at <= now) { try { new Notification(n.title, { body: n.body }); } catch (e) {} n.shown = true; changed = true; } });
+    if (changed) localStorage.setItem('serein_notif_queue', JSON.stringify(q.filter(n => !n.shown || n.at > now - 7 * 86400000)));
+  },
+};
+const newNotifId = () => Math.floor(Math.random() * 2000000000) + 1;
+
+async function scheduleExperimentReminders(exp) {
+  if (!exp.targetDate || (await Notify.permission()) !== 'granted') return;
+  const at9 = (off) => { const d = new Date(exp.targetDate + 'T09:00:00'); d.setDate(d.getDate() + off); return d; };
+  const title = '🔬 Expérience comportementale';
+  const ids = [];
+  const before = at9(-3), dayOf = at9(0);
+  if (before.getTime() > Date.now()) { const id = newNotifId(); await Notify.schedule(id, title, `Dans 3 jours : « ${exp.action} ». Prépare-toi en douceur.`, before); ids.push(id); }
+  if (dayOf.getTime() > Date.now()) { const id = newNotifId(); await Notify.schedule(id, title, `C'est aujourd'hui : « ${exp.action} ». Teste ta prédiction, puis observe ce qui se passe.`, dayOf); ids.push(id); }
+  const all = loadExperiments(); const e = all.find(x => x.id === exp.id);
+  if (e) { e.notifIds = ids; saveExperiments(all); }
+}
+async function renderNotifRow() {
+  const row = document.getElementById('expNotifRow');
+  if (!row) return;
+  if (!Notify.supported()) { row.innerHTML = '<div class="exp-notif-note">🔔 Les rappels de date seront disponibles dans l\'application mobile.</div>'; return; }
+  const perm = await Notify.permission();
+  if (perm === 'granted') row.innerHTML = '<div class="exp-notif-note granted">🔔 Rappels activés - tu seras notifié·e 3 jours avant et le jour de chaque expérience datée.</div>';
+  else if (perm === 'denied') row.innerHTML = '<div class="exp-notif-note">🔕 Rappels refusés. Active-les dans les réglages de ton appareil pour être notifié·e des expériences à venir.</div>';
+  else row.innerHTML = '<button class="btn btn-secondary" onclick="enableNotifications()" aria-label="Activer les rappels de date">🔔 Activer les rappels de date</button>';
+}
+async function enableNotifications() {
+  if (await Notify.request()) {
+    for (const e of loadExperiments()) {
+      if (e.targetDate && e.observation === null && (!e.notifIds || !e.notifIds.length)) await scheduleExperimentReminders(e);
+    }
+  }
+  renderNotifRow();
+}
+
 // ─── EXPÉRIENCES COMPORTEMENTALES ───
 const expAreas = {
   quotidien: { emoji: '🗓️', label: 'Vie quotidienne', exAction: "Sortir faire une course à une heure de forte affluence.", exPrediction: "Je vais paniquer et devoir partir aussitôt." },
@@ -3252,6 +3324,7 @@ function saveExperiment() {
   document.getElementById('expAreaHint').textContent = '';
   document.getElementById('expAddForm').classList.remove('visible');
   renderExperiments();
+  if (targetDate) scheduleExperimentReminders(exps[0]);
 }
 function expDateStatus(iso) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -3264,6 +3337,8 @@ function expDateStatus(iso) {
   return { cls: 'todo', txt: `📅 Prévue ${fmt}` };
 }
 function deleteExperiment(id) {
+  const ex = loadExperiments().find(e => e.id === id);
+  if (ex && ex.notifIds) Notify.cancel(ex.notifIds);
   saveExperiments(loadExperiments().filter(e => e.id !== id));
   renderExperiments();
 }
@@ -3279,6 +3354,7 @@ function completeExperiment(id) {
   const e = exps.find(x => x.id === id);
   if (!e) return;
   e.observation = obs; e.beliefEnd = beliefEnd;
+  if (e.notifIds) { Notify.cancel(e.notifIds); e.notifIds = []; }
   saveExperiments(exps);
   renderExperiments();
 }
@@ -3450,6 +3526,7 @@ setGreeting();
 loadStats();
 initOnboarding();
 initDisclaimer();
+Notify.flushWeb();
 </script>
 </body>
 </html>

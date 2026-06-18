@@ -226,6 +226,39 @@ body {
 .hub-card .hub-text p { font-size: 0.8rem; color: var(--color-muted); line-height: 1.35; }
 .hub-card .hub-chevron { color: var(--color-muted); flex-shrink: 0; font-size: 1.2rem; }
 
+/* ─── MINI PROGRESSION (accueil) ─── */
+.mini-progress {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  margin-top: 0.75rem;
+  font-size: 0.82rem; color: var(--color-muted);
+}
+.mini-progress .mp-item { display: flex; align-items: center; gap: 0.3rem; }
+.mini-progress .mp-item strong { color: var(--color-text); font-weight: 600; }
+.mini-progress .mp-sep { color: var(--color-border); font-size: 1rem; user-select: none; }
+
+/* ─── PENSÉE DU JOUR (accueil) ─── */
+.daily-quote {
+  margin-top: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.daily-quote .dq-label {
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--color-primary);
+  margin-bottom: 0.4rem;
+}
+.daily-quote .dq-text {
+  font-size: 0.88rem; color: var(--color-text); line-height: 1.5;
+  font-style: italic;
+}
+
 /* ─── TYPOGRAPHY ─── */
 h1 { font-family: var(--font-title); font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
 h2 { font-family: var(--font-title); font-size: 1.2rem; font-weight: 600; }
@@ -1141,7 +1174,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       </button>
     </div>
 
+    <div id="miniProgress" class="mini-progress" style="display:none;" aria-label="Mini progression"></div>
+
     <div class="daily-checkin-card" id="dailyCheckinCard" role="group" aria-label="Note quotidienne d'intensité"></div>
+
+    <div id="dailyQuote" class="daily-quote" style="display:none;"></div>
 
     <div class="divider"></div>
 
@@ -2195,6 +2232,7 @@ const navMap = {
   parcours: 'nav-parcours', tracking: 'nav-parcours', diary: 'nav-parcours', jhistory: 'nav-parcours',
 };
 const screenInitFns = {
+  home: () => { renderMiniProgress(); renderDailyCheckinCard(); },
   parcours: loadStats,
   checkin: initCheckin,
   cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
@@ -3586,9 +3624,67 @@ document.addEventListener('focusin', (e) => {
   }
 });
 
+// ─── PENSÉE DU JOUR ───
+const dailyQuotes = [
+  "Une pensée n'est pas un fait. Tu peux l'observer sans lui obéir.",
+  "L'inconfort n'est pas un danger. C'est simplement une information.",
+  "Agir malgré la peur, c'est exactement ce qui réduit la peur.",
+  "Tes pensées ne sont pas toi. Tu es l'observateur, pas le contenu.",
+  "La perfection n'existe pas - une action imparfaite vaut mieux qu'une inaction parfaite.",
+  "Ce que tu évites te contrôle. Ce que tu traverses te libère.",
+  "Une émotion dure en moyenne 90 secondes si tu la laisses passer sans la combattre.",
+  "Le but n'est pas d'éliminer l'anxiété mais de ne plus la laisser décider pour toi.",
+  "Chaque petit pas compte, même ceux qui te semblent dérisoires.",
+  "Tu n'as pas à croire chaque pensée que ton cerveau produit.",
+  "Les erreurs font partie de l'apprentissage, pas de l'échec.",
+  "Ralentir n'est pas reculer. Reprendre son souffle, c'est déjà agir.",
+  "L'acceptation n'est pas la résignation - c'est voir les choses telles qu'elles sont.",
+  "Ton ressenti d'aujourd'hui ne prédit pas ton ressenti de demain.",
+  "Ce que tu résistes persiste. Ce que tu accueilles se transforme.",
+  "La rumination vit dans le passé et le futur. Ton corps, lui, est dans le présent.",
+  "Une pensée catastrophiste est une hypothèse, pas une certitude.",
+  "Demander de l'aide est un acte de courage, pas de faiblesse.",
+  "Tu peux avoir une pensée anxieuse et quand même agir selon tes valeurs.",
+  "Le silence intérieur ne vient pas de l'absence de pensées mais de la paix avec elles.",
+  "Chaque jour où tu t'en occupes un peu est un jour gagné.",
+  "Tes émotions difficiles te donnent une information sur ce qui compte pour toi.",
+  "La bienveillance envers toi-même est le point de départ, pas la récompense.",
+  "Ce n'est pas parce que tu le penses très fort que c'est vrai.",
+  "Progresser lentement reste progresser.",
+];
+function renderDailyQuote() {
+  const el = document.getElementById('dailyQuote');
+  if (!el) return;
+  const idx = Math.floor(Date.now() / 86400000) % dailyQuotes.length;
+  el.innerHTML = `<div class="dq-label">💡 Pensée du jour</div><p class="dq-text">${dailyQuotes[idx]}</p>`;
+  el.style.display = 'block';
+}
+
+// ─── MINI PROGRESSION ───
+function renderMiniProgress() {
+  const el = document.getElementById('miniProgress');
+  if (!el) return;
+  const stats = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  const streak = stats.streak || 0;
+  const log = loadAnxietyLog();
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 7);
+  const weekEntries = log.filter(e => e.date >= cutoff.toISOString().slice(0,10));
+  const showAvg = weekEntries.length >= 2;
+  const avg = showAvg ? (weekEntries.reduce((s, e) => s + e.intensity, 0) / weekEntries.length).toFixed(1) : null;
+  if (streak < 2 && !showAvg) { el.style.display = 'none'; return; }
+  let html = '';
+  if (streak >= 2) html += `<span class="mp-item">🔥 <strong>${streak}</strong> jours</span>`;
+  if (streak >= 2 && showAvg) html += `<span class="mp-sep">·</span>`;
+  if (showAvg) html += `<span class="mp-item">📊 Moy. <strong>${avg}/10</strong> cette sem.</span>`;
+  el.innerHTML = html;
+  el.style.display = 'flex';
+}
+
 initTheme();
 setGreeting();
 loadStats();
+renderDailyQuote();
+renderMiniProgress();
 initOnboarding();
 initDisclaimer();
 Notify.flushWeb();

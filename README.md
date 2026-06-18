@@ -77,7 +77,7 @@ Typographie : **Bricolage Grotesque** (titres) + **Hanken Grotesk** (corps), via
 ## Contraintes techniques
 
 - Single HTML file - CSS et JS entierement inline
-- Zero dependance externe (sauf Google Fonts)
+- Zero dependance externe ni reseau (polices embarquees en base64, offline complet)
 - Fonctionne sans serveur (`file://`)
 - Mobile-first, max-width 480px centre
 - Dark mode par defaut, light mode disponible

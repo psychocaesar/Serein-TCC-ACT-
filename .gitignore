@@ -1,0 +1,30 @@
+# Dépendances
+node_modules/
+
+# Sortie de build web (régénérée par scripts/build-www.mjs)
+www/
+
+# macOS
+.DS_Store
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/captures/
+android/local.properties
+android/.idea/
+*.keystore
+!debug.keystore
+# Assets web synchronisés par Capacitor (régénérés via npm run sync)
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/res/xml/config.xml
+
+# iOS
+ios/App/Pods/
+ios/App/build/
+ios/App/output/
+ios/App/App/public/
+DerivedData/
+xcuserdata/

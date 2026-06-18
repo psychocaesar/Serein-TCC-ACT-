@@ -97,6 +97,46 @@ Idees d'ameliorations futures :
 
 ---
 
+## Application mobile (Capacitor)
+
+La PWA est aussi empaquetee en application native iOS et Android via [Capacitor](https://capacitorjs.com/). Le fichier `serein-tcc-act.html` reste la source unique : un script genere le dossier `www/` (webDir) consomme par Capacitor.
+
+### Structure
+
+| Element | Role |
+|---|---|
+| `serein-tcc-act.html` | Source unique (aussi servie en PWA) |
+| `assets/*.mp3` | Sons de coherence cardiaque empaquetes (offline) |
+| `scripts/build-www.mjs` | Genere `www/` (index.html + sons) |
+| `capacitor.config.json` | appId `fr.sereinapp.tcc`, webDir `www` |
+| `android/`, `ios/` | Projets natifs Capacitor |
+| `codemagic.yaml` | CI build iOS (App Store / TestFlight) |
+
+### Plugins
+
+- `@capacitor/local-notifications` - rappels des experiences comportementales (3 jours avant + le jour J). Le code web detecte Capacitor et bascule automatiquement sur les notifications natives.
+
+### Developpement
+
+```bash
+npm install
+npm run sync            # genere www/ puis cap sync (android + ios)
+
+# Android (Android Studio requis)
+npm run open:android
+
+# iOS (macOS + Xcode requis)
+npm run open:ios
+```
+
+A chaque modification de `serein-tcc-act.html`, relancer `npm run sync` avant de builder.
+
+### Build iOS (Codemagic)
+
+Le workflow `codemagic.yaml` build l'IPA sur runner macOS et publie sur TestFlight. Prerequis : enregistrer le bundle id `fr.sereinapp.tcc` sur l'Apple Developer Portal et l'associer a l'integration App Store Connect.
+
+---
+
 ## Contribuer
 
 Les contributions sont bienvenues. Lire [CONTRIBUTING.md](CONTRIBUTING.md) avant de soumettre une PR.

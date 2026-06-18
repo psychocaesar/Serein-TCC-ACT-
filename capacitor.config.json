@@ -1,0 +1,8 @@
+{
+  "appId": "fr.sereinapp.tcc",
+  "appName": "Serein TCC-ACT",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

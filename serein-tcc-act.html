@@ -635,6 +635,16 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 .exp-card-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
 .exp-complete-form { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--color-border); display: none; }
 .exp-complete-form.visible { display: block; }
+.exp-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.6rem; align-items: center; }
+.exp-badges .exp-status { margin-bottom: 0; }
+.exp-status.today { background: rgba(216,183,138,0.18); color: var(--color-primary-2); }
+.exp-status.late { background: rgba(224,112,112,0.15); color: #e07070; }
+.exp-area-badge { font-size: 0.66rem; font-weight: 600; color: var(--color-muted); background: var(--color-surface-2); border-radius: 1rem; padding: 0.15rem 0.6rem; }
+.exp-area-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.3rem 0 0.2rem; }
+.exp-area-chip { border: 1px solid var(--color-border); background: none; cursor: pointer; border-radius: 1.2rem; padding: 0.4rem 0.7rem; font-size: 0.78rem; color: var(--color-muted); font-family: var(--font-body); transition: all var(--transition); }
+.exp-area-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
+.exp-area-hint { font-size: 0.74rem; color: var(--color-muted); font-style: italic; margin: 0.4rem 0 0.2rem; min-height: 0.9rem; }
+input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid var(--color-border); border-radius: 0.875rem; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); font-size: 0.9rem; }
 
 /* ─── FEAR LADDER ─── */
 .fear-levels { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
@@ -1959,6 +1969,11 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 
     <div class="card-add-form" id="expAddForm">
       <div class="form-group">
+        <label class="form-label">Domaine de vie concerné</label>
+        <div class="exp-area-chips" id="expAreaChips" role="group" aria-label="Domaine de vie"></div>
+        <div class="exp-area-hint" id="expAreaHint"></div>
+      </div>
+      <div class="form-group">
         <label class="form-label" for="expBelief">Croyance à tester</label>
         <input type="text" id="expBelief" placeholder="Ex. : Si je demande de l'aide, on me jugera incompétent·e." aria-label="Croyance à tester">
       </div>
@@ -1973,6 +1988,10 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
       <div class="form-group">
         <label class="form-label" for="expAction">L'expérience (que vas-tu faire, précisément ?)</label>
         <textarea id="expAction" rows="2" placeholder="Ex. : Demander de l'aide à un collègue sur une tâche, demain matin." aria-label="Expérience prévue"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="expDate">Date prévue <span style="font-weight:400;color:var(--color-muted);">(optionnel, sous 28 jours)</span></label>
+        <input type="date" id="expDate" aria-label="Date prévue de l'expérience">
       </div>
       <div class="row">
         <button class="btn btn-ghost" onclick="toggleExpForm()" aria-label="Annuler">Annuler</button>
@@ -3174,29 +3193,75 @@ function computeCatastrophe() {
 }
 
 // ─── EXPÉRIENCES COMPORTEMENTALES ───
+const expAreas = {
+  quotidien: { emoji: '🗓️', label: 'Vie quotidienne', exAction: "Sortir faire une course à une heure de forte affluence.", exPrediction: "Je vais paniquer et devoir partir aussitôt." },
+  travail:   { emoji: '💼', label: 'Travail', exAction: "Rendre un dossier sans le relire trois fois.", exPrediction: "Il sera plein d'erreurs et on me le reprochera." },
+  etudes:    { emoji: '🎓', label: 'Études', exAction: "Poser une question à voix haute en cours.", exPrediction: "Tout le monde va me trouver bête." },
+  social:    { emoji: '💬', label: 'Social', exAction: "Engager une conversation avec une personne que je connais peu.", exPrediction: "Ce sera gênant et elle m'ignorera." },
+  relations: { emoji: '❤️', label: 'Relations', exAction: "Exprimer un désaccord à un proche.", exPrediction: "Il va se fâcher et s'éloigner de moi." },
+  autre:     { emoji: '✨', label: 'Autre', exAction: "", exPrediction: "" },
+};
+let selectedExpArea = null;
 function loadExperiments() { return JSON.parse(localStorage.getItem('serein_experiments') || '[]'); }
 function saveExperiments(x) { localStorage.setItem('serein_experiments', JSON.stringify(x)); }
+function renderExpAreaChips() {
+  const c = document.getElementById('expAreaChips');
+  if (!c) return;
+  c.innerHTML = Object.entries(expAreas).map(([k, v]) =>
+    `<button type="button" class="exp-area-chip${selectedExpArea === k ? ' active' : ''}" onclick="selectExpArea('${k}')" aria-pressed="${selectedExpArea === k}" aria-label="${v.label}">${v.emoji} ${v.label}</button>`
+  ).join('');
+}
+function selectExpArea(k) {
+  selectedExpArea = k;
+  renderExpAreaChips();
+  const v = expAreas[k];
+  const hint = document.getElementById('expAreaHint');
+  if (hint) hint.textContent = v.exAction ? `Exemple : « ${v.exAction} »` : '';
+  if (v.exAction) document.getElementById('expAction').placeholder = 'Ex. : ' + v.exAction;
+  if (v.exPrediction) document.getElementById('expPrediction').placeholder = 'Ex. : ' + v.exPrediction;
+}
 function toggleExpForm() {
   const f = document.getElementById('expAddForm');
   f.classList.toggle('visible');
-  if (f.classList.contains('visible')) document.getElementById('expBelief').focus();
+  if (f.classList.contains('visible')) {
+    renderExpAreaChips();
+    const dateEl = document.getElementById('expDate');
+    const today = new Date(); const max = new Date(); max.setDate(max.getDate() + 28);
+    dateEl.min = today.toISOString().slice(0, 10);
+    dateEl.max = max.toISOString().slice(0, 10);
+    document.getElementById('expBelief').focus();
+  }
 }
 function saveExperiment() {
   const belief = document.getElementById('expBelief').value.trim();
   const beliefStart = +document.getElementById('expBeliefStart').value;
   const prediction = document.getElementById('expPrediction').value.trim();
   const action = document.getElementById('expAction').value.trim();
+  const targetDate = document.getElementById('expDate').value || null;
   if (!belief || !action) return;
   const exps = loadExperiments();
-  exps.unshift({ id: Date.now(), belief, beliefStart, prediction, action, observation: null, beliefEnd: null, date: new Date().toLocaleDateString('fr-FR') });
+  exps.unshift({ id: Date.now(), area: selectedExpArea, targetDate, belief, beliefStart, prediction, action, observation: null, beliefEnd: null, date: new Date().toLocaleDateString('fr-FR') });
   saveExperiments(exps);
   document.getElementById('expBelief').value = '';
   document.getElementById('expPrediction').value = '';
   document.getElementById('expAction').value = '';
+  document.getElementById('expDate').value = '';
   document.getElementById('expBeliefStart').value = 70;
   document.getElementById('expBeliefStartVal').textContent = '70';
+  selectedExpArea = null;
+  document.getElementById('expAreaHint').textContent = '';
   document.getElementById('expAddForm').classList.remove('visible');
   renderExperiments();
+}
+function expDateStatus(iso) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const d = new Date(iso + 'T00:00:00');
+  const diff = Math.round((d - today) / 86400000);
+  const fmt = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+  if (diff < 0) return { cls: 'late', txt: `⏰ En retard - ${fmt}` };
+  if (diff === 0) return { cls: 'today', txt: '📅 Aujourd\'hui' };
+  if (diff === 1) return { cls: 'today', txt: '📅 Demain' };
+  return { cls: 'todo', txt: `📅 Prévue ${fmt}` };
 }
 function deleteExperiment(id) {
   saveExperiments(loadExperiments().filter(e => e.id !== id));
@@ -3226,8 +3291,15 @@ function renderExperiments() {
   }
   list.innerHTML = exps.map(e => {
     const done = e.observation !== null;
+    const area = e.area && expAreas[e.area] ? expAreas[e.area] : null;
+    let dateBadge = '';
+    if (!done && e.targetDate) { const s = expDateStatus(e.targetDate); dateBadge = `<span class="exp-status ${s.cls}">${s.txt}</span>`; }
     let h = `<div class="exp-card">
-      <span class="exp-status ${done ? 'done' : 'todo'}">${done ? '✓ Réalisée' : '○ À réaliser'}</span>
+      <div class="exp-badges">
+        <span class="exp-status ${done ? 'done' : 'todo'}">${done ? '✓ Réalisée' : '○ À réaliser'}</span>
+        ${dateBadge}
+        ${area ? `<span class="exp-area-badge">${area.emoji} ${area.label}</span>` : ''}
+      </div>
       <div class="exp-belief">${escHtml(e.belief)}</div>
       <div class="exp-line"><strong>Prédiction :</strong> ${e.prediction ? escHtml(e.prediction) : '-'}</div>
       <div class="exp-line"><strong>Expérience :</strong> ${escHtml(e.action)}</div>`;

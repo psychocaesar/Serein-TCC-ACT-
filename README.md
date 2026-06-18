@@ -131,6 +131,18 @@ npm run open:ios
 
 A chaque modification de `serein-tcc-act.html`, relancer `npm run sync` avant de builder.
 
+### Icones et splash
+
+Generes par [`@capacitor/assets`](https://github.com/ionic-team/capacitor-assets) a partir du logo vectoriel (S neon) :
+
+```bash
+node tools/icons/make-sources.mjs   # genere les sources plein cadre dans assets/
+npx capacitor-assets generate       # decline toutes les tailles iOS + Android
+```
+
+- Master : `tools/icons/logo-serein.svg`
+- iOS : icone plein cadre (l'OS arrondit) ; Android : icone adaptative (S en avant-plan + fond degrade).
+
 ### Build iOS (Codemagic)
 
 Le workflow `codemagic.yaml` build l'IPA sur runner macOS et publie sur TestFlight. Prerequis : enregistrer le bundle id `fr.sereinapp.tcc` sur l'Apple Developer Portal et l'associer a l'integration App Store Connect.

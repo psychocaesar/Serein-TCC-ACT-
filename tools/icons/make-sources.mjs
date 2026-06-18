@@ -17,14 +17,13 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..', '..');
 const assets = join(root, 'assets');
-const svg = readFileSync(join(here, 'logo-serein.svg'), 'utf8');
+const svg = readFileSync(join(here, 'logo-serein-tcc.svg'), 'utf8');
 
-// Variantes par retrait d'elements
-const squared = svg.replace('rx="108"', 'rx="0"');                 // fond carre plein
-const bgOnly = squared.replace(/\s*<path[\s\S]*?\/>/g, '')         // fond + halo, sans S
-                      .replace(/\s*<circle[^>]*\/>/g, '');
-const fgOnly = svg.replace(/\s*<rect[^>]*\/>/, '')                 // S seul, fond transparent
-                  .replace(/\s*<ellipse[^>]*\/>/, '');
+// Variantes par retrait d'elements (decoupage par classe : bg / halo / fg)
+const removeClass = (s, cls) => s.replace(new RegExp('\\s*<[a-zA-Z]+[^>]*class="' + cls + '"[^>]*/>', 'g'), '');
+const squared = svg.replace('rx="108"', 'rx="0"');   // fond carre plein
+const bgOnly = removeClass(squared, 'fg');           // fond + halo, sans symbole
+const fgOnly = removeClass(removeClass(svg, 'bg'), 'halo'); // symbole seul, fond transparent
 
 const render = (svgStr, size) =>
   sharp(Buffer.from(svgStr), { density: 384 }).resize(size, size).png();

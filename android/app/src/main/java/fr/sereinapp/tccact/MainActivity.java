@@ -1,4 +1,4 @@
-package fr.sereinapp.tcc;
+package fr.sereinapp.tccact;
 
 import com.getcapacitor.BridgeActivity;
 

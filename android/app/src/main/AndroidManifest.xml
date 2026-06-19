@@ -32,4 +32,6 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Rappels d'expériences comportementales (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

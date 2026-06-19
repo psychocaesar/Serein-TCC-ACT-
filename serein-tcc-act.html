@@ -347,30 +347,6 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 }
 .stat-label { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.25rem; }
 
-/* ─── CAROUSEL ─── */
-.carousel-wrap { overflow: hidden; margin: 0 -1.25rem; }
-.carousel {
-  display: flex; gap: 0.75rem;
-  padding: 0.5rem 1.25rem 1rem;
-  overflow-x: auto; scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
-}
-.carousel::-webkit-scrollbar { display: none; }
-.carousel-card {
-  flex-shrink: 0; width: 155px;
-  scroll-snap-align: start;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1rem;
-  cursor: pointer;
-  transition: transform var(--transition), box-shadow var(--transition);
-  backdrop-filter: blur(8px);
-}
-.carousel-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-.carousel-card .icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
-.carousel-card h3 { font-size: 0.85rem; color: var(--color-text); }
-.carousel-card p { font-size: 0.75rem; margin-top: 0.25rem; }
-
 /* ─── EMOTION GRID ─── */
 .emotion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
 .emotion-btn {
@@ -925,21 +901,16 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .quiz-progress-bar { flex: 1; height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
 .quiz-progress-fill { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.4s ease; }
 
-/* ─── EXPORT / SETTINGS (home) ─── */
-.export-row {
-  display: flex; align-items: center; justify-content: space-between;
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1rem 1.25rem; margin: 0.625rem 0;
+/* ─── DONNÉES & CONFIDENTIALITÉ (parcours) ─── */
+.data-note { font-size: 0.78rem; color: var(--color-muted); line-height: 1.5; margin: 0.25rem 0 0.75rem; }
+.btn-wipe {
+  width: 100%; padding: 0.7rem 1rem; border-radius: 1rem;
+  border: 1px solid #c0504a; background: none; color: #c0504a;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background var(--transition), color var(--transition);
 }
-.export-row-label { font-size: 0.88rem; font-weight: 500; }
-.export-row-sub { font-size: 0.72rem; color: var(--color-muted); margin-top: 0.15rem; }
-.btn-icon {
-  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
-  color: var(--color-primary); border-radius: 2rem;
-  padding: 0.4rem 0.9rem; font-family: var(--font-body); font-size: 0.8rem; font-weight: 600;
-  cursor: pointer; white-space: nowrap; transition: all var(--transition);
-}
-.btn-icon:hover { background: var(--color-primary); color: #0d1b15; }
+.btn-wipe:hover { background: #c0504a; color: #fff; }
+.app-version { text-align: center; font-size: 0.72rem; color: var(--color-muted); margin-top: 1.5rem; opacity: 0.7; }
 
 /* ─── BREATHING ─── */
 .breath-tech-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
@@ -1049,6 +1020,13 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .row .btn { flex: 1; }
 .divider { height: 1px; background: var(--color-border); margin: 1.25rem 0; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 .badge {
   display: inline-flex; align-items: center; gap: 0.3rem;
   padding: 0.2rem 0.6rem; border-radius: 2rem;
@@ -2096,14 +2074,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
 
     <div class="divider"></div>
-    <div class="section-title">Données & paramètres</div>
-    <div class="export-row">
-      <div>
-        <div class="export-row-label">Exporter mes données</div>
-        <div class="export-row-sub">Journal, cartes, diary - fichier JSON local</div>
-      </div>
-      <button class="btn-icon" onclick="exportData()" aria-label="Télécharger mes données en JSON">↓ Export</button>
-    </div>
+    <div class="section-title">Données & confidentialité</div>
+    <p class="data-note">Tes données restent sur ton téléphone, jamais envoyées ailleurs. Tu peux tout effacer et repartir de zéro à tout moment.</p>
+    <button class="btn-wipe" onclick="wipeAllData()" aria-label="Effacer toutes mes données">🗑️ Tout effacer et repartir de zéro</button>
+    <p class="app-version">Serein TCC·ACT · version 1.0</p>
+
   </div>
 
 </div><!-- end screen-container -->
@@ -2153,7 +2128,7 @@ function initDisclaimer() {
   }
 }
 function dismissDisclaimer() {
-  localStorage.setItem('serein_disclaimer_seen', '1');
+  Store.set('serein_disclaimer_seen', '1');
   const m = document.getElementById('disclaimerModal');
   m.style.transition = 'opacity 0.3s ease';
   m.style.opacity = '0';
@@ -2163,12 +2138,12 @@ function dismissDisclaimer() {
 // ─── STATS ───
 function loadStats() {
   const today = new Date().toDateString();
-  const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  const data = safeParse('serein_tcc_stats', {});
   if (data.lastDay !== today) {
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
     data.streak = (data.lastDay === yesterday.toDateString()) ? (data.streak || 0) + 1 : 1;
     data.lastDay = today;
-    localStorage.setItem('serein_tcc_stats', JSON.stringify(data));
+    Store.set('serein_tcc_stats', JSON.stringify(data));
   }
   document.getElementById('statStreak').textContent = data.streak || 0;
   document.getElementById('statSessions').textContent = data.sessions || 0;
@@ -2180,9 +2155,9 @@ function loadStats() {
   renderDailyCheckinCard();
 }
 function incrementSessions() {
-  const data = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  const data = safeParse('serein_tcc_stats', {});
   data.sessions = (data.sessions || 0) + 1;
-  localStorage.setItem('serein_tcc_stats', JSON.stringify(data));
+  Store.set('serein_tcc_stats', JSON.stringify(data));
   document.getElementById('statSessions').textContent = data.sessions;
 }
 
@@ -2195,7 +2170,7 @@ function initTheme() {
 function toggleTheme() {
   const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('serein_theme', next);
+  Store.set('serein_theme', next);
   updateThemeIcon(next);
 }
 function updateThemeIcon(theme) {
@@ -2363,7 +2338,7 @@ function initCheckin() {
   const saved = document.getElementById('checkinSaved'); if (saved) saved.classList.remove('visible');
   renderSymptomChips();
 }
-function loadCheckins() { return JSON.parse(localStorage.getItem('serein_checkins') || '[]'); }
+function loadCheckins() { return safeParse('serein_checkins', []); }
 function saveCheckin() {
   const intensity = +document.getElementById('checkinIntensity').value;
   const note = document.getElementById('triggerField').value.trim();
@@ -2376,12 +2351,13 @@ function saveCheckin() {
   const all = loadCheckins();
   all.unshift(entry);
   if (all.length > 90) all.pop();
-  localStorage.setItem('serein_checkins', JSON.stringify(all));
+  Store.set('serein_checkins', JSON.stringify(all));
   logAnxiety(intensity);     // garde le graphique et la carte quotidienne synchronisés
   incrementSessions();
   const saved = document.getElementById('checkinSaved');
   saved.textContent = '✓ Check-in enregistré - retrouve ton évolution dans l\'onglet Suivi.';
   saved.classList.add('visible');
+  Haptics.light();
 }
 function renderCheckinHistory() {
   const el = document.getElementById('checkinHistory');
@@ -2471,7 +2447,7 @@ function updateReformulation() {
     card.classList.add('visible');
   } else { card.classList.remove('visible'); }
 }
-function loadJournalEntries() { return JSON.parse(localStorage.getItem('serein_journal') || '[]'); }
+function loadJournalEntries() { return safeParse('serein_journal', []); }
 function resetJournal() {
   ['situationField', 'autoThoughtField', 'emotionField', 'balancedThoughtField'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   state.journalTraps = [];
@@ -2489,7 +2465,7 @@ function finishJournal() {
     const all = loadJournalEntries();
     all.unshift({ ts: Date.now(), date: new Date().toLocaleDateString('fr-FR'), situation, thought, emotion, traps: [...state.journalTraps], balanced });
     if (all.length > 90) all.pop();
-    localStorage.setItem('serein_journal', JSON.stringify(all));
+    Store.set('serein_journal', JSON.stringify(all));
   }
   incrementSessions();
   resetJournal();
@@ -2517,7 +2493,7 @@ function renderJournalHistory() {
   }).join('');
 }
 function deleteJournalEntry(ts) {
-  localStorage.setItem('serein_journal', JSON.stringify(loadJournalEntries().filter(e => e.ts !== ts)));
+  Store.set('serein_journal', JSON.stringify(loadJournalEntries().filter(e => e.ts !== ts)));
   renderJournalHistory();
 }
 
@@ -2703,6 +2679,7 @@ function runBreathPhase() {
   const isExpire = label === 'Expire';
 
   document.getElementById('breathPhaseText').textContent = label;
+  if (isInspire || isExpire) Haptics.light(); // pulsation tactile au rythme du souffle
 
   if (breathTech === 'coherence') {
     if (isInspire) playBell(bellBufAigu);
@@ -2784,7 +2761,7 @@ function onboardingNext() {
     document.getElementById(`obdot-${obCurrentSlide}`).classList.add('active');
     if (obCurrentSlide === 3) document.getElementById('obNextBtn').textContent = 'Commencer →';
   } else {
-    localStorage.setItem('serein_onboarding_done', '1');
+    Store.set('serein_onboarding_done', '1');
     const m = document.getElementById('onboardingModal');
     m.style.opacity = '0'; m.style.transition = 'opacity 0.3s ease';
     setTimeout(() => { m.classList.remove('visible'); m.style.opacity = ''; }, 300);
@@ -2809,16 +2786,24 @@ let anchorIdx = 0;
 let crisisInterval = null;
 let crisisExpand = false;
 
+let crisisReturnFocus = null;
 function showCrisis() {
-  document.getElementById('crisisOverlay').classList.add('visible');
+  crisisReturnFocus = document.activeElement;
+  const ov = document.getElementById('crisisOverlay');
+  ov.classList.add('visible');
   anchorIdx = 0;
   document.getElementById('crisisAnchor').textContent = anchorPhrases[0];
   startCrisisBreath();
+  Haptics.medium();
+  const f = ov.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
+  if (f) setTimeout(() => f.focus(), 50);
 }
 function hideCrisis() {
   document.getElementById('crisisOverlay').classList.remove('visible');
   clearInterval(crisisInterval);
   crisisInterval = null;
+  if (crisisReturnFocus && crisisReturnFocus.focus) { try { crisisReturnFocus.focus(); } catch (e) {} }
+  crisisReturnFocus = null;
 }
 function startCrisisBreath() {
   crisisExpand = false;
@@ -2926,6 +2911,7 @@ function useCopingPreset(btn) {
   const txt = btn.getAttribute('data-text');
   const form = document.getElementById('cardAddForm');
   form.classList.add('visible');
+  Haptics.light();
   document.getElementById('cardTrigger').value = '';
   document.getElementById('cardThought').value = txt;
   form.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2934,10 +2920,10 @@ function useCopingPreset(btn) {
 
 // ─── COPING CARDS ───
 function loadCards() {
-  return JSON.parse(localStorage.getItem('serein_cards') || '[]');
+  return safeParse('serein_cards', []);
 }
 function saveCards(cards) {
-  localStorage.setItem('serein_cards', JSON.stringify(cards));
+  Store.set('serein_cards', JSON.stringify(cards));
 }
 function renderCards() {
   const cards = loadCards();
@@ -2980,12 +2966,94 @@ function deleteCard(i) {
   renderCards();
 }
 function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function safeParse(key, fallback) {
+  try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); }
+  catch { return fallback; }
+}
+// ─── STORE : localStorage = miroir de lecture synchrone ; Preferences = copie durable
+// native (UserDefaults / SharedPreferences), incluse dans la sauvegarde iCloud / Google.
+// Survit à la purge du WebView par iOS et à un changement de téléphone, sans action utilisateur.
+const STORE_KEYS = [
+  'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
+  'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
+  'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
+];
+const Store = {
+  prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
+  set(key, value) {
+    try { localStorage.setItem(key, value); } catch {}
+    const p = this.prefs();
+    if (p) p.set({ key, value }).catch(() => {});
+  },
+  remove(key) {
+    try { localStorage.removeItem(key); } catch {}
+    const p = this.prefs();
+    if (p) p.remove({ key }).catch(() => {});
+  },
+  async hydrate() {
+    const p = this.prefs();
+    if (!p) return; // web : pas de store natif, on reste sur localStorage seul
+    for (const key of STORE_KEYS) {
+      try {
+        const { value } = await p.get({ key });
+        const local = localStorage.getItem(key);
+        if (value != null && local == null) {
+          localStorage.setItem(key, value);        // WebView purgé → on restaure depuis le natif
+        } else if (value == null && local != null) {
+          await p.set({ key, value: local });      // données pré-Store → on amorce le natif
+        }
+      } catch {}
+    }
+  },
+};
+
+// ─── PONTS NATIFS (Capacitor) : tous gracieux, no-op sur le web ───
+const Haptics = {
+  plugin() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics; },
+  impact(style) { const p = this.plugin(); if (p) { try { p.impact({ style }); } catch (e) {} } },
+  light()  { this.impact('LIGHT'); },
+  medium() { this.impact('MEDIUM'); },
+};
+// Dialogue de confirmation natif (iOS/Android) avec repli confirm() sur le web
+async function confirmDialog(message, title) {
+  const D = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Dialog;
+  if (D) {
+    try {
+      const { value } = await D.confirm({ title: title || 'Confirmer', message, okButtonTitle: 'Confirmer', cancelButtonTitle: 'Annuler' });
+      return value;
+    } catch (e) { return false; }
+  }
+  return confirm(message);
+}
+// Clés contenant les DONNÉES utilisateur (hors thème / état d'onboarding)
+const DATA_KEYS = [
+  'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
+  'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
+];
+async function wipeAllData() {
+  if (!await confirmDialog(
+    "Effacer définitivement toutes tes données (journal, cartes, suivi, expériences) et repartir de zéro ? Cette action est irréversible.",
+    'Tout effacer'
+  )) return;
+  try { const ids = loadExperiments().flatMap(e => e.notifIds || []); if (ids.length) await Notify.cancel(ids); } catch (e) {}
+  DATA_KEYS.forEach(k => Store.remove(k));
+  Haptics.medium();
+  location.reload();
+}
+// Focus-trap clavier pour les overlays (VoiceOver/TalkBack + clavier physique)
+function getOpenModal() {
+  for (const id of ['crisisOverlay', 'onboardingModal', 'disclaimerModal']) {
+    const el = document.getElementById(id);
+    if (el && el.classList.contains('visible')) return el;
+  }
+  return null;
 }
 
 // ─── POSITIVE DIARY ───
 function loadDiaryEntries() {
-  return JSON.parse(localStorage.getItem('serein_diary') || '[]');
+  return safeParse('serein_diary', []);
 }
 function saveDiaryEntry() {
   const text = document.getElementById('diaryInput').value.trim();
@@ -2993,7 +3061,7 @@ function saveDiaryEntry() {
   const entries = loadDiaryEntries();
   entries.unshift({ text, date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) });
   if (entries.length > 30) entries.pop();
-  localStorage.setItem('serein_diary', JSON.stringify(entries));
+  Store.set('serein_diary', JSON.stringify(entries));
   document.getElementById('diaryInput').value = '';
   renderDiary();
   incrementSessions();
@@ -3073,13 +3141,13 @@ const ANXIETY_KEY = 'serein_anxiety_log';
 const ANXIETY_MAX_DAYS = 90;
 
 function loadAnxietyLog() {
-  return JSON.parse(localStorage.getItem(ANXIETY_KEY) || '[]');
+  return safeParse(ANXIETY_KEY, []);
 }
 function saveAnxietyLog(log) {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - ANXIETY_MAX_DAYS);
   const cutoffStr = cutoff.toISOString().slice(0, 10);
-  localStorage.setItem(ANXIETY_KEY, JSON.stringify(log.filter(e => e.date >= cutoffStr)));
+  Store.set(ANXIETY_KEY, JSON.stringify(log.filter(e => e.date >= cutoffStr)));
 }
 function logAnxiety(intensity) {
   const log = loadAnxietyLog();
@@ -3270,10 +3338,10 @@ function hideTrackTip() {
   if (tip) tip.classList.remove('visible');
 }
 
-function clearAnxietyLog() {
-  if (!confirm('Effacer toutes les données de suivi (intensités et check-ins) ? Cette action est irréversible.')) return;
-  localStorage.removeItem(ANXIETY_KEY);
-  localStorage.removeItem('serein_checkins');
+async function clearAnxietyLog() {
+  if (!await confirmDialog('Effacer toutes les données de suivi (intensités et check-ins) ? Cette action est irréversible.', 'Effacer le suivi')) return;
+  Store.remove(ANXIETY_KEY);
+  Store.remove('serein_checkins');
   renderTracking();
   renderDailyCheckinCard();
 }
@@ -3323,24 +3391,32 @@ const Notify = {
   },
   async schedule(id, title, body, atDate) {
     if (atDate.getTime() <= Date.now()) return;
-    if (this.isCap()) { try { await this.cap().schedule({ notifications: [{ id, title, body, schedule: { at: atDate } }] }); } catch (e) {} return; }
-    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]');
+    if (this.isCap()) {
+      try {
+        const pending = await this.cap().getPending();
+        // iOS plafonne à 64 notifs en attente ; on garde une marge pour ne rien perdre silencieusement
+        if (pending && pending.notifications && pending.notifications.length >= 62) return;
+        await this.cap().schedule({ notifications: [{ id, title, body, smallIcon: 'ic_stat_serein', iconColor: '#2f6b50', schedule: { at: atDate } }] });
+      } catch (e) {}
+      return;
+    }
+    const q = safeParse('serein_notif_queue', []);
     q.push({ id, title, body, at: atDate.getTime(), shown: false });
-    localStorage.setItem('serein_notif_queue', JSON.stringify(q));
+    Store.set('serein_notif_queue', JSON.stringify(q));
   },
   async cancel(ids) {
     if (!ids || !ids.length) return;
     if (this.isCap()) { try { await this.cap().cancel({ notifications: ids.map(id => ({ id })) }); } catch (e) {} return; }
-    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]').filter(n => !ids.includes(n.id));
-    localStorage.setItem('serein_notif_queue', JSON.stringify(q));
+    const q = safeParse('serein_notif_queue', []).filter(n => !ids.includes(n.id));
+    Store.set('serein_notif_queue', JSON.stringify(q));
   },
   // Fallback web : déclenche les rappels échus à l'ouverture de l'app
   flushWeb() {
     if (this.isCap() || !('Notification' in window) || Notification.permission !== 'granted') return;
-    const q = JSON.parse(localStorage.getItem('serein_notif_queue') || '[]');
+    const q = safeParse('serein_notif_queue', []);
     const now = Date.now(); let changed = false;
     q.forEach(n => { if (!n.shown && n.at <= now) { try { new Notification(n.title, { body: n.body }); } catch (e) {} n.shown = true; changed = true; } });
-    if (changed) localStorage.setItem('serein_notif_queue', JSON.stringify(q.filter(n => !n.shown || n.at > now - 7 * 86400000)));
+    if (changed) Store.set('serein_notif_queue', JSON.stringify(q.filter(n => !n.shown || n.at > now - 7 * 86400000)));
   },
 };
 const newNotifId = () => Math.floor(Math.random() * 2000000000) + 1;
@@ -3384,8 +3460,8 @@ const expAreas = {
   autre:     { emoji: '✨', label: 'Autre', exAction: "", exPrediction: "" },
 };
 let selectedExpArea = null;
-function loadExperiments() { return JSON.parse(localStorage.getItem('serein_experiments') || '[]'); }
-function saveExperiments(x) { localStorage.setItem('serein_experiments', JSON.stringify(x)); }
+function loadExperiments() { return safeParse('serein_experiments', []); }
+function saveExperiments(x) { Store.set('serein_experiments', JSON.stringify(x)); }
 function renderExpAreaChips() {
   const c = document.getElementById('expAreaChips');
   if (!c) return;
@@ -3600,37 +3676,11 @@ function quizRestart() {
   initQuiz();
 }
 
-// ─── EXPORT ───
-function exportData() {
-  const payload = {
-    export_date: new Date().toISOString(),
-    app: 'Serein TCC·ACT',
-    stats: JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}'),
-    coping_cards: JSON.parse(localStorage.getItem('serein_cards') || '[]'),
-    positive_diary: JSON.parse(localStorage.getItem('serein_diary') || '[]'),
-    anxiety_log: JSON.parse(localStorage.getItem('serein_anxiety_log') || '[]'),
-    checkins: JSON.parse(localStorage.getItem('serein_checkins') || '[]'),
-    thought_journal: JSON.parse(localStorage.getItem('serein_journal') || '[]'),
-    behavioral_experiments: JSON.parse(localStorage.getItem('serein_experiments') || '[]'),
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `serein-export-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 // ─── INIT ───
 document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 document.getElementById('breathCircle').addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBreathing(); }
 });
-document.querySelectorAll('.carousel-card').forEach(c => {
-  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
-});
-
 // ─── CLAVIER : garder le champ actif visible quand le clavier s'ouvre ───
 document.addEventListener('focusin', (e) => {
   const el = e.target;
@@ -3679,7 +3729,7 @@ function renderDailyQuote() {
 function renderMiniProgress() {
   const el = document.getElementById('miniProgress');
   if (!el) return;
-  const stats = JSON.parse(localStorage.getItem('serein_tcc_stats') || '{}');
+  const stats = safeParse('serein_tcc_stats', {});
   const streak = stats.streak || 0;
   const log = loadAnxietyLog();
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 7);
@@ -3695,14 +3745,55 @@ function renderMiniProgress() {
   el.style.display = 'flex';
 }
 
-initTheme();
-setGreeting();
-loadStats();
-renderDailyQuote();
-renderMiniProgress();
-initOnboarding();
-initDisclaimer();
-Notify.flushWeb();
+// ─── FOCUS-TRAP : garde le focus clavier dans la modale ouverte ───
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab') return;
+  const modal = getOpenModal();
+  if (!modal) return;
+  const list = [...modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el => el.offsetParent !== null && !el.disabled);
+  if (!list.length) return;
+  const first = list[0], last = list[list.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
+// ─── BOUTON RETOUR ANDROID ───
+function handleHardwareBack() {
+  // 1) une modale ouverte ? on la ferme (sauf onboarding/disclaimer : on consomme sans quitter)
+  const crisis = document.getElementById('crisisOverlay');
+  if (crisis && crisis.classList.contains('visible')) { hideCrisis(); return; }
+  if (getOpenModal()) return; // onboarding / disclaimer : on bloque la sortie d'app
+  // 2) écran outil → retour au hub parent ; onglet principal → accueil ; accueil → quitter
+  const cur = state.currentScreen;
+  const mainTabs = ['home', 'apaiser', 'comprendre', 'parcours'];
+  if (mainTabs.includes(cur)) {
+    if (cur === 'home') { const A = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App; if (A) A.exitApp(); return; }
+    navigateTo('home'); return;
+  }
+  const parent = { 'nav-home': 'home', 'nav-apaiser': 'apaiser', 'nav-comprendre': 'comprendre', 'nav-parcours': 'parcours' }[navMap[cur]] || 'home';
+  navigateTo(parent);
+}
+
+initTheme(); // peinture immédiate du thème depuis le miroir localStorage
+async function boot() {
+  await Store.hydrate(); // restaure/amorce la copie durable native avant tout rendu
+  // Respecte la taille de texte système (Dynamic Type iOS / font scale Android)
+  const TZ = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextZoom;
+  if (TZ) { try { const { value } = await TZ.getPreferred(); if (value) await TZ.set({ value }); } catch (e) {} }
+  // Bouton retour physique Android
+  const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+  if (App) { try { App.addListener('backButton', handleHardwareBack); } catch (e) {} }
+  initTheme();
+  setGreeting();
+  loadStats();
+  renderDailyQuote();
+  renderMiniProgress();
+  initOnboarding();
+  initDisclaimer();
+  Notify.flushWeb();
+}
+boot();
 </script>
 </body>
 </html>

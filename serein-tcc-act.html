@@ -2602,27 +2602,41 @@ let bellCtx = null;
 let bellBufAigu = null;
 let bellBufGrave = null;
 let bellsLoading = false;
+let bellsLoaded = false;
+
+// Crée et réveille l'AudioContext. DOIT être appelé dans un geste utilisateur :
+// sur iOS un contexte créé hors d'un tap reste "suspended" et ne joue jamais.
+function ensureBellCtx() {
+  if (!bellCtx) {
+    try { bellCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { return null; }
+  }
+  if (bellCtx.state === 'suspended') bellCtx.resume();
+  return bellCtx;
+}
 
 async function loadBells() {
-  if (bellCtx || bellsLoading) return;
+  if (bellsLoaded || bellsLoading) return;
+  const ctx = ensureBellCtx();            // contexte créé pendant le geste (entrée sur l'écran)
+  if (!ctx) return;
   bellsLoading = true;
   try {
     const [r1, r2] = await Promise.all([fetch('./cloche.mp3'), fetch('./clochegrave.mp3')]);
-    if (!r1.ok || !r2.ok) return;
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const [ab1, ab2] = await Promise.all([r1.arrayBuffer(), r2.arrayBuffer()]);
-    [bellBufAigu, bellBufGrave] = await Promise.all([ctx.decodeAudioData(ab1), ctx.decodeAudioData(ab2)]);
-    bellCtx = ctx;
-  } catch(e) { /* sons non disponibles en file:// ou hors ligne */ }
+    if (r1.ok && r2.ok) {
+      const [ab1, ab2] = await Promise.all([r1.arrayBuffer(), r2.arrayBuffer()]);
+      [bellBufAigu, bellBufGrave] = await Promise.all([ctx.decodeAudioData(ab1), ctx.decodeAudioData(ab2)]);
+      bellsLoaded = true;
+    }
+  } catch(e) { /* sons non disponibles hors ligne */ }
   bellsLoading = false;
 }
 
 function playBell(buf) {
-  if (!bellCtx || !buf) return;
-  if (bellCtx.state === 'suspended') bellCtx.resume();
-  const src = bellCtx.createBufferSource();
+  const ctx = ensureBellCtx();
+  if (!ctx || !buf) return;
+  const src = ctx.createBufferSource();
   src.buffer = buf;
-  src.connect(bellCtx.destination);
+  src.connect(ctx.destination);
   src.start();
 }
 
@@ -2653,6 +2667,7 @@ function toggleBreathing() {
 }
 
 function startBreathing() {
+  ensureBellCtx();   // débloque l'audio dans le geste du tap (iOS)
   breathActive = true;
   breathPhaseIdx = 0;
   breathCycles = 0;

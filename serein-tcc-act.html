@@ -949,6 +949,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   cursor: pointer; transition: all var(--transition);
 }
 .breath-tab.active { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+.breath-dur-label { font-size: 0.72rem; color: var(--color-muted); text-align: center; margin-bottom: 0.4rem; }
+.breath-dur-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; margin-bottom: 0.5rem; }
+.breath-dur {
+  padding: 0.3rem 0.75rem; border-radius: 2rem;
+  border: 1.5px solid var(--color-border); background: var(--color-surface);
+  color: var(--color-muted); font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+.breath-dur.active { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
 .breath-circle-container {
   display: flex; flex-direction: column; align-items: center;
   margin: 1.25rem 0 1rem; position: relative;
@@ -976,6 +985,22 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   transform: scale(0.72);
   box-shadow: 0 0 0 0 rgba(147,201,172,0.2);
   transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
+  --hold-base: 0.72;
+}
+/* Paliers "Retiens" (boîte, 4-7-8) : léger battement autour de la position tenue,
+   pour signaler que le temps avance sans suggérer de bouger. */
+.breath-circle.holding { animation: breathHold 2.2s ease-in-out infinite; }
+@keyframes breathHold {
+  0%, 100% { transform: scale(var(--hold-base)); }
+  50%      { transform: scale(calc(var(--hold-base) + 0.012)); }
+}
+/* Anneau de progression : se vide au fil de la phase en cours, en plus du chiffre. */
+.breath-progress-ring { position: absolute; inset: 0; width: 220px; height: 220px; transform: rotate(-90deg); pointer-events: none; }
+.bpr-track { fill: none; stroke: var(--color-border); stroke-width: 3; }
+.bpr-fill {
+  fill: none; stroke: var(--color-primary); stroke-width: 3; stroke-linecap: round;
+  stroke-dasharray: 628.319; stroke-dashoffset: 628.319;
+  transition: stroke-dashoffset 1s linear;
 }
 .breath-phase-text {
   font-family: var(--font-title); font-weight: 600; font-size: 0.88rem;
@@ -1402,10 +1427,23 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <button class="breath-tab" onclick="selectBreathTech('478', this)" aria-pressed="false">4-7-8</button>
     </div>
 
+    <div class="breath-dur-label">Durée de la séance</div>
+    <div class="breath-dur-tabs" role="group" aria-label="Durée de la séance">
+      <button class="breath-dur active" onclick="selectBreathDuration(0, this)" aria-pressed="true">Libre</button>
+      <button class="breath-dur" onclick="selectBreathDuration(180, this)" aria-pressed="false">3 min</button>
+      <button class="breath-dur" onclick="selectBreathDuration(300, this)" aria-pressed="false">5 min</button>
+      <button class="breath-dur" onclick="selectBreathDuration(600, this)" aria-pressed="false">10 min</button>
+      <button class="breath-dur" onclick="selectBreathDuration(900, this)" aria-pressed="false">15 min</button>
+    </div>
+
     <div class="breath-circle-container">
       <div class="breath-rings-wrap">
         <div class="breath-ring breath-ring-1"></div>
         <div class="breath-ring breath-ring-2"></div>
+        <svg class="breath-progress-ring" viewBox="0 0 220 220" aria-hidden="true">
+          <circle class="bpr-track" cx="110" cy="110" r="100"></circle>
+          <circle class="bpr-fill" id="breathProgressRing" cx="110" cy="110" r="100"></circle>
+        </svg>
         <div class="breath-circle" id="breathCircle"
           onclick="toggleBreathing()"
           role="button"
@@ -2672,12 +2710,18 @@ async function loadBells() {
   bellsLoading = false;
 }
 
+// Les fichiers sources sont exportés à un niveau très bas (crête ~0.07) :
+// quasi inaudibles sur un haut-parleur de téléphone sans ce gain de rattrapage.
+const BELL_GAIN = 8;
 function playBell(buf) {
   const ctx = ensureBellCtx();
   if (!ctx || !buf) return;
   const src = ctx.createBufferSource();
   src.buffer = buf;
-  src.connect(ctx.destination);
+  const gain = ctx.createGain();
+  gain.gain.value = BELL_GAIN;
+  src.connect(gain);
+  gain.connect(ctx.destination);
   src.start();
 }
 
@@ -2691,8 +2735,28 @@ let breathActive = false;
 let breathTech = 'coherence';
 let breathPhaseIdx = 0;
 let breathSecondsLeft = 0;
+let breathPhaseDuration = 0;
 let breathCycles = 0;
 let breathTimer = null;
+let breathTargetSec = 0;   // 0 = séance libre (illimitée)
+let breathStartTime = 0;
+let breathCounted = false;  // garde-fou : 1 seul incrément de séance par run
+function fmtTime(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+// r=100 sur le cercle SVG (cf. markup .bpr-fill) → circonférence = 2πr.
+const BREATH_RING_CIRC = 2 * Math.PI * 100;
+function setRingProgress(fractionRemaining, instant) {
+  const ring = document.getElementById('breathProgressRing');
+  if (!ring) return;
+  const offset = BREATH_RING_CIRC * (1 - fractionRemaining);
+  if (instant) {
+    ring.style.transition = 'none';
+    ring.style.strokeDashoffset = offset;
+    ring.getBoundingClientRect(); // force le reflow avant de réactiver la transition
+    ring.style.transition = 'stroke-dashoffset 1s linear';
+  } else {
+    ring.style.strokeDashoffset = offset;
+  }
+}
 
 function selectBreathTech(tech, el) {
   if (breathActive) stopBreathing();
@@ -2701,6 +2765,14 @@ function selectBreathTech(tech, el) {
   el.classList.add('active');
   el.setAttribute('aria-pressed', 'true');
   resetBreathCircle();
+}
+
+function selectBreathDuration(sec, el) {
+  if (breathActive) stopBreathing();
+  breathTargetSec = sec;
+  document.querySelectorAll('.breath-dur').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+  el.classList.add('active');
+  el.setAttribute('aria-pressed', 'true');
 }
 
 function toggleBreathing() {
@@ -2712,6 +2784,8 @@ function startBreathing() {
   breathActive = true;
   breathPhaseIdx = 0;
   breathCycles = 0;
+  breathCounted = false;
+  breathStartTime = Date.now();
   document.getElementById('breathBtn').textContent = '⏹ Arrêter';
   document.getElementById('breathBtn').setAttribute('aria-label', 'Arrêter la respiration guidée');
   runBreathPhase();
@@ -2727,12 +2801,14 @@ function stopBreathing() {
 
 function resetBreathCircle() {
   const c = document.getElementById('breathCircle');
+  c.classList.remove('holding');
   c.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
   c.style.transform = 'scale(0.72)';
   c.style.boxShadow = '0 0 0 0 rgba(147,201,172,0.2)';
   document.getElementById('breathPhaseText').innerHTML = 'Appuie<br>pour commencer';
   document.getElementById('breathCountdown').textContent = '';
   document.getElementById('breathInfo').textContent = '';
+  setRingProgress(0, true); // anneau vide au repos
 }
 
 function runBreathPhase() {
@@ -2742,26 +2818,37 @@ function runBreathPhase() {
   const label = tech.labels[breathPhaseIdx];
   const isInspire = label === 'Inspire';
   const isExpire = label === 'Expire';
+  const isHold = !isInspire && !isExpire; // "Retiens" (boîte, 4-7-8)
 
   document.getElementById('breathPhaseText').textContent = label;
-  if (isInspire || isExpire) Haptics.light(); // pulsation tactile au rythme du souffle
 
-  if (breathTech === 'coherence') {
-    if (isInspire) playBell(bellBufAigu);
-    else if (isExpire) playBell(bellBufGrave);
-  }
+  // Cloche aiguë à l'inspiration, grave à l'expiration — sur toutes les techniques.
+  // Les paliers "Retiens" restent silencieux (seule l'haptique les marque) : ça les distingue à l'oreille.
+  if (isInspire) playBell(bellBufAigu);
+  else if (isExpire) playBell(bellBufGrave);
 
   const c = document.getElementById('breathCircle');
-  c.style.transition = `transform ${duration}s ease-in-out, box-shadow ${duration}s ease-in-out`;
-  if (isInspire) {
-    c.style.transform = 'scale(1)';
-    c.style.boxShadow = '0 0 50px 16px rgba(147,201,172,0.18)';
-  } else if (isExpire) {
-    c.style.transform = 'scale(0.72)';
-    c.style.boxShadow = '0 0 0 0 rgba(147,201,172,0.2)';
+  if (isHold) {
+    Haptics.medium(); // distinct du souffle : marque le début du palier
+    const prevLabel = tech.labels[(breathPhaseIdx - 1 + tech.phases.length) % tech.phases.length];
+    c.style.setProperty('--hold-base', prevLabel === 'Inspire' ? 1 : 0.72);
+    c.classList.add('holding');
+  } else {
+    Haptics.light(); // pulsation tactile au rythme du souffle
+    c.classList.remove('holding');
+    c.style.transition = `transform ${duration}s ease-in-out, box-shadow ${duration}s ease-in-out`;
+    if (isInspire) {
+      c.style.transform = 'scale(1)';
+      c.style.boxShadow = '0 0 50px 16px rgba(147,201,172,0.18)';
+    } else {
+      c.style.transform = 'scale(0.72)';
+      c.style.boxShadow = '0 0 0 0 rgba(147,201,172,0.2)';
+    }
   }
 
+  breathPhaseDuration = duration;
   breathSecondsLeft = duration;
+  setRingProgress(1, true); // anneau plein au début de chaque phase
   tickBreath();
 }
 
@@ -2769,6 +2856,11 @@ function tickBreath() {
   if (!breathActive) return;
   if (breathSecondsLeft <= 0) { advanceBreathPhase(); return; }
   document.getElementById('breathCountdown').textContent = breathSecondsLeft;
+  setRingProgress(breathSecondsLeft / breathPhaseDuration, false);
+  if (breathTargetSec > 0) {
+    const remaining = breathTargetSec - (Date.now() - breathStartTime) / 1000;
+    document.getElementById('breathInfo').textContent = '⏳ ' + fmtTime(remaining) + ' restantes';
+  }
   breathSecondsLeft--;
   breathTimer = setTimeout(tickBreath, 1000);
 }
@@ -2777,12 +2869,36 @@ function advanceBreathPhase() {
   if (!breathActive) return;
   const tech = breathTechs[breathTech];
   breathPhaseIdx = (breathPhaseIdx + 1) % tech.phases.length;
-  if (breathPhaseIdx === 0) {
+  if (breathPhaseIdx === 0) { // fin d'un cycle complet (on termine toujours sur une expiration)
     breathCycles++;
-    document.getElementById('breathInfo').textContent = breathCycles === 1 ? '1 cycle complété' : `${breathCycles} cycles complétés`;
-    if (breathCycles >= 4) { incrementSessions(); }
+    if (breathTargetSec > 0) {
+      const elapsed = (Date.now() - breathStartTime) / 1000;
+      if (elapsed >= breathTargetSec) { finishBreathSession(); return; }
+    } else {
+      document.getElementById('breathInfo').textContent = breathCycles === 1 ? '1 cycle complété' : `${breathCycles} cycles complétés`;
+      if (breathCycles >= 4 && !breathCounted) { incrementSessions(); breathCounted = true; }
+    }
   }
   runBreathPhase();
+}
+
+// Fin minutée : on s'arrête proprement à la fin du cycle, pas en plein souffle.
+function finishBreathSession() {
+  breathActive = false;
+  clearTimeout(breathTimer);
+  if (!breathCounted) { incrementSessions(); breathCounted = true; }
+  Haptics.medium();
+  const c = document.getElementById('breathCircle');
+  c.classList.remove('holding');
+  c.style.transition = 'transform 0.6s ease, box-shadow 0.6s ease';
+  c.style.transform = 'scale(0.82)';
+  c.style.boxShadow = '0 0 40px 12px rgba(147,201,172,0.2)';
+  document.getElementById('breathPhaseText').innerHTML = 'Séance<br>terminée 🌿';
+  document.getElementById('breathCountdown').textContent = '';
+  document.getElementById('breathInfo').textContent = 'Bravo, tu as pris ce temps pour toi.';
+  setRingProgress(1, true);
+  document.getElementById('breathBtn').textContent = '▶ Recommencer';
+  document.getElementById('breathBtn').setAttribute('aria-label', 'Recommencer la respiration guidée');
 }
 
 // ─── GROUNDING ───

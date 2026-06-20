@@ -26,6 +26,9 @@
   --color-muted: #93a89b;
   --color-border: rgba(255,255,255,0.08);
   --radius: 1.625rem;
+  --radius-sm: 1rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.625rem;
   --gradient: linear-gradient(120deg, #93c9ac, #d8b78a);
   --nav-height: 72px;
   --font-title: 'Bricolage Grotesque', sans-serif;
@@ -85,7 +88,7 @@ body {
 .modal-disclaimer {
   background: rgba(216,183,138,0.1);
   border: 1px solid var(--color-primary-2);
-  border-radius: 1rem;
+  border-radius: var(--radius-sm);
   padding: 0.9rem 1rem;
   margin-bottom: 0.75rem;
   font-size: 0.85rem;
@@ -96,7 +99,7 @@ body {
 .modal-resources {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
   display: flex; flex-direction: column; gap: 0.35rem;
@@ -109,7 +112,7 @@ body {
   display: flex; align-items: flex-start; gap: 0.6rem;
   background: rgba(216,183,138,0.07);
   border: 1px solid rgba(216,183,138,0.25);
-  border-radius: 1rem;
+  border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   margin: 0.5rem 0 1rem;
   font-size: 0.77rem;
@@ -124,11 +127,15 @@ body {
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: calc(env(safe-area-inset-top) + 0.5rem) 1rem 0.25rem;
   flex-shrink: 0;
   gap: 0.5rem;
 }
+/* Chevron retour : occupe toujours la gouttière gauche (visibility, pas display),
+   pour que le toggle thème reste calé à droite même quand le retour est masqué. */
+.header-back { visibility: hidden; }
+.header-back svg { width: 20px; height: 20px; }
 .app-logo { display: flex; align-items: center; gap: 0.5rem; }
 .app-logo svg { width: 28px; height: 28px; }
 .app-logo span {
@@ -160,7 +167,8 @@ body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 1.25rem calc(var(--nav-height) + env(safe-area-inset-bottom) + 1rem);
+  /* +4.5rem : réserve la zone du FAB SOS pour qu'il ne recouvre jamais le dernier contenu */
+  padding: 0 1.25rem calc(var(--nav-height) + env(safe-area-inset-bottom) + 4.5rem);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
@@ -171,8 +179,11 @@ body {
   transition: opacity var(--transition), transform var(--transition);
   min-height: 100%;
 }
-.screen.active { display: block; opacity: 1; transform: translateY(0); }
-.screen.entering { display: block; opacity: 0; transform: translateY(8px); }
+.screen.active { display: block; opacity: 1; transform: translateX(0); }
+.screen.entering { display: block; opacity: 0; }
+/* sens du glissement : avant = arrive de la droite, retour = arrive de la gauche */
+.screen.entering.from-fwd  { transform: translateX(26px); }
+.screen.entering.from-back { transform: translateX(-26px); }
 
 /* ─── BOTTOM NAV (5 tabs) ─── */
 .bottom-nav {
@@ -196,7 +207,7 @@ body {
   background: none; border: none; cursor: pointer;
   color: var(--color-muted);
   padding: 0.5rem 0.4rem;
-  border-radius: 1rem;
+  border-radius: var(--radius-sm);
   transition: color var(--transition), background var(--transition);
   min-width: 52px; flex: 1;
 }
@@ -225,6 +236,21 @@ body {
 .hub-card .hub-text h3 { font-family: var(--font-title); font-size: 1rem; font-weight: 600; margin-bottom: 0.1rem; }
 .hub-card .hub-text p { font-size: 0.8rem; color: var(--color-muted); line-height: 1.35; }
 .hub-card .hub-chevron { color: var(--color-muted); flex-shrink: 0; font-size: 1.2rem; }
+/* Apparition échelonnée des cartes quand un onglet devient actif */
+@keyframes hubIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.screen.active .hub-list .hub-card { animation: hubIn 0.34s cubic-bezier(0.4,0,0.2,1) both; }
+.screen.active .hub-list .hub-card:nth-child(1) { animation-delay: 0.04s; }
+.screen.active .hub-list .hub-card:nth-child(2) { animation-delay: 0.08s; }
+.screen.active .hub-list .hub-card:nth-child(3) { animation-delay: 0.12s; }
+.screen.active .hub-list .hub-card:nth-child(4) { animation-delay: 0.16s; }
+.screen.active .hub-list .hub-card:nth-child(5) { animation-delay: 0.20s; }
+.screen.active .hub-list .hub-card:nth-child(6) { animation-delay: 0.24s; }
+
+/* État vide chaleureux (Parcours, nouvel utilisateur) */
+.parcours-empty { text-align: center; padding: 1.5rem 1rem 0.5rem; }
+.parcours-empty .pe-emoji { font-size: 2.4rem; margin-bottom: 0.4rem; }
+.parcours-empty h3 { font-family: var(--font-title); font-size: 1.15rem; margin-bottom: 0.35rem; }
+.parcours-empty p { color: var(--color-muted); font-size: 0.88rem; line-height: 1.45; margin-bottom: 1rem; }
 
 /* ─── MINI PROGRESSION (accueil) ─── */
 .mini-progress {
@@ -335,7 +361,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .stat-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-md);
   padding: 1rem 0.75rem; text-align: center;
   backdrop-filter: blur(8px);
 }
@@ -351,7 +377,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .emotion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
 .emotion-btn {
   background: var(--color-surface); border: 2px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1.25rem 1rem; text-align: center;
+  border-radius: var(--radius-md); padding: 1.25rem 1rem; text-align: center;
   cursor: pointer; transition: all var(--transition); backdrop-filter: blur(8px);
 }
 .emotion-btn:hover { border-color: var(--color-primary); background: var(--color-primary-light); }
@@ -392,7 +418,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 }
 textarea, input[type="text"] {
   width: 100%; background: var(--color-surface);
-  border: 1.5px solid var(--color-border); border-radius: 1rem;
+  border: 1.5px solid var(--color-border); border-radius: var(--radius-sm);
   padding: 0.85rem 1rem;
   font-family: var(--font-body); font-size: 0.9rem; color: var(--color-text);
   resize: none; transition: border-color var(--transition); -webkit-appearance: none;
@@ -435,7 +461,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .schema-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
 .schema-btn {
   background: var(--color-surface); border: 1.5px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1rem; cursor: pointer; text-align: left;
+  border-radius: var(--radius-md); padding: 1rem; cursor: pointer; text-align: left;
   transition: all var(--transition); backdrop-filter: blur(8px);
 }
 .schema-btn:hover, .schema-btn.active { border-color: var(--color-primary-2); background: rgba(216,183,138,0.1); }
@@ -457,7 +483,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .act-step {
   display: flex; align-items: flex-start; gap: 0.75rem;
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1rem; padding: 1rem;
+  border-radius: var(--radius-sm); padding: 1rem;
 }
 .act-num {
   flex-shrink: 0; width: 24px; height: 24px; background: var(--gradient);
@@ -525,7 +551,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .coping-preset-add {
   align-self: flex-start; margin-top: 0.875rem; background: rgba(13,27,21,0.13); border: none;
   color: #0d1b15; font-weight: 600; font-size: 0.74rem; padding: 0.35rem 0.75rem;
-  border-radius: 1rem; cursor: pointer; font-family: var(--font-body); transition: background var(--transition);
+  border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-body); transition: background var(--transition);
 }
 .coping-preset-add:hover { background: rgba(13,27,21,0.22); }
 
@@ -535,11 +561,11 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .trap-chip.selected { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
 .trap-hint { font-size: 0.74rem; color: var(--color-muted); margin-top: 0.4rem; }
 .trap-examples { display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 0.875rem; }
-.trap-example { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 1rem; padding: 0.875rem; }
+.trap-example { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.875rem; }
 .trap-example-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; }
 .trap-example-row { display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 0.3rem; }
 .trap-example-row p { margin: 0; font-size: 0.82rem; color: var(--color-text); flex: 1; line-height: 1.4; }
-.te-label { flex-shrink: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.15rem 0.45rem; border-radius: 1rem; margin-top: 0.1rem; }
+.te-label { flex-shrink: 0; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.15rem 0.45rem; border-radius: var(--radius-sm); margin-top: 0.1rem; }
 .te-bad { background: rgba(224,112,112,0.15); color: #e07070; }
 .te-good { background: var(--color-primary-light); color: var(--color-primary); }
 .journal-entry { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1rem 1.125rem; margin-bottom: 0.75rem; }
@@ -547,26 +573,26 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .journal-entry-thought { font-size: 0.84rem; color: var(--color-muted); text-decoration: line-through; margin-bottom: 0.3rem; line-height: 1.4; }
 .journal-entry-balanced { font-size: 0.9rem; color: var(--color-text); font-weight: 500; margin-bottom: 0.5rem; line-height: 1.45; }
 .journal-entry-traps { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.5rem; }
-.journal-entry-traps span { font-size: 0.68rem; color: var(--color-primary); background: var(--color-primary-light); border-radius: 1rem; padding: 0.1rem 0.5rem; }
+.journal-entry-traps span { font-size: 0.68rem; color: var(--color-primary); background: var(--color-primary-light); border-radius: var(--radius-sm); padding: 0.1rem 0.5rem; }
 
 /* ─── CHECK-IN HISTORY (tracking) ─── */
 .checkin-history { display: flex; flex-direction: column; gap: 0.5rem; }
 .checkin-entry {
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1rem; padding: 0.75rem 0.875rem;
+  border-radius: var(--radius-sm); padding: 0.75rem 0.875rem;
 }
 .checkin-entry-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.3rem; }
 .checkin-entry-emoji { font-size: 1.1rem; }
 .checkin-entry-date { font-size: 0.72rem; color: var(--color-muted); }
 .checkin-entry-intensity {
   margin-left: auto; font-family: var(--font-title); font-weight: 700; font-size: 0.85rem;
-  padding: 0.1rem 0.5rem; border-radius: 1rem; background: var(--color-primary-light); color: var(--color-primary);
+  padding: 0.1rem 0.5rem; border-radius: var(--radius-sm); background: var(--color-primary-light); color: var(--color-primary);
 }
 .checkin-entry-note { font-size: 0.83rem; color: var(--color-text); margin-bottom: 0.3rem; line-height: 1.45; }
 .checkin-entry-symptoms { display: flex; flex-wrap: wrap; gap: 0.25rem; }
 .checkin-entry-symptoms span {
   font-size: 0.68rem; color: var(--color-muted); background: var(--color-surface-2);
-  border-radius: 1rem; padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm); padding: 0.1rem 0.45rem;
 }
 
 /* ─── TRACKING ─── */
@@ -595,13 +621,13 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 .track-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0 0 0.75rem; }
 .track-stat-card {
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1rem; padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem;
 }
 .track-stat-label { font-size: 0.68rem; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
 .track-stat-value { font-family: var(--font-title); font-size: 1.2rem; font-weight: 700; color: var(--color-text); }
 .track-insight {
   background: var(--color-primary-light); border: 1px solid rgba(147,201,172,0.2);
-  border-radius: 1rem; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--color-primary);
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--color-primary);
   margin-bottom: 1rem; min-height: 2.5rem;
 }
 .track-empty { text-align: center; padding: 2rem 1rem; color: var(--color-muted); }
@@ -631,7 +657,7 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 .metaphor-list { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .metaphor-card {
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1rem; padding: 0; overflow: hidden;
+  border-radius: var(--radius-sm); padding: 0; overflow: hidden;
 }
 .metaphor-card summary {
   list-style: none; cursor: pointer; padding: 1rem 1.125rem;
@@ -651,7 +677,7 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 }
 .exp-card .exp-status {
   display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.05em; padding: 0.15rem 0.6rem; border-radius: 1rem; margin-bottom: 0.6rem;
+  letter-spacing: 0.05em; padding: 0.15rem 0.6rem; border-radius: var(--radius-sm); margin-bottom: 0.6rem;
 }
 .exp-status.todo { background: rgba(216,183,138,0.15); color: var(--color-primary-2); }
 .exp-status.done { background: var(--color-primary-light); color: var(--color-primary); }
@@ -671,7 +697,7 @@ input[type="range"] { width: 100%; accent-color: var(--color-primary); height: 2
 .exp-badges .exp-status { margin-bottom: 0; }
 .exp-status.today { background: rgba(216,183,138,0.18); color: var(--color-primary-2); }
 .exp-status.late { background: rgba(224,112,112,0.15); color: #e07070; }
-.exp-area-badge { font-size: 0.66rem; font-weight: 600; color: var(--color-muted); background: var(--color-surface-2); border-radius: 1rem; padding: 0.15rem 0.6rem; }
+.exp-area-badge { font-size: 0.66rem; font-weight: 600; color: var(--color-muted); background: var(--color-surface-2); border-radius: var(--radius-sm); padding: 0.15rem 0.6rem; }
 .exp-area-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.3rem 0 0.2rem; }
 .exp-area-chip { border: 1px solid var(--color-border); background: none; cursor: pointer; border-radius: 1.2rem; padding: 0.4rem 0.7rem; font-size: 0.78rem; color: var(--color-muted); font-family: var(--font-body); transition: all var(--transition); }
 .exp-area-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
@@ -685,7 +711,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .fear-level {
   display: flex; align-items: center; gap: 0.75rem;
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1rem; padding: 1rem; transition: all var(--transition);
+  border-radius: var(--radius-sm); padding: 1rem; transition: all var(--transition);
 }
 .fear-level.done { border-color: var(--color-primary); background: var(--color-primary-light); opacity: 0.7; }
 .fear-num {
@@ -724,7 +750,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .ob-dot.active { background: var(--color-primary); width: 20px; border-radius: 4px; }
 .onboarding-tip {
   background: var(--color-primary-light); border: 1px solid var(--color-primary);
-  border-radius: 1rem; padding: 0.75rem 1rem; margin-top: 0.75rem;
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.75rem;
   font-size: 0.82rem; color: var(--color-text); line-height: 1.5;
 }
 
@@ -794,22 +820,23 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   position: fixed;
   bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem); right: 1rem;
   z-index: 90;
+  width: 48px; height: 48px;
   background: linear-gradient(135deg, #c0504a, #e07060);
-  color: #fff; border: none; border-radius: 2rem;
-  padding: 0.5rem 1rem; font-family: var(--font-body);
-  font-size: 0.75rem; font-weight: 700; cursor: pointer;
+  color: #fff; border: none; border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 800; cursor: pointer;
   box-shadow: 0 4px 16px rgba(192,80,74,0.4);
-  display: flex; align-items: center; gap: 0.35rem;
+  display: flex; align-items: center; justify-content: center;
   transition: transform var(--transition), box-shadow var(--transition);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
-.fab-sos:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(192,80,74,0.5); }
+.fab-sos:hover, .fab-sos:active { transform: scale(1.07); box-shadow: 0 6px 22px rgba(192,80,74,0.55); }
 
 /* ─── COPING CARDS ─── */
 .cards-list { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .coping-card-item {
   background: var(--color-surface); border: 1.5px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1rem;
+  border-radius: var(--radius-md); padding: 1rem;
   display: flex; align-items: flex-start; gap: 0.75rem;
   transition: border-color var(--transition);
 }
@@ -826,7 +853,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .coping-card-del:hover { color: #c05050; }
 .card-add-form {
   background: var(--color-surface); border: 1.5px dashed var(--color-primary);
-  border-radius: 1.25rem; padding: 1.25rem; margin-top: 0.75rem;
+  border-radius: var(--radius-md); padding: 1.25rem; margin-top: 0.75rem;
   display: none;
 }
 .card-add-form.visible { display: block; }
@@ -837,7 +864,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .diary-entries { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .diary-entry {
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: 1.25rem; padding: 1rem;
+  border-radius: var(--radius-md); padding: 1rem;
 }
 .diary-entry-date { font-size: 0.7rem; color: var(--color-muted); margin-bottom: 0.3rem; }
 .diary-entry-text { font-size: 0.88rem; color: var(--color-text); line-height: 1.5; }
@@ -876,7 +903,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .quiz-schemas { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
 .quiz-schema-btn {
   background: var(--color-surface); border: 1.5px solid var(--color-border);
-  border-radius: 1rem; padding: 0.75rem; cursor: pointer;
+  border-radius: var(--radius-sm); padding: 0.75rem; cursor: pointer;
   font-family: var(--font-body); font-size: 0.82rem; font-weight: 500;
   color: var(--color-text); text-align: center;
   transition: all var(--transition);
@@ -904,7 +931,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 /* ─── DONNÉES & CONFIDENTIALITÉ (parcours) ─── */
 .data-note { font-size: 0.78rem; color: var(--color-muted); line-height: 1.5; margin: 0.25rem 0 0.75rem; }
 .btn-wipe {
-  width: 100%; padding: 0.7rem 1rem; border-radius: 1rem;
+  width: 100%; padding: 0.7rem 1rem; border-radius: var(--radius-sm);
   border: 1px solid #c0504a; background: none; color: #c0504a;
   font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
   cursor: pointer; transition: background var(--transition), color var(--transition);
@@ -1024,8 +1051,14 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
   }
+}
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 .badge {
   display: inline-flex; align-items: center; gap: 0.3rem;
@@ -1093,10 +1126,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 </div>
 
 <!-- ─── SOS FAB ─── -->
-<button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-  SOS
-</button>
+<button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide — SOS, ouvre l'espace de crise">SOS</button>
 
 <!-- ─── DISCLAIMER MODAL (first launch) ─── -->
 <div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1117,6 +1147,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
 <!-- ─── HEADER ─── -->
 <header class="app-header">
+  <button class="icon-btn header-back" id="headerBack" onclick="goBack()" aria-label="Retour">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+  </button>
   <div class="header-actions">
     <button class="icon-btn" id="themeToggle" aria-label="Basculer thème clair / sombre">
       <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2038,6 +2073,13 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <h1>Où j'en <span>suis</span></h1>
     </div>
 
+    <div class="parcours-empty" id="parcoursEmpty" style="display:none;">
+      <div class="pe-emoji">🌱</div>
+      <h3>Ton parcours commence ici</h3>
+      <p>Fais un premier check-in ou un exercice — ta progression, ton humeur et tes séries s'afficheront ici.</p>
+      <button class="btn btn-primary" onclick="navigateTo('checkin')" aria-label="Faire un premier check-in">Faire un check-in</button>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-value" id="statStreak">0</div>
@@ -2152,6 +2194,13 @@ function loadStats() {
     const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
     document.getElementById('statMood').textContent = ['😶','😕','😐','🙂','😊'][Math.min(4, Math.round(avg / 2))];
   }
+  // Nouvel utilisateur (aucune séance, aucune humeur) : on remplace le mur de zéros
+  // par un état vide chaleureux. La série passe à 1 dès l'ouverture, donc on ne s'y fie pas.
+  const isNew = (data.sessions || 0) === 0 && moods.length === 0;
+  const emptyEl = document.getElementById('parcoursEmpty');
+  const gridEl = document.querySelector('#screen-parcours .stats-grid');
+  if (emptyEl) emptyEl.style.display = isNew ? 'block' : 'none';
+  if (gridEl) gridEl.style.display = isNew ? 'none' : '';
   renderDailyCheckinCard();
 }
 function incrementSessions() {
@@ -2206,6 +2255,13 @@ const navMap = {
   experiments: 'nav-comprendre', ladder: 'nav-comprendre',
   parcours: 'nav-parcours', tracking: 'nav-parcours', diary: 'nav-parcours', jhistory: 'nav-parcours',
 };
+// Onglets de premier niveau (atteints par la barre du bas) : pas de chevron retour.
+const MAIN_TABS = ['home', 'apaiser', 'comprendre', 'parcours'];
+// Écran parent d'un écran donné. null = sommet (accueil) → pas de retour.
+function parentOf(screen) {
+  if (MAIN_TABS.includes(screen)) return screen === 'home' ? null : 'home';
+  return { 'nav-home': 'home', 'nav-apaiser': 'apaiser', 'nav-comprendre': 'comprendre', 'nav-parcours': 'parcours' }[navMap[screen]] || 'home';
+}
 const screenInitFns = {
   home: () => { renderMiniProgress(); renderDailyCheckinCard(); },
   parcours: loadStats,
@@ -2227,21 +2283,30 @@ function navigateTo(screen) {
   const oldEl = document.getElementById(screenMap[state.currentScreen]);
   const newEl = document.getElementById(screenMap[screen]);
   if (!newEl) return;
+  // Sens : retour (remontée vers le parent) → glisse depuis la gauche, sinon depuis la droite.
+  const goingBack = (screen === parentOf(state.currentScreen));
   oldEl.classList.remove('active');
   oldEl.style.display = 'none';
   newEl.style.display = 'block';
-  newEl.classList.add('entering');
+  newEl.classList.add('entering', goingBack ? 'from-back' : 'from-fwd');
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    newEl.classList.remove('entering');
+    newEl.classList.remove('entering', 'from-back', 'from-fwd');
     newEl.classList.add('active');
   }));
   document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('active'); b.removeAttribute('aria-current'); });
   const navEl = document.getElementById(navMap[screen]);
   if (navEl) { navEl.classList.add('active'); navEl.setAttribute('aria-current', 'page'); }
+  // Chevron retour : visible sur les sous-écrans, masqué sur les onglets de premier niveau.
+  const backBtn = document.getElementById('headerBack');
+  if (backBtn) backBtn.style.visibility = MAIN_TABS.includes(screen) ? 'hidden' : 'visible';
   document.querySelector('.screen-container').scrollTo(0, 0);
   state.currentScreen = screen;
   if (screen !== 'calm' && breathActive) stopBreathing();
   if (screenInitFns[screen]) screenInitFns[screen]();
+}
+function goBack() {
+  const p = parentOf(state.currentScreen);
+  if (p) { Haptics.light(); navigateTo(p); }
 }
 
 // ─── MOOD CHIPS ───
@@ -3765,13 +3830,10 @@ function handleHardwareBack() {
   if (crisis && crisis.classList.contains('visible')) { hideCrisis(); return; }
   if (getOpenModal()) return; // onboarding / disclaimer : on bloque la sortie d'app
   // 2) écran outil → retour au hub parent ; onglet principal → accueil ; accueil → quitter
-  const cur = state.currentScreen;
-  const mainTabs = ['home', 'apaiser', 'comprendre', 'parcours'];
-  if (mainTabs.includes(cur)) {
-    if (cur === 'home') { const A = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App; if (A) A.exitApp(); return; }
-    navigateTo('home'); return;
+  const parent = parentOf(state.currentScreen);
+  if (parent === null) { // accueil : on quitte l'app
+    const A = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App; if (A) A.exitApp(); return;
   }
-  const parent = { 'nav-home': 'home', 'nav-apaiser': 'apaiser', 'nav-comprendre': 'comprendre', 'nav-parcours': 'parcours' }[navMap[cur]] || 'home';
   navigateTo(parent);
 }
 

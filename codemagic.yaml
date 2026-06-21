@@ -14,6 +14,8 @@ workflows:
       vars:
         XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
+        # Apple ID numérique de Serein TCC·ACT (App Store Connect → Infos générales → « Apple ID »)
+        APP_APPLE_ID: "6781663800"
       node: latest
 
     scripts:
@@ -24,6 +26,18 @@ workflows:
         script: |
           npm run build:web
           npx cap sync ios
+
+      - name: Auto-incrémente le build number (dernier TestFlight + 1)
+        script: |
+          LATEST=$(app-store-connect get-latest-testflight-build-number "$APP_APPLE_ID")
+          if [ -z "$LATEST" ]; then
+            echo "⚠️  Build number introuvable — vérifie APP_APPLE_ID et l'intégration App Store Connect."
+            exit 1
+          fi
+          NEW=$((LATEST + 1))
+          echo "Dernier build TestFlight : $LATEST → nouveau : $NEW"
+          cd "$CM_BUILD_DIR/ios/App"
+          agvtool new-version -all "$NEW"
 
       - name: Apply code signing to Xcode project
         script: xcode-project use-profiles

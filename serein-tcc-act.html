@@ -355,6 +355,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   transform: scale(1.03);
 }
 .mood-chip .emoji { font-size: 1.1rem; }
+.mood-chip-pos { border-color: rgba(147,201,172,0.4); }
 
 /* ─── STATS GRID ─── */
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin: 1rem 0; }
@@ -393,6 +394,20 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   border-radius: var(--radius); padding: 1.25rem;
   display: none; animation: fadeIn 0.3s ease;
 }
+/* Carte de micro-intervention positive (journal positif, arrivée via une humeur positive) */
+.positive-card {
+  background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+.positive-card h3 { font-family: var(--font-title); font-size: 1.05rem; color: var(--color-primary); margin-bottom: 0.5rem; }
+.positive-card > p { font-size: 0.9rem; line-height: 1.5; color: var(--color-text); }
+.positive-action {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  background: var(--color-surface); border-radius: var(--radius-sm);
+  padding: 0.8rem 0.9rem; margin-top: 0.9rem; font-size: 0.88rem; line-height: 1.45; color: var(--color-text);
+}
+.positive-action .pa-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-primary); }
 .suggestion-card.visible { display: block; }
 .suggestion-card h3 { color: var(--color-primary); margin-bottom: 0.5rem; font-size: 0.9rem; }
 .suggestion-card .sugg-cta {
@@ -596,9 +611,9 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 }
 
 /* ─── TRACKING ─── */
-.track-period-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.track-period-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .track-period-btn {
-  padding: 0.35rem 1.1rem; border-radius: 2rem; border: 1px solid var(--color-border);
+  padding: 0.35rem 0.9rem; border-radius: 2rem; border: 1px solid var(--color-border);
   background: none; color: var(--color-muted); font-family: var(--font-body);
   font-size: 0.8rem; cursor: pointer; transition: all var(--transition);
 }
@@ -764,7 +779,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 }
 .crisis-overlay.visible { display: flex; }
 .crisis-close {
-  position: absolute; top: 1.25rem; right: 1.25rem;
+  position: absolute; top: calc(env(safe-area-inset-top) + 1rem); right: 1.25rem;
   background: var(--color-surface); border: 1.5px solid var(--color-border);
   border-radius: 2rem; padding: 0.4rem 1rem;
   font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
@@ -1209,6 +1224,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       </button>
       <button class="mood-chip" data-mood="aplat" aria-label="À plat" onclick="selectMood('aplat')">
         <span class="emoji">😶</span> À plat
+      </button>
+      <button class="mood-chip mood-chip-pos" data-mood="bien" aria-label="Ça va" onclick="selectMood('bien')">
+        <span class="emoji">🙂</span> Ça va
+      </button>
+      <button class="mood-chip mood-chip-pos" data-mood="serein" aria-label="Serein" onclick="selectMood('serein')">
+        <span class="emoji">😌</span> Serein
+      </button>
+      <button class="mood-chip mood-chip-pos" data-mood="forme" aria-label="En forme" onclick="selectMood('forme')">
+        <span class="emoji">✨</span> En forme
       </button>
     </div>
 
@@ -1749,6 +1773,19 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
     <p>Un espace uniquement pour le positif. Pour contrebalancer le filtre mental négatif.</p>
 
+    <div class="positive-card" id="positiveSuggestion" style="display:none;" role="region" aria-live="polite">
+      <h3 id="posTitle"></h3>
+      <p id="posText"></p>
+      <div class="positive-action">
+        <span class="pa-label">🌱 En moins de 2 minutes</span>
+        <span id="posAction"></span>
+      </div>
+      <details class="onboarding-tip" style="margin-top:0.75rem;cursor:pointer;">
+        <summary style="font-weight:600;list-style:none;">Pourquoi ça aide</summary>
+        <p id="posMechanism" style="margin-top:0.5rem;font-size:0.83rem;"></p>
+      </details>
+    </div>
+
     <div class="diary-input-row mt-2">
       <label class="form-label" for="diaryInput">Quelque chose de positif aujourd'hui, même petit</label>
       <textarea id="diaryInput" rows="3" placeholder="Ex. : J'ai pris le temps de manger tranquillement. Un collègue m'a remercié." aria-label="Note positive"></textarea>
@@ -1835,8 +1872,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <p>Observe l'évolution de ton état au fil des jours.</p>
 
       <div class="track-period-tabs mt-2" role="group" aria-label="Période">
-        <button class="track-period-btn active" onclick="setTrackPeriod(7,this)" aria-label="7 derniers jours">7 jours</button>
-        <button class="track-period-btn" onclick="setTrackPeriod(30,this)" aria-label="30 derniers jours">30 jours</button>
+        <button class="track-period-btn active" onclick="setTrackPeriod(7,this)" aria-label="7 derniers jours">7 j</button>
+        <button class="track-period-btn" onclick="setTrackPeriod(30,this)" aria-label="30 derniers jours">30 j</button>
+        <button class="track-period-btn" onclick="setTrackPeriod(90,this)" aria-label="3 derniers mois">3 mois</button>
+        <button class="track-period-btn" onclick="setTrackPeriod(365,this)" aria-label="12 derniers mois">1 an</button>
       </div>
 
       <div class="track-chart-wrap" role="figure" aria-label="Graphique d'évolution">
@@ -2305,7 +2344,7 @@ const screenInitFns = {
   parcours: loadStats,
   checkin: initCheckin,
   cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
-  diary: renderDiary,
+  diary: initDiary,
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
   quiz: initQuiz,
   schemas: () => renderDefusion(currentDefusion),
@@ -2348,10 +2387,45 @@ function goBack() {
 }
 
 // ─── MOOD CHIPS ───
+const POSITIVE_MOODS = ['bien', 'serein', 'forme'];
+let pendingPositiveMood = null;
+// Micro-interventions positives (savouring / broaden-and-build / soi observateur / activation),
+// fondées sur la formation TCC-ACT. Ton observationnel et validant, sans allégation thérapeutique.
+const positiveEmotionSuggestions = {
+  bien: {
+    title: `🌅 L'élargissement positif`,
+    text: `Cette sensation agréable est bien présente en ce moment. Elle t'offre un espace naturel pour élargir ton horizon et nourrir ta vitalité. Ton esprit peut simplement observer cette vague positive le traverser, sans avoir besoin de la retenir.`,
+    action: `Scanne ton corps quelques secondes et remarque physiquement où se loge ce bien-être — une chaleur dans la poitrine, une légèreté dans les épaules — puis respire doucement avec cette sensation.`,
+    mechanism: `Les émotions positives élargissent naturellement le répertoire de pensées et d'actions (théorie de l'élargissement, Fredrickson) et consolident des ressources personnelles durables.`,
+  },
+  serein: {
+    title: `🧘 Le soi observateur`,
+    text: `Le calme s'est installé et l'agitation de l'esprit s'observe de loin. Ce silence intérieur est un espace dégagé qui permet de voir les choses avec clarté. L'équilibre a totalement le droit de prendre toute la place dans cet instant.`,
+    action: `Pose fermement tes pieds sur le sol, redresse ton dos, et choisis mentalement une valeur — bienveillance, créativité, curiosité… — à suivre comme une boussole pour les prochaines heures.`,
+    mechanism: `L'attention flexible au présent permet de se placer en position de « soi observateur » (ACT) : un espace mental dégagé pour se reconnecter à l'ici et maintenant.`,
+  },
+  forme: {
+    title: `⚡ L'action engagée`,
+    text: `L'élan et la vitalité sont bien là, comme un moteur allumé prêt à avancer. Cette énergie s'observe très bien de l'extérieur et ne demande qu'à s'exprimer. Le choix t'appartient quant à la direction dans laquelle l'orienter.`,
+    action: `Identifie une micro-action de « rapprochement » qui compte pour toi — envoyer un message affectueux, trier un dossier, lire une page d'un livre — et réalise-la tout de suite pour incarner tes valeurs.`,
+    mechanism: `Transformer une énergie disponible en action alignée sur une valeur génère un renforcement positif intrinsèque (activation comportementale) qui nourrit le sens.`,
+  },
+};
 function selectMood(mood) {
   document.querySelectorAll('.mood-chip').forEach(c => c.classList.remove('selected'));
-  document.querySelector(`[data-mood="${mood}"]`).classList.add('selected');
-  setTimeout(() => { resetCheckinForm(); selectEmotion(mood); navigateTo('checkin'); }, 200);
+  const chip = document.querySelector(`[data-mood="${mood}"]`);
+  if (chip) chip.classList.add('selected');
+  setTimeout(() => {
+    chip && chip.classList.remove('selected');
+    if (POSITIVE_MOODS.includes(mood)) {
+      // Émotion positive : micro-intervention dédiée + journal positif,
+      // plutôt que le check-in de détresse (symptômes, suggestions d'exercices).
+      pendingPositiveMood = mood;
+      navigateTo('diary');
+    } else {
+      resetCheckinForm(); selectEmotion(mood); navigateTo('checkin');
+    }
+  }, 200);
 }
 
 // ─── CHECK-IN ───
@@ -2401,6 +2475,7 @@ function selectEmotion(emotion) {
 
 function followSuggestion() {
   if (!suggCtaScreen) return;
+  saveCheckin(); // on n'abandonne pas le check-in : on l'enregistre avant de filer vers l'exercice
   if (suggCtaScreen === 'journal') {
     const note = document.getElementById('triggerField').value.trim();
     if (note) document.getElementById('situationField').value = note;
@@ -2987,8 +3062,15 @@ function hideCrisis() {
   crisisReturnFocus = null;
 }
 function startCrisisBreath() {
+  loadBells(); // précharge les cloches (le tap SOS débloque l'audio iOS)
+  const c = document.getElementById('crisisCircle');
+  c.classList.remove('expand'); // état contracté rendu d'abord
   crisisExpand = false;
-  updateCrisisCircle();
+  // Lance l'inspiration au frame suivant : sans ça l'animation saute (élément juste affiché).
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    crisisExpand = true;
+    updateCrisisCircle();
+  }));
   crisisInterval = setInterval(() => {
     crisisExpand = !crisisExpand;
     updateCrisisCircle();
@@ -3000,10 +3082,13 @@ function updateCrisisCircle() {
   if (crisisExpand) {
     c.classList.add('expand');
     t.textContent = 'Inspire...';
+    playBell(bellBufAigu);
   } else {
     c.classList.remove('expand');
     t.textContent = 'Expire...';
+    playBell(bellBufGrave);
   }
+  Haptics.light(); // pulsation tactile à chaque changement de phase
 }
 function nextAnchor() {
   anchorIdx = (anchorIdx + 1) % anchorPhrases.length;
@@ -3260,6 +3345,27 @@ function renderDiary() {
       <div class="diary-entry-text">${escHtml(e.text)}</div>
     </div>`).join('');
 }
+// Init de l'écran : rend le journal + affiche la micro-intervention si on arrive via une humeur positive.
+function initDiary() {
+  renderDiary();
+  const card = document.getElementById('positiveSuggestion');
+  if (!card) return;
+  if (pendingPositiveMood && positiveEmotionSuggestions[pendingPositiveMood]) {
+    renderPositiveSuggestion(pendingPositiveMood);
+    pendingPositiveMood = null;
+  } else {
+    card.style.display = 'none';
+  }
+}
+function renderPositiveSuggestion(mood) {
+  const s = positiveEmotionSuggestions[mood];
+  if (!s) return;
+  document.getElementById('posTitle').textContent = s.title;
+  document.getElementById('posText').textContent = s.text;
+  document.getElementById('posAction').textContent = s.action;
+  document.getElementById('posMechanism').textContent = s.mechanism;
+  document.getElementById('positiveSuggestion').style.display = 'block';
+}
 
 // ─── WHAT'S UP QUESTIONS ───
 const allQuestions = [
@@ -3319,7 +3425,7 @@ function fcAction(type) {
 
 // ─── ANXIETY TRACKING ───
 const ANXIETY_KEY = 'serein_anxiety_log';
-const ANXIETY_MAX_DAYS = 90;
+const ANXIETY_MAX_DAYS = 800; // ~2 ans : couvre la vue 1 an + la comparaison de période précédente
 
 function loadAnxietyLog() {
   return safeParse(ANXIETY_KEY, []);
@@ -3436,6 +3542,10 @@ function renderTracking() {
   const ptColor = v => v <= 3 ? '#93c9ac' : v <= 6 ? '#d8b78a' : '#e07070';
   const dayNames = ['dim','lun','mar','mer','jeu','ven','sam'];
   const every = trackPeriod <= 7 ? 1 : Math.ceil(trackPeriod / 7);
+  // Sur les longues périodes, les points se chevauchent : on ne les affiche que si la donnée
+  // reste assez clairsemée, et plus petits. La courbe + l'aire portent la tendance.
+  const showDots = trackPeriod <= 31 || filled.length <= 45;
+  const dotR = trackPeriod <= 31 ? 4.5 : 3;
 
   container.innerHTML = `
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Évolution de l'intensité sur ${trackPeriod} jours">
@@ -3450,10 +3560,10 @@ function renderTracking() {
         <text x="${pL-4}" y="${yOf(v)+4}" font-size="8" fill="var(--color-muted)" text-anchor="end">${v}</text>`).join('')}
       ${areaPath ? `<path d="${areaPath}" fill="url(#tg)"/>` : ''}
       ${linePath ? `<path d="${linePath}" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
-      ${ep.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${ptColor(p.intensity)}" stroke="var(--color-bg)" stroke-width="2" style="cursor:pointer"
+      ${showDots ? ep.map(p => `<circle cx="${p.x}" cy="${p.y}" r="${dotR}" fill="${ptColor(p.intensity)}" stroke="var(--color-bg)" stroke-width="2" style="cursor:pointer"
         onmouseenter="showTrackTip(event,'${p.date}',${p.intensity})" onmouseleave="hideTrackTip()"
         ontouchstart="showTrackTip(event,'${p.date}',${p.intensity})" ontouchend="hideTrackTip()"
-        aria-label="${formatDateShort(p.date)} : ${p.intensity}/10"/>`).join('')}
+        aria-label="${formatDateShort(p.date)} : ${p.intensity}/10"/>`).join('') : ''}
       ${entries.map((e, i) => {
         if (i % every !== 0 && i !== n - 1) return '';
         const d = new Date(e.date + 'T12:00:00');

@@ -948,7 +948,56 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .quiz-progress-bar { flex: 1; height: 4px; background: var(--color-border); border-radius: 2px; overflow: hidden; }
 .quiz-progress-fill { height: 100%; background: var(--gradient); border-radius: 2px; transition: width 0.4s ease; }
 
-/* ─── DONNÉES & CONFIDENTIALITÉ (parcours) ─── */
+/* ─── RÉGLAGES ─── */
+.reglages-block { margin-bottom: 1.75rem; }
+.seg-control {
+  display: flex; gap: 0.35rem; background: var(--color-surface);
+  border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.3rem;
+}
+.seg-btn {
+  flex: 1; padding: 0.6rem 0.4rem; border: none; background: none; color: var(--color-muted);
+  font-family: var(--font-body); font-size: 0.84rem; font-weight: 600;
+  border-radius: calc(var(--radius-sm) - 0.3rem); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+  transition: background var(--transition), color var(--transition);
+}
+.seg-btn.active { background: var(--color-primary-light); color: var(--color-primary); }
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); padding: 0.9rem 1rem;
+}
+.setting-info { display: flex; flex-direction: column; gap: 0.15rem; }
+.setting-info strong { font-size: 0.9rem; font-weight: 600; }
+.setting-info span { font-size: 0.78rem; color: var(--color-muted); }
+.setting-control { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+.setting-time {
+  background: var(--color-primary-light); color: var(--color-primary); border: none;
+  border-radius: var(--radius-sm); padding: 0.35rem 0.6rem;
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.toggle-switch { position: relative; display: inline-block; width: 46px; height: 27px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; cursor: pointer; background: var(--color-surface-2);
+  border: 1px solid var(--color-border); border-radius: 27px; transition: background var(--transition);
+}
+.toggle-slider::before {
+  content: ''; position: absolute; height: 21px; width: 21px; left: 2px; top: 2px;
+  background: #fff; border-radius: 50%; transition: transform var(--transition);
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--color-primary); border-color: var(--color-primary); }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(19px); }
+.setting-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+.setting-link-row {
+  display: block; background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); padding: 0.9rem 1rem; color: var(--color-text);
+  text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: border-color var(--transition), color var(--transition);
+}
+.setting-link-row:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.visually-hidden-input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+
+/* ─── DONNÉES & CONFIDENTIALITÉ ─── */
 .data-note { font-size: 0.78rem; color: var(--color-muted); line-height: 1.5; margin: 0.25rem 0 0.75rem; }
 .btn-wipe {
   width: 100%; padding: 0.7rem 1rem; border-radius: var(--radius-sm);
@@ -1198,9 +1247,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </svg>
   </button>
   <div class="header-actions">
-    <button class="icon-btn" id="themeToggle" aria-label="Basculer thème clair / sombre">
-      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+    <button class="icon-btn" id="settingsBtn" onclick="navigateTo('reglages')" aria-label="Réglages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </svg>
     </button>
   </div>
@@ -2187,13 +2237,61 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       </button>
     </div>
 
-    <div class="divider"></div>
-    <div class="section-title">Données & confidentialité</div>
-    <p class="data-note">Tes données restent sur ton téléphone et ne sont jamais transmises à nos serveurs ni à des tiers. Tu peux tout effacer et repartir de zéro à tout moment.</p>
-    <button class="btn-wipe" onclick="wipeAllData()" aria-label="Effacer toutes mes données">🗑️ Tout effacer et repartir de zéro</button>
-    <p style="margin-top:0.85rem;"><a href="privacy.html" style="color:var(--color-primary);font-size:0.85rem;">Politique de confidentialité</a></p>
-    <p class="app-version">Serein TCC·ACT · version 1.0</p>
+  </div>
 
+  <!-- ═══ ÉCRAN : RÉGLAGES ═══ -->
+  <div class="screen" id="screen-reglages" role="main" aria-label="Réglages">
+    <div class="greeting-block">
+      <div class="time-label">⚙️ Réglages</div>
+      <h1>Tes <span>préférences</span></h1>
+    </div>
+
+    <div class="reglages-block">
+      <div class="section-title">Apparence</div>
+      <div class="seg-control" role="group" aria-label="Thème de l'application">
+        <button class="seg-btn" id="theme-dark" onclick="setTheme('dark')" aria-label="Thème sombre">🌙 Sombre</button>
+        <button class="seg-btn" id="theme-light" onclick="setTheme('light')" aria-label="Thème clair">☀️ Clair</button>
+        <button class="seg-btn" id="theme-auto" onclick="setTheme('auto')" aria-label="Thème automatique">🌗 Auto</button>
+      </div>
+      <p class="data-note">« Auto » suit le réglage clair / sombre de ton téléphone.</p>
+    </div>
+
+    <div class="reglages-block">
+      <div class="section-title">Pratique</div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Rappel quotidien</strong>
+          <span>Une invitation à faire ton check-in</span>
+        </div>
+        <div class="setting-control">
+          <button id="reminderTimeBtn" class="setting-time" onclick="openReminderTimePicker()" style="display:none;" aria-label="Changer l'heure du rappel"></button>
+          <label class="toggle-switch">
+            <input type="checkbox" id="reminderToggle" onchange="onReminderToggle(this.checked)" aria-label="Activer le rappel quotidien">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <input type="time" id="reminderTimeInput" value="21:00" onchange="onReminderTimeChange(this.value)" class="visually-hidden-input" aria-hidden="true" tabindex="-1">
+    </div>
+
+    <div class="reglages-block">
+      <div class="section-title">Données & confidentialité</div>
+      <p class="data-note">Tes données restent sur ton téléphone et ne sont jamais transmises à nos serveurs ni à des tiers. Tu peux les sauvegarder, les restaurer, ou tout effacer à tout moment.</p>
+      <div class="setting-actions">
+        <button class="btn btn-secondary" onclick="exportData()" aria-label="Exporter mes données">⬇️ Exporter mes données</button>
+        <button class="btn btn-secondary" onclick="importData()" aria-label="Importer une sauvegarde">⬆️ Importer une sauvegarde</button>
+      </div>
+      <button class="btn-wipe" onclick="wipeAllData()" aria-label="Effacer toutes mes données">🗑️ Tout effacer et repartir de zéro</button>
+      <p style="margin-top:0.85rem;"><a href="privacy.html" style="color:var(--color-primary);font-size:0.85rem;">Politique de confidentialité</a></p>
+      <input type="file" id="importFileInput" accept="application/json,.json" onchange="handleImportFile(this)" style="display:none;" aria-hidden="true" tabindex="-1">
+    </div>
+
+    <div class="reglages-block">
+      <div class="section-title">À propos</div>
+      <a class="setting-link-row" href="https://github.com/psychocaesar/Serein-TCC-ACT-" target="_blank" rel="noopener" aria-label="Code source sur GitHub">Code source (GitHub) ↗</a>
+    </div>
+
+    <p class="app-version">Serein TCC·ACT · version 1.0</p>
   </div>
 
 </div><!-- end screen-container -->
@@ -2284,21 +2382,35 @@ function incrementSessions() {
 }
 
 // ─── THEME ───
+// 'dark' / 'light' = choix explicite ; 'auto' = suit la préférence système.
+function applyTheme(theme) {
+  const effective = theme === 'auto'
+    ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    : theme;
+  document.documentElement.setAttribute('data-theme', effective);
+}
+function updateThemeControl(theme) {
+  ['dark', 'light', 'auto'].forEach(t => {
+    const btn = document.getElementById('theme-' + t);
+    if (btn) btn.classList.toggle('active', t === theme);
+  });
+}
 function initTheme() {
   const saved = localStorage.getItem('serein_theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', saved);
-  updateThemeIcon(saved);
+  applyTheme(saved);
+  updateThemeControl(saved);
 }
-function toggleTheme() {
-  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  Store.set('serein_theme', next);
-  updateThemeIcon(next);
+function setTheme(theme) {
+  applyTheme(theme);
+  Store.set('serein_theme', theme);
+  updateThemeControl(theme);
+  Haptics.light();
 }
-function updateThemeIcon(theme) {
-  document.getElementById('themeIcon').innerHTML = theme === 'light'
-    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
-    : '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+// Bascule en direct si le système change de thème et que le mode 'auto' est actif.
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+    if ((localStorage.getItem('serein_theme') || 'dark') === 'auto') applyTheme('auto');
+  });
 }
 
 // ─── GREETING ───
@@ -2318,6 +2430,7 @@ const screenMap = {
   tracking: 'screen-tracking', catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
   experiments: 'screen-experiments', jhistory: 'screen-jhistory',
   apaiser: 'screen-apaiser', comprendre: 'screen-comprendre', parcours: 'screen-parcours',
+  reglages: 'screen-reglages',
 };
 // Chaque écran pointe vers son onglet parent (par besoin, pas par technique)
 const navMap = {
@@ -2349,6 +2462,7 @@ const screenInitFns = {
   catastrophe: initCatastrophe,
   experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
+  reglages: loadReminderPrefs,
 };
 
 function navigateTo(screen) {
@@ -3269,6 +3383,7 @@ const STORE_KEYS = [
   'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
   'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
+  'serein_reminder_enabled', 'serein_reminder_time',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -3317,6 +3432,12 @@ async function confirmDialog(message, title) {
   }
   return confirm(message);
 }
+// Alerte informative (un seul bouton OK) avec repli alert() sur le web
+async function alertDialog(message, title) {
+  const D = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Dialog;
+  if (D) { try { await D.alert({ title: title || 'Serein TCC·ACT', message, buttonTitle: 'OK' }); return; } catch (e) {} }
+  alert(message);
+}
 // Clés contenant les DONNÉES utilisateur (hors thème / état d'onboarding)
 const DATA_KEYS = [
   'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
@@ -3332,6 +3453,139 @@ async function wipeAllData() {
   Haptics.medium();
   location.reload();
 }
+
+// ─── RAPPEL QUOTIDIEN ───
+// Notification répétée chaque jour à l'heure choisie. Repeats natif uniquement
+// (le repli web one-shot de Notify ne gère pas la répétition).
+const DAILY_REMINDER_ID = 424242;
+const REMINDER_MESSAGES = [
+  'Un moment pour toi : et si tu faisais ton check-in ?',
+  'Comment tu te sens aujourd\'hui ? Prends 30 secondes pour le noter.',
+  'Ta météo intérieure du jour t\'attend dans Serein.',
+  'Une petite pause pour observer tes pensées, en douceur.',
+];
+function loadReminderPrefs() {
+  const enabled = localStorage.getItem('serein_reminder_enabled') === 'true';
+  const time = localStorage.getItem('serein_reminder_time') || '21:00';
+  const toggle = document.getElementById('reminderToggle');
+  const btn = document.getElementById('reminderTimeBtn');
+  const input = document.getElementById('reminderTimeInput');
+  if (toggle) toggle.checked = enabled;
+  if (btn) { btn.textContent = time + ' ›'; btn.style.display = enabled ? '' : 'none'; }
+  if (input) input.value = time;
+}
+function openReminderTimePicker() {
+  const input = document.getElementById('reminderTimeInput');
+  if (!input) return;
+  input.style.pointerEvents = 'auto';
+  input.focus();
+  try { if (input.showPicker) input.showPicker(); else input.click(); } catch (e) { input.click(); }
+  setTimeout(() => { input.style.pointerEvents = 'none'; }, 500);
+}
+function onReminderTimeChange(val) {
+  if (!val) return;
+  Store.set('serein_reminder_time', val);
+  const btn = document.getElementById('reminderTimeBtn');
+  if (btn) btn.textContent = val + ' ›';
+  if (localStorage.getItem('serein_reminder_enabled') === 'true') {
+    const [h, m] = val.split(':').map(Number);
+    scheduleDailyReminder(h, m);
+  }
+}
+async function onReminderToggle(enabled) {
+  const btn = document.getElementById('reminderTimeBtn');
+  if (enabled) {
+    const time = localStorage.getItem('serein_reminder_time') || '21:00';
+    const [h, m] = time.split(':').map(Number);
+    if (await scheduleDailyReminder(h, m)) {
+      Store.set('serein_reminder_enabled', 'true');
+      if (btn) { btn.textContent = time + ' ›'; btn.style.display = ''; }
+      Haptics.light();
+    } else {
+      const toggle = document.getElementById('reminderToggle');
+      if (toggle) toggle.checked = false;
+      Store.set('serein_reminder_enabled', 'false');
+      await alertDialog(
+        Notify.isCap()
+          ? "Les notifications sont désactivées pour Serein. Active-les dans les réglages de ton téléphone pour recevoir le rappel."
+          : "Les rappels quotidiens fonctionnent dans l'application mobile Serein.",
+        'Rappel quotidien'
+      );
+    }
+  } else {
+    Store.set('serein_reminder_enabled', 'false');
+    if (btn) btn.style.display = 'none';
+    cancelDailyReminder();
+  }
+}
+async function scheduleDailyReminder(hour, minute) {
+  if (!Notify.isCap()) return false;
+  try {
+    const LC = Notify.cap();
+    if ((await LC.requestPermissions()).display !== 'granted') return false;
+    await LC.cancel({ notifications: [{ id: DAILY_REMINDER_ID }] }).catch(() => {});
+    const msg = REMINDER_MESSAGES[Math.floor(Math.random() * REMINDER_MESSAGES.length)];
+    await LC.schedule({ notifications: [{
+      id: DAILY_REMINDER_ID, title: 'Serein TCC·ACT', body: msg,
+      smallIcon: 'ic_stat_serein', iconColor: '#2f6b50',
+      schedule: { on: { hour, minute }, repeats: true },
+    }] });
+    return true;
+  } catch (e) { return false; }
+}
+async function cancelDailyReminder() {
+  if (!Notify.isCap()) return;
+  try { await Notify.cap().cancel({ notifications: [{ id: DAILY_REMINDER_ID }] }); } catch (e) {}
+}
+
+// ─── EXPORT / IMPORT (sauvegarde JSON) ───
+const EXPORT_KEYS = [...DATA_KEYS, 'serein_theme', 'serein_reminder_enabled', 'serein_reminder_time'];
+function exportData() {
+  const payload = { app: 'serein-tcc', version: 1, exportedAt: new Date().toISOString(), data: {} };
+  EXPORT_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v !== null) payload.data[k] = v; });
+  const json = JSON.stringify(payload, null, 2);
+  const isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if (isNative && navigator.clipboard) {
+    // Le téléchargement de Blob ne marche pas dans la WebView native → presse-papiers.
+    navigator.clipboard.writeText(json).then(
+      () => alertDialog('Tes données ont été copiées dans le presse-papiers. Colle-les dans une note ou un fichier pour les conserver en lieu sûr.', 'Export'),
+      () => alertDialog('Impossible de copier les données.', 'Export')
+    );
+    return;
+  }
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'serein-tcc-donnees-' + ymd() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+function importData() {
+  const inp = document.getElementById('importFileInput');
+  if (inp) inp.click();
+}
+function handleImportFile(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const payload = JSON.parse(reader.result);
+      if (!payload || payload.app !== 'serein-tcc' || !payload.data) {
+        await alertDialog('Ce fichier ne ressemble pas à une sauvegarde Serein TCC·ACT.', 'Import'); return;
+      }
+      if (!await confirmDialog('Remplacer tes données actuelles par cette sauvegarde ? Les données présentes seront écrasées.', 'Importer')) return;
+      EXPORT_KEYS.forEach(k => { if (k in payload.data) Store.set(k, payload.data[k]); });
+      Haptics.medium();
+      location.reload();
+    } catch (e) {
+      await alertDialog('Fichier illisible : ' + e.message, 'Import');
+    }
+  };
+  reader.readAsText(file);
+}
+
 // Focus-trap clavier pour les overlays (VoiceOver/TalkBack + clavier physique)
 function getOpenModal() {
   for (const id of ['crisisOverlay', 'onboardingModal', 'disclaimerModal']) {
@@ -3992,7 +4246,6 @@ function quizRestart() {
 }
 
 // ─── INIT ───
-document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 document.getElementById('breathCircle').addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleBreathing(); }
 });

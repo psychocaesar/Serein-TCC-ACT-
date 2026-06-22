@@ -2795,8 +2795,8 @@ const BELL_GAIN = 11;
 const bellFallback = (typeof Audio !== 'undefined')
   ? { aigu: new Audio('cloche.mp3'), grave: new Audio('clochegrave.mp3') }
   : { aigu: null, grave: null };
-function playBell(buf) {
-  const which = (buf === bellBufGrave) ? 'grave' : 'aigu';
+function playBell(which) {            // which = 'aigu' | 'grave'
+  const buf = which === 'grave' ? bellBufGrave : bellBufAigu;
   const ctx = ensureBellCtx();
   if (ctx && ctx.state === 'suspended') ctx.resume();
   if (ctx && buf) {
@@ -2927,8 +2927,8 @@ function runBreathPhase() {
 
   // Cloche aiguë à l'inspiration, grave à l'expiration — sur toutes les techniques.
   // Les paliers "Retiens" restent silencieux (seule l'haptique les marque) : ça les distingue à l'oreille.
-  if (isInspire) playBell(bellBufAigu);
-  else if (isExpire) playBell(bellBufGrave);
+  if (isInspire) playBell('aigu');
+  else if (isExpire) playBell('grave');
 
   const c = document.getElementById('breathCircle');
   if (isHold) {
@@ -3110,11 +3110,11 @@ function updateCrisisCircle() {
   if (crisisExpand) {
     c.classList.add('expand');
     t.textContent = 'Inspire...';
-    playBell(bellBufAigu);
+    playBell('aigu');
   } else {
     c.classList.remove('expand');
     t.textContent = 'Expire...';
-    playBell(bellBufGrave);
+    playBell('grave');
   }
   Haptics.light(); // pulsation tactile à chaque changement de phase
 }

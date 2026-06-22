@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "build:web": "node scripts/build-www.mjs",
+    "test": "node --test \"tests/*.test.js\"",
     "sync": "npm run build:web && cap sync",
     "open:android": "cap open android",
     "open:ios": "cap open ios"

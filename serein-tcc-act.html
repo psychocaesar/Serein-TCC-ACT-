@@ -2785,20 +2785,44 @@ async function loadBells() {
   bellsLoading = false;
 }
 
-// Les fichiers sources sont exportés à un niveau très bas (crête ~0.07) :
-// quasi inaudibles sur un haut-parleur de téléphone sans ce gain de rattrapage.
-const BELL_GAIN = 8;
+// Sources exportées à très bas niveau (crête ~0.07) → gain de rattrapage en Web Audio.
+const BELL_GAIN = 11;
+// Repli HTMLAudio : certaines WebView (OEM Android type ColorOS) échouent à décoder en Web Audio.
+const bellFallback = (typeof Audio !== 'undefined')
+  ? { aigu: new Audio('cloche.mp3'), grave: new Audio('clochegrave.mp3') }
+  : { aigu: null, grave: null };
 function playBell(buf) {
+  const which = (buf === bellBufGrave) ? 'grave' : 'aigu';
   const ctx = ensureBellCtx();
-  if (!ctx || !buf) return;
-  const src = ctx.createBufferSource();
-  src.buffer = buf;
-  const gain = ctx.createGain();
-  gain.gain.value = BELL_GAIN;
-  src.connect(gain);
-  gain.connect(ctx.destination);
-  src.start();
+  if (ctx && ctx.state === 'suspended') ctx.resume();
+  if (ctx && buf) {
+    try {
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const gain = ctx.createGain();
+      gain.gain.value = BELL_GAIN;
+      src.connect(gain); gain.connect(ctx.destination);
+      src.start();
+      return;
+    } catch (e) { /* on bascule sur le repli ci-dessous */ }
+  }
+  const el = bellFallback[which];
+  if (el) { try { el.currentTime = 0; el.play().catch(() => {}); } catch (e) {} }
 }
+// Déverrouille l'audio dès le tout premier geste (politique autoplay iOS/Android) :
+// crée/résume le contexte, précharge les cloches et débloque les éléments de repli.
+function primeAudio() {
+  ensureBellCtx();
+  loadBells();
+  for (const k of ['aigu', 'grave']) {
+    const el = bellFallback[k];
+    if (!el) continue;
+    el.muted = true;
+    Promise.resolve(el.play()).then(() => { el.pause(); el.currentTime = 0; el.muted = false; }).catch(() => { el.muted = false; });
+  }
+}
+window.addEventListener('pointerdown', primeAudio, { once: true });
+window.addEventListener('touchstart', primeAudio, { once: true });
 
 // ─── BREATHING ───
 const breathTechs = {

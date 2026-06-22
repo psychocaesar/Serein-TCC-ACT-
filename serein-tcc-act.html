@@ -748,8 +748,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   display: flex; align-items: center; justify-content: center;
   color: var(--color-muted); transition: all var(--transition); flex-shrink: 0;
 }
+.fear-check svg { opacity: 0; transition: opacity var(--transition); }
 .fear-check:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .fear-level.done .fear-check { border-color: var(--color-primary); color: var(--color-primary); }
+.fear-level.done .fear-check svg { opacity: 1; }
 .closing-card {
   background: var(--color-primary-light); border: 1.5px solid var(--color-primary);
   border-radius: var(--radius); padding: 1.5rem; text-align: center;
@@ -1710,16 +1712,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <div class="big-emoji">🌱</div>
       <h3>Tu l'as fait !</h3>
       <p>Chaque pas compte. L'évitement maintient l'anxiété - l'action la réduit progressivement. Reviens demain pour continuer.</p>
-    </div>
-
-    <div class="divider"></div>
-
-    <h2 class="mb-1">🔬 Expériences comportementales</h2>
-    <p>Teste une croyance anxieuse au lieu de la croire sur parole : prédis, expérimente, observe, révise.</p>
-    <div class="mt-2">
-      <button class="btn btn-secondary" onclick="navigateTo('experiments')" aria-label="Ouvrir les expériences comportementales">
-        🔬 Mes expériences
-      </button>
     </div>
 
     <div class="mt-3">

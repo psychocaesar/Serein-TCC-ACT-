@@ -294,6 +294,22 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   color: var(--color-muted); margin-bottom: 0.75rem;
 }
 
+/* ─── ACCÈS RAPIDE (accueil) ─── */
+.quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin: 0.5rem 0 0; }
+.quick-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 0.45rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.95rem 0.4rem;
+  cursor: pointer; color: var(--color-text);
+  font-family: var(--font-body);
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+.quick-btn:hover, .quick-btn:active { transform: translateY(-2px); border-color: var(--color-primary); background: var(--color-primary-light); }
+.quick-btn .qa-icon { font-size: 1.5rem; line-height: 1; }
+.quick-btn .qa-label { font-size: 0.74rem; font-weight: 600; text-align: center; line-height: 1.2; }
+
 /* ─── CARDS ─── */
 .card {
   background: var(--color-surface);
@@ -333,12 +349,14 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 }
 
 /* ─── MOOD CHIPS ─── */
-/* ─── CHECK-IN PAR CURSEURS (modèle circomplexe valence × énergie) ─── */
+/* ─── CHECK-IN PAR CURSEUR (axe humeur unique) ─── */
 #checkin-card { margin: 1rem 0; }
 #mood-orb-container { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 1.5rem; }
 #mood-orb {
-  width: 80px; height: 80px; border-radius: 50%;
+  width: 88px; height: 88px; border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #bfe5d6, #4a9e82);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.3rem; line-height: 1;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   margin-bottom: 0.85rem;
 }
@@ -352,21 +370,20 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .slider-row { display: flex; align-items: center; gap: 10px; }
 .slider-row > span { font-size: 1.2rem; flex-shrink: 0; }
 .slider-ends { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--color-muted); margin-top: 0.35rem; padding: 0 1.85rem; }
-/* Curseurs custom : scopés aux deux IDs pour ne pas toucher les autres sliders (intensité, croyance). */
-#slider-valence, #slider-energie {
+/* Curseur custom : scopé à l'ID pour ne pas toucher les autres sliders (intensité, croyance). */
+#slider-valence {
   -webkit-appearance: none; appearance: none;
   flex: 1; width: auto; min-width: 0; height: 8px; border-radius: 8px;
   outline: none; cursor: pointer;
+  background: linear-gradient(90deg, #e0574e, #e08a3c, #5bb98f);
 }
-#slider-valence { background: linear-gradient(90deg, #e0574e, #e08a3c, #5bb98f); }
-#slider-energie { background: linear-gradient(90deg, #5b7a99, #4a9e82, #e08a3c); }
-#slider-valence::-webkit-slider-thumb, #slider-energie::-webkit-slider-thumb {
+#slider-valence::-webkit-slider-thumb {
   -webkit-appearance: none; appearance: none;
   width: 26px; height: 26px; border-radius: 50%;
   background: #fff; border: 3px solid var(--color-primary);
   box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
 }
-#slider-valence::-moz-range-thumb, #slider-energie::-moz-range-thumb {
+#slider-valence::-moz-range-thumb {
   width: 26px; height: 26px; border-radius: 50%;
   background: #fff; border: 3px solid var(--color-primary);
   box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
@@ -1277,17 +1294,23 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
         <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
       </div>
 
-      <div class="slider-block">
-        <label for="slider-energie">Ton énergie</label>
-        <div class="slider-row">
-          <span aria-hidden="true">🌙</span>
-          <input type="range" id="slider-energie" min="0" max="100" value="50" oninput="onMoodSliderInput()" aria-label="Ton énergie, de basse à haute">
-          <span aria-hidden="true">⚡</span>
-        </div>
-        <div class="slider-ends"><span>Basse</span><span>Haute</span></div>
-      </div>
-
       <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Continuer avec l'état sélectionné">Continuer →</button>
+    </div>
+
+    <div class="section-title">Accès rapide</div>
+    <div class="quick-actions" role="group" aria-label="Accès rapide aux outils">
+      <button class="quick-btn" onclick="navigateTo('calm')" aria-label="Respirer">
+        <span class="qa-icon" aria-hidden="true">🌬️</span>
+        <span class="qa-label">Respirer</span>
+      </button>
+      <button class="quick-btn" onclick="startNewJournal()" aria-label="Noter une pensée">
+        <span class="qa-icon" aria-hidden="true">📝</span>
+        <span class="qa-label">Noter une pensée</span>
+      </button>
+      <button class="quick-btn" onclick="navigateTo('cards')" aria-label="Carte de coping">
+        <span class="qa-icon" aria-hidden="true">🃏</span>
+        <span class="qa-label">Carte de coping</span>
+      </button>
     </div>
 
     <div id="miniProgress" class="mini-progress" style="display:none;" aria-label="Mini progression"></div>
@@ -2497,55 +2520,48 @@ function selectMood(mood) {
   }, 200);
 }
 
-// ─── CHECK-IN PAR CURSEURS (modèle circomplexe valence × énergie) ───
-// Les 7 états restent ceux de selectMood ; seule la SAISIE change (2 curseurs continus).
+// ─── CHECK-IN PAR CURSEUR (axe humeur unique) ───
+// Une seule barre « Humeur » (difficile → bien). Les 7 états restent ceux de selectMood ;
+// seule la SAISIE change (1 curseur continu, emoji affiché DANS la bulle).
 const MOOD_STATES = {
   panique:    { emoji: "💨", label: "Panique",    desc: "Montée d'angoisse",  bg: "#e0574e", light: "#f3b4ae" },
   stress:     { emoji: "😤", label: "Stressé·e",  desc: "Tension, urgence",   bg: "#e08a3c", light: "#f3d3a8" },
-  rumination: { emoji: "🌀", label: "Je rumine",  desc: "Pensées en boucle",  bg: "#7c6bd0", light: "#cfc7f0" },
-  aplat:      { emoji: "😶", label: "À plat",      desc: "Vide, engourdi·e",   bg: "#6e7d88", light: "#ccd4da" },
   triste:     { emoji: "😢", label: "Triste",      desc: "Tristesse, repli",   bg: "#5b7fb0", light: "#c5d6ec" },
-  fatigue:    { emoji: "😴", label: "Fatigué·e",   desc: "Besoin de repos",    bg: "#8f8aa6", light: "#d8d3e6" },
+  rumination: { emoji: "🌀", label: "Je rumine",  desc: "Pensées en boucle",  bg: "#7c6bd0", light: "#cfc7f0" },
   bien:       { emoji: "🙂", label: "Ça va",       desc: "Plutôt stable",      bg: "#4a9e82", light: "#bfe5d6" },
   serein:     { emoji: "😌", label: "Serein",      desc: "Calme, posé·e",      bg: "#5bb98f", light: "#c6ecd9" },
   forme:      { emoji: "✨", label: "En forme",    desc: "Énergie, élan",      bg: "#8fc44e", light: "#dcefb9" },
+  // États conservés pour selectMood / check-in détaillé (plus sur la barre depuis l'axe unique)
+  aplat:      { emoji: "😶", label: "À plat",      desc: "Vide, engourdi·e",   bg: "#6e7d88", light: "#ccd4da" },
+  fatigue:    { emoji: "😴", label: "Fatigué·e",   desc: "Besoin de repos",    bg: "#8f8aa6", light: "#d8d3e6" },
 };
-// Chevauchements du modèle résolus par priorité (premier match gagne) :
-// états aigus d'abord ; le centre neutre 50/50 retombe sur « Ça va » (pas de détresse présumée).
-function getMoodFromSliders(valence, energie) {
-  const v = valence, e = energie;
-  // Haute énergie + valence basse = états d'alerte
-  if (v <= 30 && e >= 60) return "panique";
-  if (v <= 45 && e >= 60) return "stress";
-  // Valence haute = bien-être (énergie haute = en forme, sinon serein)
-  if (v >= 65) return e >= 55 ? "forme" : "serein";
-  // Basse énergie = états de retrait, en dégradé d'humeur (du plus bas au plus neutre)
-  if (e <= 39) {
-    if (v <= 25) return "aplat";
-    if (v <= 45) return "triste";
-    return "fatigue"; // v 46-64
-  }
-  // Énergie moyenne + valence basse-moyenne = rumination ; centre neutre = ça va
-  if (v < 50) return "rumination";
-  return "bien";
+// Échelle large à 7 états sur l'axe humeur (difficile 0 → bien 100). Le centre (50) = « Ça va ».
+function getMoodFromValence(v) {
+  if (v <= 14) return "panique";
+  if (v <= 28) return "stress";
+  if (v <= 42) return "triste";
+  if (v < 50)  return "rumination"; // 43-49
+  if (v <= 63) return "bien";       // 50-63 (centre neutre)
+  if (v <= 82) return "serein";
+  return "forme";                   // 83-100
 }
 let currentSliderMood = "bien";
 function updateMoodOrb() {
   const vEl = document.getElementById("slider-valence");
-  const eEl = document.getElementById("slider-energie");
-  if (!vEl || !eEl) return false;
-  const key = getMoodFromSliders(+vEl.value, +eEl.value);
+  if (!vEl) return false;
+  const key = getMoodFromValence(+vEl.value);
   const s = MOOD_STATES[key];
   const changed = key !== currentSliderMood;
   currentSliderMood = key;
   const orb = document.getElementById("mood-orb");
   if (orb) {
+    orb.textContent = s.emoji; // emoji DANS la bulle (cf. prototype)
     orb.style.background = `radial-gradient(circle at 35% 35%, ${s.light}, ${s.bg})`;
     orb.style.boxShadow = `0 10px 34px ${s.bg}66`; // bg à ~40% d'opacité (66 hex)
   }
   const lab = document.getElementById("mood-label");
   const desc = document.getElementById("mood-desc");
-  if (lab) lab.textContent = `${s.emoji} ${s.label}`;
+  if (lab) lab.textContent = s.label;
   if (desc) desc.textContent = s.desc;
   return changed;
 }

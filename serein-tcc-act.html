@@ -339,26 +339,45 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 }
 
 /* ─── MOOD CHIPS ─── */
-.mood-chips { display: flex; flex-wrap: wrap; gap: 0.625rem; margin: 1rem 0; }
-.mood-chip {
-  display: flex; align-items: center; gap: 0.4rem;
-  padding: 0.6rem 1rem;
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  border-radius: 2rem;
-  font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
-  color: var(--color-text); cursor: pointer;
-  transition: background var(--transition), border-color var(--transition), transform var(--transition);
-  backdrop-filter: blur(4px);
+/* ─── CHECK-IN PAR CURSEURS (modèle circomplexe valence × énergie) ─── */
+#checkin-card { margin: 1rem 0; }
+#mood-orb-container { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 1.5rem; }
+#mood-orb {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #bfe5d6, #4a9e82);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: 0.85rem;
 }
-.mood-chip:hover, .mood-chip.selected {
-  background: var(--color-primary-light);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: scale(1.03);
+#mood-label { font-family: var(--font-title); font-size: 1.15rem; font-weight: 700; color: var(--color-text); }
+#mood-desc { font-size: 0.82rem; color: var(--color-muted); margin-top: 0.15rem; }
+.slider-block { margin-bottom: 1.25rem; }
+.slider-block label {
+  display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--color-primary); margin-bottom: 0.6rem;
 }
-.mood-chip .emoji { font-size: 1.1rem; }
-.mood-chip-pos { border-color: rgba(147,201,172,0.4); }
+.slider-row { display: flex; align-items: center; gap: 10px; }
+.slider-row > span { font-size: 1.2rem; flex-shrink: 0; }
+.slider-ends { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--color-muted); margin-top: 0.35rem; padding: 0 1.85rem; }
+/* Curseurs custom : scopés aux deux IDs pour ne pas toucher les autres sliders (intensité, croyance). */
+#slider-valence, #slider-energie {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; width: auto; min-width: 0; height: 8px; border-radius: 8px;
+  outline: none; cursor: pointer;
+}
+#slider-valence { background: linear-gradient(90deg, #e0574e, #e08a3c, #5bb98f); }
+#slider-energie { background: linear-gradient(90deg, #5b7a99, #4a9e82, #e08a3c); }
+#slider-valence::-webkit-slider-thumb, #slider-energie::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
+}
+#slider-valence::-moz-range-thumb, #slider-energie::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
+}
+.mood-confirm-btn { width: 100%; margin-top: 0.25rem; }
 
 /* ─── STATS GRID ─── */
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin: 1rem 0; }
@@ -509,26 +528,6 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
   font-size: 0.72rem; font-weight: 700; color: #0d1b15;
 }
 .act-step p { font-size: 0.85rem; margin: 0; color: var(--color-text); }
-
-/* ─── DAILY CHECK-IN ─── */
-.daily-checkin-card {
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: var(--radius); padding: 1rem 1.125rem; margin: 0.75rem 0;
-  cursor: default;
-}
-.daily-checkin-card h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-text); }
-.intensity-chips { display: flex; gap: 0.35rem; }
-.intensity-chip {
-  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-  padding: 0.5rem 0.15rem; border: 1px solid var(--color-border); border-radius: 0.875rem;
-  background: none; cursor: pointer; transition: all var(--transition);
-  font-size: 0.58rem; color: var(--color-muted); font-family: var(--font-body);
-}
-.intensity-chip .ic-emoji { font-size: 1.35rem; line-height: 1; }
-.intensity-chip:hover, .intensity-chip:focus {
-  border-color: var(--color-primary); background: var(--color-primary-light); color: var(--color-primary);
-}
-.checkin-done { display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary); font-size: 0.875rem; font-weight: 500; }
 
 /* ─── SYMPTOM CHIPS ─── */
 .symptom-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
@@ -995,6 +994,22 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: border-color var(--transition), color var(--transition);
 }
 .setting-link-row:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.insta-link {
+  display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--color-text);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.6rem;
+  transition: border-color var(--transition);
+}
+.insta-link:hover { border-color: var(--color-primary); }
+.insta-icon {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  display: flex; align-items: center; justify-content: center;
+}
+.insta-icon svg { width: 20px; height: 20px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.insta-text { flex: 1; }
+.insta-text .insta-title { font-size: 0.9rem; font-weight: 600; }
+.insta-text .insta-handle { font-size: 0.78rem; color: var(--color-muted); }
 .visually-hidden-input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 
 /* ─── DONNÉES & CONFIDENTIALITÉ ─── */
@@ -1264,36 +1279,39 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="greeting-block">
       <div class="time-label" id="timeLabel">Bonjour</div>
       <h1>Comment tu te <span>sens</span> ?</h1>
-      <p class="sub-text">Choisis ce qui résonne le mieux maintenant.</p>
     </div>
 
-    <div class="mood-chips" role="group" aria-label="Comment tu te sens ?">
-      <button class="mood-chip" data-mood="stress" aria-label="Stressé·e" onclick="selectMood('stress')">
-        <span class="emoji">😤</span> Stressé·e
-      </button>
-      <button class="mood-chip" data-mood="rumination" aria-label="Je rumine" onclick="selectMood('rumination')">
-        <span class="emoji">🌀</span> Je rumine
-      </button>
-      <button class="mood-chip" data-mood="panique" aria-label="Panique" onclick="selectMood('panique')">
-        <span class="emoji">💨</span> Panique
-      </button>
-      <button class="mood-chip" data-mood="aplat" aria-label="À plat" onclick="selectMood('aplat')">
-        <span class="emoji">😶</span> À plat
-      </button>
-      <button class="mood-chip mood-chip-pos" data-mood="bien" aria-label="Ça va" onclick="selectMood('bien')">
-        <span class="emoji">🙂</span> Ça va
-      </button>
-      <button class="mood-chip mood-chip-pos" data-mood="serein" aria-label="Serein" onclick="selectMood('serein')">
-        <span class="emoji">😌</span> Serein
-      </button>
-      <button class="mood-chip mood-chip-pos" data-mood="forme" aria-label="En forme" onclick="selectMood('forme')">
-        <span class="emoji">✨</span> En forme
-      </button>
+    <div id="checkin-card">
+      <div id="mood-orb-container" aria-live="polite">
+        <div id="mood-orb" aria-hidden="true"></div>
+        <div id="mood-label"></div>
+        <div id="mood-desc"></div>
+      </div>
+
+      <div class="slider-block">
+        <label for="slider-valence">Ton humeur</label>
+        <div class="slider-row">
+          <span aria-hidden="true">😔</span>
+          <input type="range" id="slider-valence" min="0" max="100" value="50" oninput="onMoodSliderInput()" aria-label="Ton humeur, de difficile à bien">
+          <span aria-hidden="true">😊</span>
+        </div>
+        <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
+      </div>
+
+      <div class="slider-block">
+        <label for="slider-energie">Ton énergie</label>
+        <div class="slider-row">
+          <span aria-hidden="true">🌙</span>
+          <input type="range" id="slider-energie" min="0" max="100" value="50" oninput="onMoodSliderInput()" aria-label="Ton énergie, de basse à haute">
+          <span aria-hidden="true">⚡</span>
+        </div>
+        <div class="slider-ends"><span>Basse</span><span>Haute</span></div>
+      </div>
+
+      <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Continuer avec l'état sélectionné">Continuer →</button>
     </div>
 
     <div id="miniProgress" class="mini-progress" style="display:none;" aria-label="Mini progression"></div>
-
-    <div class="daily-checkin-card" id="dailyCheckinCard" role="group" aria-label="Note quotidienne d'intensité"></div>
 
     <div id="dailyQuote" class="daily-quote" style="display:none;"></div>
 
@@ -1331,7 +1349,17 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <button class="emotion-btn" data-emotion="aplat" onclick="selectEmotion('aplat')" aria-label="À plat">
         <span class="emoji">😶</span>
         <span class="label">À plat</span>
-        <span class="desc">Vide, démotivé·e, fatigue</span>
+        <span class="desc">Vide, engourdi·e, déconnecté·e</span>
+      </button>
+      <button class="emotion-btn" data-emotion="triste" onclick="selectEmotion('triste')" aria-label="Triste">
+        <span class="emoji">😢</span>
+        <span class="label">Triste</span>
+        <span class="desc">Tristesse, repli sur soi</span>
+      </button>
+      <button class="emotion-btn" data-emotion="fatigue" onclick="selectEmotion('fatigue')" aria-label="Fatigué·e">
+        <span class="emoji">😴</span>
+        <span class="label">Fatigué·e</span>
+        <span class="desc">Peu d'énergie, besoin de repos</span>
       </button>
     </div>
 
@@ -1966,7 +1994,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <!-- ═══ SCREEN : ÉCHELLE DE CATASTROPHE ═══ -->
   <div class="screen" id="screen-catastrophe" role="main" aria-label="Échelle de catastrophe">
     <div class="greeting-block">
-      <div class="time-label">Décatastrophiser</div>
       <h1>Échelle de <span>catastrophe</span></h1>
     </div>
     <p>Quand l'esprit anticipe le pire, confronte la prédiction aux faits. Réponds aussi honnêtement que possible.</p>
@@ -2011,7 +2038,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <!-- ═══ SCREEN : MÉTAPHORES ACT ═══ -->
   <div class="screen" id="screen-metaphores" role="main" aria-label="Métaphores ACT">
     <div class="greeting-block">
-      <div class="time-label">ACT</div>
       <h1>Métaphores <span>ACT</span></h1>
     </div>
     <p>Des images pour changer ta relation aux pensées et aux émotions difficiles. Touche une métaphore pour la déplier.</p>
@@ -2124,9 +2150,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <!-- ═══ HUB : APAISER ═══ -->
   <div class="screen" id="screen-apaiser" role="main" aria-label="Apaiser">
     <div class="greeting-block">
-      <div class="time-label">🫧 Apaiser</div>
       <h1>Revenir au <span>calme</span></h1>
-      <p class="sub-text">Faire baisser la tension, là, maintenant.</p>
     </div>
     <div class="hub-list">
       <button class="hub-card" onclick="navigateTo('calm')" aria-label="Respiration et ancrage">
@@ -2150,9 +2174,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <!-- ═══ HUB : COMPRENDRE ═══ -->
   <div class="screen" id="screen-comprendre" role="main" aria-label="Comprendre">
     <div class="greeting-block">
-      <div class="time-label">🧭 Comprendre</div>
       <h1>Travailler sur tes <span>pensées</span></h1>
-      <p class="sub-text">Démêler, identifier, tester - à ton rythme.</p>
     </div>
     <div class="hub-list">
       <button class="hub-card" onclick="navigateTo('journal')" aria-label="Journal de pensées">
@@ -2191,7 +2213,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <!-- ═══ HUB : MON PARCOURS ═══ -->
   <div class="screen" id="screen-parcours" role="main" aria-label="Mon parcours">
     <div class="greeting-block">
-      <div class="time-label">📈 Mon parcours</div>
       <h1>Où j'en <span>suis</span></h1>
     </div>
 
@@ -2205,7 +2226,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-value" id="statStreak">0</div>
-        <div class="stat-label">Jours consécutifs</div>
+        <div class="stat-label">Jours de pratique</div>
       </div>
       <div class="stat-card">
         <div class="stat-value" id="statSessions">0</div>
@@ -2289,6 +2310,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="reglages-block">
       <div class="section-title">À propos</div>
       <a class="setting-link-row" href="https://github.com/psychocaesar/Serein-TCC-ACT-" target="_blank" rel="noopener" aria-label="Code source sur GitHub">Code source (GitHub) ↗</a>
+      <a class="insta-link" href="https://www.instagram.com/sereinapp.fr/" target="_blank" rel="noopener" aria-label="Suis-nous sur Instagram, @sereinapp.fr">
+        <div class="insta-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+        <div class="insta-text"><div class="insta-title">Suis-nous sur Instagram</div><div class="insta-handle">@sereinapp.fr</div></div>
+      </a>
     </div>
 
     <p class="app-version">Serein TCC·ACT · version 1.0</p>
@@ -2353,12 +2378,13 @@ function loadStats() {
   const today = new Date().toDateString();
   const data = safeParse('serein_tcc_stats', {});
   if (data.lastDay !== today) {
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    data.streak = (data.lastDay === yesterday.toDateString()) ? (data.streak || 0) + 1 : 1;
+    // Cumul de jours de pratique qui ne retombe JAMAIS (pas de série cassée = pas de culpabilité).
+    if (data.totalDays == null) data.totalDays = data.streak || 0; // migration depuis l'ancien streak
+    data.totalDays += 1;
     data.lastDay = today;
     Store.set('serein_tcc_stats', JSON.stringify(data));
   }
-  document.getElementById('statStreak').textContent = data.streak || 0;
+  document.getElementById('statStreak').textContent = data.totalDays || 0;
   document.getElementById('statSessions').textContent = data.sessions || 0;
   const moods = data.moods || [];
   if (moods.length > 0) {
@@ -2372,7 +2398,6 @@ function loadStats() {
   const gridEl = document.querySelector('#screen-parcours .stats-grid');
   if (emptyEl) emptyEl.style.display = isNew ? 'block' : 'none';
   if (gridEl) gridEl.style.display = isNew ? 'none' : '';
-  renderDailyCheckinCard();
 }
 function incrementSessions() {
   const data = safeParse('serein_tcc_stats', {});
@@ -2416,10 +2441,9 @@ if (window.matchMedia) {
 // ─── GREETING ───
 function setGreeting() {
   const h = new Date().getHours();
-  const slots = [[5,'Bonne nuit 🌟','Prends soin de toi.'],[12,'Bonjour ☀️','Commence la journée avec clarté.'],[18,'Bon après-midi 🌤️','Prends un moment pour toi.'],[24,'Bonne soirée 🌙','Prends un moment pour faire le point.']];
-  const [, label, sub] = slots.find(([end]) => h < end) || slots[slots.length - 1];
+  const slots = [[5,'Bonne nuit 🌟'],[12,'Bonjour ☀️'],[18,'Bon après-midi 🌤️'],[24,'Bonne soirée 🌙']];
+  const label = (slots.find(([end]) => h < end) || slots[slots.length - 1])[1];
   document.getElementById('timeLabel').textContent = label;
-  document.querySelector('#screen-home .sub-text').textContent = sub;
 }
 
 // ─── NAVIGATION ───
@@ -2449,7 +2473,7 @@ function parentOf(screen) {
   return { 'nav-home': 'home', 'nav-apaiser': 'apaiser', 'nav-comprendre': 'comprendre', 'nav-parcours': 'parcours' }[navMap[screen]] || 'home';
 }
 const screenInitFns = {
-  home: () => { renderMiniProgress(); renderDailyCheckinCard(); },
+  home: () => { renderMiniProgress(); updateMoodOrb(); },
   parcours: loadStats,
   checkin: initCheckin,
   cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
@@ -2538,6 +2562,70 @@ function selectMood(mood) {
   }, 200);
 }
 
+// ─── CHECK-IN PAR CURSEURS (modèle circomplexe valence × énergie) ───
+// Les 7 états restent ceux de selectMood ; seule la SAISIE change (2 curseurs continus).
+const MOOD_STATES = {
+  panique:    { emoji: "💨", label: "Panique",    desc: "Montée d'angoisse",  bg: "#e0574e", light: "#f3b4ae" },
+  stress:     { emoji: "😤", label: "Stressé·e",  desc: "Tension, urgence",   bg: "#e08a3c", light: "#f3d3a8" },
+  rumination: { emoji: "🌀", label: "Je rumine",  desc: "Pensées en boucle",  bg: "#7c6bd0", light: "#cfc7f0" },
+  aplat:      { emoji: "😶", label: "À plat",      desc: "Vide, engourdi·e",   bg: "#6e7d88", light: "#ccd4da" },
+  triste:     { emoji: "😢", label: "Triste",      desc: "Tristesse, repli",   bg: "#5b7fb0", light: "#c5d6ec" },
+  fatigue:    { emoji: "😴", label: "Fatigué·e",   desc: "Besoin de repos",    bg: "#8f8aa6", light: "#d8d3e6" },
+  bien:       { emoji: "🙂", label: "Ça va",       desc: "Plutôt stable",      bg: "#4a9e82", light: "#bfe5d6" },
+  serein:     { emoji: "😌", label: "Serein",      desc: "Calme, posé·e",      bg: "#5bb98f", light: "#c6ecd9" },
+  forme:      { emoji: "✨", label: "En forme",    desc: "Énergie, élan",      bg: "#8fc44e", light: "#dcefb9" },
+};
+// Chevauchements du modèle résolus par priorité (premier match gagne) :
+// états aigus d'abord ; le centre neutre 50/50 retombe sur « Ça va » (pas de détresse présumée).
+function getMoodFromSliders(valence, energie) {
+  const v = valence, e = energie;
+  // Haute énergie + valence basse = états d'alerte
+  if (v <= 30 && e >= 60) return "panique";
+  if (v <= 45 && e >= 60) return "stress";
+  // Valence haute = bien-être (énergie haute = en forme, sinon serein)
+  if (v >= 65) return e >= 55 ? "forme" : "serein";
+  // Basse énergie = états de retrait, en dégradé d'humeur (du plus bas au plus neutre)
+  if (e <= 39) {
+    if (v <= 25) return "aplat";
+    if (v <= 45) return "triste";
+    return "fatigue"; // v 46-64
+  }
+  // Énergie moyenne + valence basse-moyenne = rumination ; centre neutre = ça va
+  if (v < 50) return "rumination";
+  return "bien";
+}
+let currentSliderMood = "bien";
+function updateMoodOrb() {
+  const vEl = document.getElementById("slider-valence");
+  const eEl = document.getElementById("slider-energie");
+  if (!vEl || !eEl) return false;
+  const key = getMoodFromSliders(+vEl.value, +eEl.value);
+  const s = MOOD_STATES[key];
+  const changed = key !== currentSliderMood;
+  currentSliderMood = key;
+  const orb = document.getElementById("mood-orb");
+  if (orb) {
+    orb.style.background = `radial-gradient(circle at 35% 35%, ${s.light}, ${s.bg})`;
+    orb.style.boxShadow = `0 10px 34px ${s.bg}66`; // bg à ~40% d'opacité (66 hex)
+  }
+  const lab = document.getElementById("mood-label");
+  const desc = document.getElementById("mood-desc");
+  if (lab) lab.textContent = `${s.emoji} ${s.label}`;
+  if (desc) desc.textContent = s.desc;
+  return changed;
+}
+function onMoodSliderInput() {
+  if (updateMoodOrb()) Haptics.light(); // retour tactile léger à chaque changement d'état
+}
+function confirmMood() {
+  updateMoodOrb();
+  // Fusion : le curseur d'humeur EST le point quotidien de la courbe (plus de carte séparée).
+  // valence 100 (bien) → 2 ; valence 0 (difficile) → 10 ; valence 50 → 6.
+  const v = +document.getElementById('slider-valence').value;
+  logAnxiety(Math.round(2 + (100 - v) * 0.08));
+  selectMood(currentSliderMood); // réutilise le flux existant (suggestions, journal positif, etc.)
+}
+
 // ─── CHECK-IN ───
 const emotionSuggestions = {
   stress: {
@@ -2560,9 +2648,21 @@ const emotionSuggestions = {
   },
   aplat: {
     title: '😶 Pour le vide / à plat',
-    text: 'L\'activation comportementale aide à rompre le cycle de retrait. Une micro-action suffit pour relancer l\'élan.',
+    text: 'L\'activation comportementale aide à rompre le cycle de retrait. Une micro-action suffit pour relancer l\'élan - l\'action précède l\'humeur.',
     tags: ['Activation', 'Action courte'],
     cta: 'Exposition douce →', ctaScreen: 'ladder',
+  },
+  triste: {
+    title: '🌱 Pour la tristesse',
+    text: 'La tristesse pousse au repli et à l\'inaction. De tout petits pas - une activité de plaisir ou de maîtrise - réamorcent l\'élan sans surcharge. Et accueille ce moment avec bienveillance, pas avec autocritique.',
+    tags: ['Activation douce', 'Auto-compassion'],
+    cta: 'Mes cartes de coping →', ctaScreen: 'cards',
+  },
+  fatigue: {
+    title: '🌙 Pour la fatigue',
+    text: 'La fatigue peut signaler un vrai besoin de repos - ou parfois un évitement. Valide le repos, puis tente un micro-effort (deux minutes) pour ne pas t\'enliser dans l\'inertie.',
+    tags: ['Repos', 'Micro-pas'],
+    cta: 'Respiration & ancrage →', ctaScreen: 'calm',
   },
 };
 
@@ -3720,7 +3820,6 @@ function logAnxiety(intensity) {
   const idx = log.findIndex(e => e.date === today);
   if (idx >= 0) log[idx].intensity = intensity; else log.push({ date: today, intensity });
   saveAnxietyLog(log);
-  renderDailyCheckinCard();
   if (state.currentScreen === 'tracking') renderTracking();
 }
 function getTodayAnxiety() {
@@ -3728,40 +3827,6 @@ function getTodayAnxiety() {
   return loadAnxietyLog().find(e => e.date === today);
 }
 
-function renderDailyCheckinCard() {
-  const card = document.getElementById('dailyCheckinCard');
-  if (!card) return;
-  const chips = [
-    { e: '😊', l: 'Bien', v: 2 },
-    { e: '🙂', l: 'Calme', v: 4 },
-    { e: '😐', l: 'Neutre', v: 6 },
-    { e: '😔', l: 'Difficile', v: 8 },
-    { e: '😰', l: 'Intense', v: 10 },
-  ];
-  const today = getTodayAnxiety();
-  if (today) {
-    const closest = chips.reduce((p, c) => Math.abs(c.v - today.intensity) < Math.abs(p.v - today.intensity) ? c : p);
-    card.innerHTML = `<div class="checkin-done" role="status">${closest.e} Intensité notée aujourd'hui : <strong>${today.intensity}/10</strong>&ensp;<span style="font-size:0.75rem;color:var(--color-muted);cursor:pointer" onclick="renderDailyCheckinCardForm()">Modifier</span></div>`;
-  } else {
-    renderDailyCheckinCardForm();
-  }
-}
-function renderDailyCheckinCardForm() {
-  const card = document.getElementById('dailyCheckinCard');
-  if (!card) return;
-  const chips = [
-    { e: '😊', l: 'Bien', v: 2 },
-    { e: '🙂', l: 'Calme', v: 4 },
-    { e: '😐', l: 'Neutre', v: 6 },
-    { e: '😔', l: 'Difficile', v: 8 },
-    { e: '😰', l: 'Intense', v: 10 },
-  ];
-  card.innerHTML = `
-    <h3>Note ton niveau du jour</h3>
-    <div class="intensity-chips" role="group" aria-label="Intensité ressentie de 1 à 10">
-      ${chips.map(c => `<button class="intensity-chip" onclick="logAnxiety(${c.v})" aria-label="${c.l}, intensité ${c.v} sur 10"><span class="ic-emoji">${c.e}</span><span>${c.l}</span></button>`).join('')}
-    </div>`;
-}
 
 let trackPeriod = 7;
 function setTrackPeriod(days, el) {
@@ -3912,7 +3977,6 @@ async function clearAnxietyLog() {
   Store.remove(ANXIETY_KEY);
   Store.remove('serein_checkins');
   renderTracking();
-  renderDailyCheckinCard();
 }
 
 // ─── ÉCHELLE DE CATASTROPHE ───
@@ -4298,16 +4362,16 @@ function renderMiniProgress() {
   const el = document.getElementById('miniProgress');
   if (!el) return;
   const stats = safeParse('serein_tcc_stats', {});
-  const streak = stats.streak || 0;
+  const days = stats.totalDays || 0;
   const log = loadAnxietyLog();
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 7);
   const weekEntries = log.filter(e => e.date >= ymd(cutoff));
   const showAvg = weekEntries.length >= 2;
   const avg = showAvg ? (weekEntries.reduce((s, e) => s + e.intensity, 0) / weekEntries.length).toFixed(1) : null;
-  if (streak < 2 && !showAvg) { el.style.display = 'none'; return; }
+  if (days < 2 && !showAvg) { el.style.display = 'none'; return; }
   let html = '';
-  if (streak >= 2) html += `<span class="mp-item">🔥 <strong>${streak}</strong> jours</span>`;
-  if (streak >= 2 && showAvg) html += `<span class="mp-sep">·</span>`;
+  if (days >= 2) html += `<span class="mp-item">🔥 <strong>${days}</strong> jours de pratique</span>`;
+  if (days >= 2 && showAvg) html += `<span class="mp-sep">·</span>`;
   if (showAvg) html += `<span class="mp-item">📊 Moy. <strong>${avg}/10</strong> cette sem.</span>`;
   el.innerHTML = html;
   el.style.display = 'flex';
@@ -4354,6 +4418,7 @@ async function boot() {
   loadStats();
   renderDailyQuote();
   renderMiniProgress();
+  updateMoodOrb(); // peint la bulle d'humeur (50/50 → « Ça va ») au démarrage
   initOnboarding();
   initDisclaimer();
   Notify.flushWeb();

@@ -380,7 +380,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .mood-confirm-btn { width: 100%; margin-top: 0.25rem; }
 
 /* ─── STATS GRID ─── */
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin: 1rem 0; }
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.625rem; margin: 1rem 0; }
 .stat-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -1987,7 +1987,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="mt-2" id="journalHistoryList"></div>
 
     <div class="mt-3">
-      <button class="btn btn-ghost" onclick="navigateTo('parcours')" aria-label="Retour à Mon parcours">← Parcours</button>
+      <button class="btn btn-ghost" onclick="navigateTo('comprendre')" aria-label="Retour à Comprendre">← Comprendre</button>
     </div>
   </div>
 
@@ -2176,25 +2176,16 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="greeting-block">
       <h1>Travailler sur tes <span>pensées</span></h1>
     </div>
+    <div class="section-title">Recadrer mes pensées</div>
     <div class="hub-list">
-      <button class="hub-card" onclick="navigateTo('journal')" aria-label="Journal de pensées">
+      <button class="hub-card" onclick="navigateTo('jhistory')" aria-label="Journal de pensées">
         <span class="hub-icon">📝</span>
-        <span class="hub-text"><h3>Journal de pensées</h3><p>Restructure une pensée en quelques étapes</p></span>
+        <span class="hub-text"><h3>Journal de pensées</h3><p>Restructure tes pensées et relis tes entrées</p></span>
         <span class="hub-chevron">›</span>
       </button>
       <button class="hub-card" onclick="navigateTo('schemas')" aria-label="Schémas et biais">
         <span class="hub-icon">🧠</span>
         <span class="hub-text"><h3>Schémas & biais</h3><p>Repère tes pièges cognitifs + défusion ACT</p></span>
-        <span class="hub-chevron">›</span>
-      </button>
-      <button class="hub-card" onclick="navigateTo('experiments')" aria-label="Expériences comportementales">
-        <span class="hub-icon">🔬</span>
-        <span class="hub-text"><h3>Expériences comportementales</h3><p>Teste une croyance anxieuse dans la vraie vie</p></span>
-        <span class="hub-chevron">›</span>
-      </button>
-      <button class="hub-card" onclick="navigateTo('ladder')" aria-label="Exposition graduelle">
-        <span class="hub-icon">🪜</span>
-        <span class="hub-text"><h3>Exposition graduelle</h3><p>Affronte tes évitements palier par palier</p></span>
         <span class="hub-chevron">›</span>
       </button>
       <button class="hub-card" onclick="navigateTo('catastrophe')" aria-label="Échelle de catastrophe">
@@ -2205,6 +2196,20 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <button class="hub-card" onclick="navigateTo('quiz')" aria-label="Quiz des schémas">
         <span class="hub-icon">🎯</span>
         <span class="hub-text"><h3>Quiz des schémas</h3><p>Identifie le biais cognitif en jeu</p></span>
+        <span class="hub-chevron">›</span>
+      </button>
+    </div>
+
+    <div class="section-title" style="margin-top:1.75rem;">Passer à l'action</div>
+    <div class="hub-list">
+      <button class="hub-card" onclick="navigateTo('experiments')" aria-label="Expériences comportementales">
+        <span class="hub-icon">🔬</span>
+        <span class="hub-text"><h3>Expériences comportementales</h3><p>Teste une croyance anxieuse dans la vraie vie</p></span>
+        <span class="hub-chevron">›</span>
+      </button>
+      <button class="hub-card" onclick="navigateTo('ladder')" aria-label="Exposition graduelle">
+        <span class="hub-icon">🪜</span>
+        <span class="hub-text"><h3>Exposition graduelle</h3><p>Affronte tes évitements palier par palier</p></span>
         <span class="hub-chevron">›</span>
       </button>
     </div>
@@ -2229,10 +2234,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
         <div class="stat-label">Jours de pratique</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value" id="statSessions">0</div>
-        <div class="stat-label">Séances</div>
-      </div>
-      <div class="stat-card">
         <div class="stat-value" id="statMood">-</div>
         <div class="stat-label">Humeur moy.</div>
       </div>
@@ -2241,19 +2242,14 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="divider"></div>
 
     <div class="hub-list">
-      <button class="hub-card" onclick="navigateTo('tracking')" aria-label="Courbe d'anxiété">
+      <button class="hub-card" onclick="navigateTo('tracking')" aria-label="Mon évolution">
         <span class="hub-icon">📈</span>
-        <span class="hub-text"><h3>Courbe d'anxiété</h3><p>Visualise l'évolution + tes derniers check-ins</p></span>
+        <span class="hub-text"><h3>Mon évolution</h3><p>Visualise l'évolution + tes derniers check-ins</p></span>
         <span class="hub-chevron">›</span>
       </button>
       <button class="hub-card" onclick="navigateTo('diary')" aria-label="Journal positif">
         <span class="hub-icon">📗</span>
         <span class="hub-text"><h3>Journal positif</h3><p>Contrebalance le filtre négatif</p></span>
-        <span class="hub-chevron">›</span>
-      </button>
-      <button class="hub-card" onclick="navigateTo('jhistory')" aria-label="Historique du journal">
-        <span class="hub-icon">🗂️</span>
-        <span class="hub-text"><h3>Historique du journal</h3><p>Relis tes restructurations passées</p></span>
         <span class="hub-chevron">›</span>
       </button>
     </div>
@@ -2385,7 +2381,6 @@ function loadStats() {
     Store.set('serein_tcc_stats', JSON.stringify(data));
   }
   document.getElementById('statStreak').textContent = data.totalDays || 0;
-  document.getElementById('statSessions').textContent = data.sessions || 0;
   const moods = data.moods || [];
   if (moods.length > 0) {
     const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
@@ -2403,7 +2398,6 @@ function incrementSessions() {
   const data = safeParse('serein_tcc_stats', {});
   data.sessions = (data.sessions || 0) + 1;
   Store.set('serein_tcc_stats', JSON.stringify(data));
-  document.getElementById('statSessions').textContent = data.sessions;
 }
 
 // ─── THEME ───
@@ -2460,10 +2454,10 @@ const screenMap = {
 const navMap = {
   home: 'nav-home', checkin: 'nav-home', whatup: 'nav-home',
   apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser',
-  comprendre: 'nav-comprendre', journal: 'nav-comprendre',
+  comprendre: 'nav-comprendre', journal: 'nav-comprendre', jhistory: 'nav-comprendre',
   schemas: 'nav-comprendre', quiz: 'nav-comprendre', catastrophe: 'nav-comprendre',
   experiments: 'nav-comprendre', ladder: 'nav-comprendre',
-  parcours: 'nav-parcours', tracking: 'nav-parcours', diary: 'nav-parcours', jhistory: 'nav-parcours',
+  parcours: 'nav-parcours', tracking: 'nav-parcours', diary: 'nav-parcours',
 };
 // Onglets de premier niveau (atteints par la barre du bas) : pas de chevron retour.
 const MAIN_TABS = ['home', 'apaiser', 'comprendre', 'parcours'];

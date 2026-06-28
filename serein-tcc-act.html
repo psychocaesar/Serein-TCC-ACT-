@@ -4363,7 +4363,13 @@ async function boot() {
   if (TZ) { try { const { value } = await TZ.getPreferred(); if (value) await TZ.set({ value }); } catch (e) {} }
   // Bouton retour physique Android
   const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
-  if (App) { try { App.addListener('backButton', handleHardwareBack); } catch (e) {} }
+  if (App) {
+    try { App.addListener('backButton', handleHardwareBack); } catch (e) {}
+    // Deep-link depuis le widget iOS (serein-tcc://cards) -> ouvre l'écran Cartes
+    try { App.addListener('appUrlOpen', (data) => {
+      if (data && data.url && data.url.indexOf('cards') !== -1) navigateTo('cards');
+    }); } catch (e) {}
+  }
   initTheme();
   setGreeting();
   loadStats();

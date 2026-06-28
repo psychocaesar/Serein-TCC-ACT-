@@ -1,6 +1,7 @@
 import UIKit
 import Capacitor
 import AVFoundation
+import WidgetKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +17,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
             print("AVAudioSession: \(error)")
         }
+        syncWidgetData()
         return true
+    }
+
+    /// Recopie les cartes de coping du store Capacitor (UserDefaults.standard,
+    /// clé préfixée "CapacitorStorage.serein_cards") vers le conteneur partagé de
+    /// l'App Group, puis rafraîchit le widget. Nécessite l'App Group activé sur la
+    /// target App (sinon UserDefaults(suiteName:) est nil → no-op silencieux).
+    func syncWidgetData() {
+        let appGroup = "group.fr.sereinapp.tccact"
+        let raw = UserDefaults.standard.string(forKey: "CapacitorStorage.serein_cards") ?? "[]"
+        if let shared = UserDefaults(suiteName: appGroup) {
+            shared.set(raw, forKey: "serein_cards")
+        }
+        if #available(iOS 14.0, *) {
+            WidgetCenter.shared.reloadAllTimelines()
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -27,6 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        // L'utilisateur quitte l'app -> le widget reflète les cartes créées/supprimées.
+        syncWidgetData()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

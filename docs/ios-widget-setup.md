@@ -51,7 +51,10 @@ version marketing (actuellement `1.0`). La nouvelle target ajoute ses propres r�
 2. Créer 1-2 cartes de coping dans l'app.
 3. **Mettre l'app en arrière-plan** (l'AppDelegate recopie alors les cartes dans l'App Group).
 4. Écran d'accueil → ajouter le widget **Carte de coping** (taille Medium ou Large).
-5. Vérifier : la carte s'affiche, la rotation se fait dans le temps, le tap ouvre l'app sur **Cartes**.
+5. **Écran verrouillé (iOS 16+)** : verrouiller → appui long → Personnaliser → écran verrouillé →
+   ajouter un widget → **Carte de coping** (format rectangulaire, sous l'heure). Le rendu y est
+   monochrome (imposé par le système) ; le tap ouvre l'app sur **Cartes**.
+6. Vérifier : la carte s'affiche, la rotation se fait dans le temps, le tap ouvre l'app sur **Cartes**.
 
 ## 5. Codemagic (build iOS de release)
 

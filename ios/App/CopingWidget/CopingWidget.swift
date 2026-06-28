@@ -62,9 +62,11 @@ struct CopingProvider: TimelineProvider {
 }
 
 struct CopingWidgetEntryView: View {
+    @Environment(\.widgetFamily) var family
     var entry: CopingEntry
 
-    private var content: some View {
+    // ── Écran d'accueil (systemMedium / systemLarge) : carte brandée ──
+    private var homeInner: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("CARTE DE COPING")
                 .font(.system(size: 11, weight: .bold))
@@ -87,11 +89,56 @@ struct CopingWidgetEntryView: View {
         .widgetURL(URL(string: "serein-tcc://cards"))
     }
 
-    var body: some View {
+    private var homeView: some View {
         if #available(iOS 17.0, *) {
-            content.padding(16).containerBackground(bgColor, for: .widget)
+            return AnyView(homeInner.padding(16).containerBackground(bgColor, for: .widget))
         } else {
-            content.padding(16).background(bgColor)
+            return AnyView(homeInner.padding(16).background(bgColor))
+        }
+    }
+
+    // ── Écran verrouillé (accessoryRectangular) : monochrome, rendu système ──
+    @available(iOS 16.0, *)
+    private var lockRectInner: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text("Carte de coping")
+                .font(.system(size: 11, weight: .semibold))
+            if let thought = entry.thought {
+                Text("« \(thought) »")
+                    .font(.system(size: 13))
+                    .lineLimit(3)
+            } else {
+                Text("Crée une carte dans l'app")
+                    .font(.system(size: 12))
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .widgetURL(URL(string: "serein-tcc://cards"))
+    }
+
+    @available(iOS 16.0, *)
+    private var lockRectView: some View {
+        if #available(iOS 17.0, *) {
+            return AnyView(lockRectInner.containerBackground(.clear, for: .widget).widgetAccentable())
+        } else {
+            return AnyView(lockRectInner.widgetAccentable())
+        }
+    }
+
+    @ViewBuilder
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            switch family {
+            case .accessoryRectangular:
+                lockRectView
+            case .accessoryInline:
+                Text(entry.thought.map { "🌿 \($0)" } ?? "Carte de coping")
+                    .widgetURL(URL(string: "serein-tcc://cards"))
+            default:
+                homeView
+            }
+        } else {
+            homeView
         }
     }
 }
@@ -104,8 +151,17 @@ struct CopingWidget: Widget {
             CopingWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Carte de coping")
-        .description("Une carte de coping sur ton écran d'accueil.")
-        .supportedFamilies([.systemMedium, .systemLarge])
+        .description("Une carte de coping sur ton écran d'accueil ou verrouillé.")
+        .supportedFamilies(supportedFamilies)
+    }
+
+    private var supportedFamilies: [WidgetFamily] {
+        var fams: [WidgetFamily] = [.systemMedium, .systemLarge]
+        if #available(iOS 16.0, *) {
+            fams.append(.accessoryRectangular) // écran verrouillé
+            fams.append(.accessoryInline)      // ligne au-dessus de l'heure
+        }
+        return fams
     }
 }
 

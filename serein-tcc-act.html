@@ -310,6 +310,20 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .quick-btn .qa-icon { font-size: 1.5rem; line-height: 1; }
 .quick-btn .qa-label { font-size: 0.74rem; font-weight: 600; text-align: center; line-height: 1.2; }
 
+/* ─── UN PETIT PAS (activation basse énergie) ─── */
+.ms-intro { color: var(--color-muted); font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.25rem; }
+.ms-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; margin-bottom: 1.25rem;
+}
+.ms-emoji { font-size: 3rem; line-height: 1; margin-bottom: 1rem; }
+.ms-action { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; color: var(--color-text); line-height: 1.35; }
+.ms-main-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.ms-done { text-align: center; padding: 1.5rem 1rem; }
+.ms-done-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.ms-done p { color: var(--color-text); font-size: 1.05rem; line-height: 1.45; margin-bottom: 1.25rem; }
+.ms-done-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+
 /* ─── CARDS ─── */
 .card {
   background: var(--color-surface);
@@ -2165,6 +2179,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
         <span class="hub-text"><h3>Respiration & ancrage</h3><p>Cohérence cardiaque, 4-7-8, ancrage 5-4-3-2-1</p></span>
         <span class="hub-chevron">›</span>
       </button>
+      <button class="hub-card" onclick="navigateTo('microstep')" aria-label="Un petit pas">
+        <span class="hub-icon">🌱</span>
+        <span class="hub-text"><h3>Un petit pas</h3><p>Quand tout est lourd : une seule petite action, à la fois</p></span>
+        <span class="hub-chevron">›</span>
+      </button>
       <button class="hub-card" onclick="navigateTo('cards')" aria-label="Cartes de coping">
         <span class="hub-icon">🃏</span>
         <span class="hub-text"><h3>Cartes de coping</h3><p>Tes phrases-ressources en 1 tap</p></span>
@@ -2180,6 +2199,34 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
         <span class="hub-text"><h3>Journal positif</h3><p>Cultive ce qui va bien, contrebalance le filtre négatif</p></span>
         <span class="hub-chevron">›</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ═══ ÉCRAN : UN PETIT PAS (activation douce, basse énergie) ═══ -->
+  <div class="screen" id="screen-microstep" role="main" aria-label="Un petit pas">
+    <div class="greeting-block">
+      <div class="time-label">Activation douce</div>
+      <h1>Juste <span>un petit pas</span></h1>
+    </div>
+    <p class="ms-intro">Pas besoin d'élan ni de motivation. Une seule petite chose, maintenant. L'action vient avant l'envie - pas l'inverse.</p>
+
+    <div class="ms-card" id="msCard">
+      <div class="ms-emoji" id="msEmoji" aria-hidden="true">💧</div>
+      <div class="ms-action" id="msAction" aria-live="polite">Bois un grand verre d'eau, lentement.</div>
+    </div>
+
+    <div class="ms-main-actions" id="msMainActions">
+      <button class="btn btn-primary" onclick="microStepDone()" aria-label="C'est fait">C'est fait ✓</button>
+      <button class="btn btn-ghost" onclick="microStepAnother()" aria-label="Proposer une autre idée">Une autre idée ↻</button>
+    </div>
+
+    <div class="ms-done" id="msDone" role="status" hidden>
+      <div class="ms-done-emoji" aria-hidden="true">🌱</div>
+      <p id="msDoneText">Bravo. C'est un vrai pas, même s'il paraît petit.</p>
+      <div class="ms-done-actions">
+        <button class="btn btn-primary" onclick="microStepRestart()" aria-label="Un autre petit pas">Un autre petit pas</button>
+        <button class="btn btn-ghost" onclick="navigateTo('apaiser')" aria-label="Revenir">Revenir</button>
+      </div>
     </div>
   </div>
 
@@ -2454,12 +2501,12 @@ const screenMap = {
   catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
   experiments: 'screen-experiments', jhistory: 'screen-jhistory',
   apaiser: 'screen-apaiser', comprendre: 'screen-comprendre', parcours: 'screen-parcours',
-  reglages: 'screen-reglages',
+  reglages: 'screen-reglages', microstep: 'screen-microstep',
 };
 // Chaque écran pointe vers son onglet parent (par besoin, pas par technique)
 const navMap = {
   home: 'nav-home', checkin: 'nav-home', whatup: 'nav-home',
-  apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser', diary: 'nav-apaiser',
+  apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser', diary: 'nav-apaiser', microstep: 'nav-apaiser',
   comprendre: 'nav-comprendre', journal: 'nav-comprendre', jhistory: 'nav-comprendre',
   schemas: 'nav-comprendre', quiz: 'nav-comprendre', catastrophe: 'nav-comprendre',
   experiments: 'nav-comprendre', ladder: 'nav-comprendre',
@@ -2486,6 +2533,7 @@ const screenInitFns = {
   experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
   reglages: loadReminderPrefs,
+  microstep: initMicroStep,
 };
 
 function navigateTo(screen) {
@@ -2641,14 +2689,14 @@ const emotionSuggestions = {
   aplat: {
     title: '😶 Pour le vide / à plat',
     text: 'L\'activation comportementale aide à rompre le cycle de retrait. Une micro-action suffit pour relancer l\'élan - l\'action précède l\'humeur.',
-    tags: ['Activation', 'Action courte'],
-    cta: 'Exposition douce →', ctaScreen: 'ladder',
+    tags: ['Activation', 'Un petit pas'],
+    cta: 'Un petit pas →', ctaScreen: 'microstep',
   },
   triste: {
     title: '🌱 Pour la tristesse',
-    text: 'La tristesse pousse au repli et à l\'inaction. De tout petits pas - une activité de plaisir ou de maîtrise - réamorcent l\'élan sans surcharge. Et accueille ce moment avec bienveillance, pas avec autocritique.',
-    tags: ['Activation douce', 'Auto-compassion'],
-    cta: 'Mes cartes de coping →', ctaScreen: 'cards',
+    text: 'La tristesse pousse au repli et à l\'inaction. De tout petits pas - une seule chose, sans surcharge - réamorcent l\'élan. Accueille ce moment avec bienveillance, pas avec autocritique.',
+    tags: ['Activation douce', 'Un petit pas'],
+    cta: 'Un petit pas →', ctaScreen: 'microstep',
   },
   fatigue: {
     title: '🌙 Pour la fatigue',
@@ -3320,6 +3368,63 @@ function crisisToggleGrounding() {
   document.getElementById('crisisCardPanel').hidden = true;
   panel.hidden = false;
   Haptics.light();
+}
+
+// ─── UN PETIT PAS : activation comportementale micro-séquencée (états basse énergie) ───
+// Une seule micro-action affichée à la fois, deux boutons max : anti-surcharge cognitive.
+const MICRO_STEPS = [
+  { emoji: '💧', text: "Bois un grand verre d'eau, lentement." },
+  { emoji: '🪟', text: "Ouvre la fenêtre et respire l'air une minute." },
+  { emoji: '🧍', text: "Lève-toi et étire-toi pendant 30 secondes." },
+  { emoji: '🚶', text: "Fais dix pas, même juste dans la pièce." },
+  { emoji: '☀️', text: "Approche-toi d'une source de lumière." },
+  { emoji: '🧦', text: "Enfile des vêtements propres et confortables." },
+  { emoji: '🛏️', text: "Remets juste la couette en place." },
+  { emoji: '🍵', text: "Prépare-toi une boisson chaude." },
+  { emoji: '💬', text: "Écris un message court à quelqu'un que tu aimes." },
+  { emoji: '🎵', text: "Mets une chanson qui te fait du bien." },
+  { emoji: '🌬️', text: "Trois respirations lentes, une main sur le ventre." },
+  { emoji: '🧽', text: "Range UN seul objet près de toi." },
+  { emoji: '🪥', text: "Passe-toi de l'eau fraîche sur le visage." },
+  { emoji: '📝', text: "Note une seule chose, minuscule, faisable aujourd'hui." },
+];
+const MICRO_PRAISE = [
+  "Bravo. C'est un vrai pas, même s'il paraît petit.",
+  "Tu viens d'agir malgré le poids. C'est précieux.",
+  "L'élan revient après l'action, pas avant. Tu l'as amorcé.",
+  "Sois doux·ce avec toi : faire UNE chose aujourd'hui, c'est suffisant.",
+];
+let microStepIdx = 0;
+function renderMicroStep() {
+  const s = MICRO_STEPS[microStepIdx % MICRO_STEPS.length];
+  const em = document.getElementById('msEmoji');
+  const ac = document.getElementById('msAction');
+  if (em) em.textContent = s.emoji;
+  if (ac) ac.textContent = s.text;
+}
+function initMicroStep() {
+  microStepIdx = Math.floor(Math.random() * MICRO_STEPS.length); // variété entre les visites
+  const done = document.getElementById('msDone');
+  const card = document.getElementById('msCard');
+  const main = document.getElementById('msMainActions');
+  if (done) done.hidden = true;
+  if (card) card.hidden = false;
+  if (main) main.hidden = false;
+  renderMicroStep();
+}
+function microStepAnother() { microStepIdx = (microStepIdx + 1) % MICRO_STEPS.length; renderMicroStep(); Haptics.light(); }
+function microStepRestart() {
+  document.getElementById('msDone').hidden = true;
+  document.getElementById('msCard').hidden = false;
+  document.getElementById('msMainActions').hidden = false;
+  microStepAnother();
+}
+function microStepDone() {
+  document.getElementById('msCard').hidden = true;
+  document.getElementById('msMainActions').hidden = true;
+  document.getElementById('msDoneText').textContent = MICRO_PRAISE[Math.floor(Math.random() * MICRO_PRAISE.length)];
+  document.getElementById('msDone').hidden = false;
+  Haptics.medium();
 }
 function startCrisisBreath() {
   loadBells(); // précharge les cloches (le tap SOS débloque l'audio iOS)

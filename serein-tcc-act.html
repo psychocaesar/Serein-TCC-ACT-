@@ -249,12 +249,6 @@ body {
 .screen.active .hub-list .hub-card:nth-child(5) { animation-delay: 0.20s; }
 .screen.active .hub-list .hub-card:nth-child(6) { animation-delay: 0.24s; }
 
-/* État vide chaleureux (Parcours, nouvel utilisateur) */
-.parcours-empty { text-align: center; padding: 1.5rem 1rem 0.5rem; }
-.parcours-empty .pe-emoji { font-size: 2.4rem; margin-bottom: 0.4rem; }
-.parcours-empty h3 { font-family: var(--font-title); font-size: 1.15rem; margin-bottom: 0.35rem; }
-.parcours-empty p { color: var(--color-muted); font-size: 0.88rem; line-height: 1.45; margin-bottom: 1rem; }
-
 /* ─── MINI PROGRESSION (accueil) ─── */
 .mini-progress {
   display: flex; align-items: center; gap: 0.75rem;
@@ -380,21 +374,6 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .mood-confirm-btn { width: 100%; margin-top: 0.25rem; }
 
 /* ─── STATS GRID ─── */
-.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.625rem; margin: 1rem 0; }
-.stat-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 1rem 0.75rem; text-align: center;
-  backdrop-filter: blur(8px);
-}
-.stat-value {
-  font-family: var(--font-title); font-size: 1.75rem; font-weight: 700;
-  background: var(--gradient);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  line-height: 1;
-}
-.stat-label { font-size: 0.7rem; color: var(--color-muted); margin-top: 0.25rem; }
 
 /* ─── EMOTION GRID ─── */
 .emotion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
@@ -1938,42 +1917,6 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
   </div>
 
-  <!-- ═══ SCREEN : SUIVI ═══ -->
-  <div class="screen" id="screen-tracking" role="main" aria-label="Suivi d'anxiété">
-    <div class="screen-pad">
-      <h1>📊 Ton suivi</h1>
-      <p>Observe l'évolution de ton état au fil des jours.</p>
-
-      <div class="track-period-tabs mt-2" role="group" aria-label="Période">
-        <button class="track-period-btn active" onclick="setTrackPeriod(7,this)" aria-label="7 derniers jours">7 j</button>
-        <button class="track-period-btn" onclick="setTrackPeriod(30,this)" aria-label="30 derniers jours">30 j</button>
-        <button class="track-period-btn" onclick="setTrackPeriod(90,this)" aria-label="3 derniers mois">3 mois</button>
-        <button class="track-period-btn" onclick="setTrackPeriod(365,this)" aria-label="12 derniers mois">1 an</button>
-      </div>
-
-      <div class="track-chart-wrap" role="figure" aria-label="Graphique d'évolution">
-        <div id="trackSvgContainer"></div>
-        <div class="track-tooltip" id="trackTooltip" aria-hidden="true"></div>
-      </div>
-
-      <div class="track-stats-grid" id="trackStatsGrid"></div>
-
-      <div class="track-insight" id="trackInsight" role="status" aria-live="polite"></div>
-
-      <div class="divider"></div>
-
-      <div class="section-title">Derniers check-ins</div>
-      <div class="checkin-history" id="checkinHistory"></div>
-
-      <div class="divider"></div>
-
-      <button class="btn" style="border:1px solid var(--color-border);color:var(--color-muted);background:none;width:100%;font-size:0.8rem;"
-        onclick="clearAnxietyLog()" aria-label="Effacer toutes les données de suivi">
-        Effacer les données de suivi
-      </button>
-    </div>
-  </div>
-
   <!-- ═══ SCREEN : HISTORIQUE DU JOURNAL ═══ -->
   <div class="screen" id="screen-jhistory" role="main" aria-label="Historique du journal">
     <div class="greeting-block">
@@ -2168,6 +2111,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
         <span class="hub-text"><h3>Métaphores ACT</h3><p>Prendre du recul sur une émotion difficile</p></span>
         <span class="hub-chevron">›</span>
       </button>
+      <button class="hub-card" onclick="navigateTo('diary')" aria-label="Journal positif">
+        <span class="hub-icon">📗</span>
+        <span class="hub-text"><h3>Journal positif</h3><p>Cultive ce qui va bien, contrebalance le filtre négatif</p></span>
+        <span class="hub-chevron">›</span>
+      </button>
     </div>
   </div>
 
@@ -2215,45 +2163,41 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
   </div>
 
-  <!-- ═══ HUB : MON PARCOURS ═══ -->
+  <!-- ═══ TAB : MON PARCOURS (tableau de bord d'évolution) ═══ -->
   <div class="screen" id="screen-parcours" role="main" aria-label="Mon parcours">
     <div class="greeting-block">
       <h1>Où j'en <span>suis</span></h1>
     </div>
+    <div id="parcoursPractice" class="mini-progress" style="display:none;" aria-label="Jours de pratique"></div>
+    <p>Observe l'évolution de ton état au fil des jours.</p>
 
-    <div class="parcours-empty" id="parcoursEmpty" style="display:none;">
-      <div class="pe-emoji">🌱</div>
-      <h3>Ton parcours commence ici</h3>
-      <p>Fais un premier check-in ou un exercice - ta progression, ton humeur et tes séries s'afficheront ici.</p>
-      <button class="btn btn-primary" onclick="navigateTo('checkin')" aria-label="Faire un premier check-in">Faire un check-in</button>
+    <div class="track-period-tabs mt-2" role="group" aria-label="Période">
+      <button class="track-period-btn active" onclick="setTrackPeriod(7,this)" aria-label="7 derniers jours">7 j</button>
+      <button class="track-period-btn" onclick="setTrackPeriod(30,this)" aria-label="30 derniers jours">30 j</button>
+      <button class="track-period-btn" onclick="setTrackPeriod(90,this)" aria-label="3 derniers mois">3 mois</button>
+      <button class="track-period-btn" onclick="setTrackPeriod(365,this)" aria-label="12 derniers mois">1 an</button>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="statStreak">0</div>
-        <div class="stat-label">Jours de pratique</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statMood">-</div>
-        <div class="stat-label">Humeur moy.</div>
-      </div>
+    <div class="track-chart-wrap" role="figure" aria-label="Graphique d'évolution">
+      <div id="trackSvgContainer"></div>
+      <div class="track-tooltip" id="trackTooltip" aria-hidden="true"></div>
     </div>
+
+    <div class="track-stats-grid" id="trackStatsGrid"></div>
+
+    <div class="track-insight" id="trackInsight" role="status" aria-live="polite"></div>
 
     <div class="divider"></div>
 
-    <div class="hub-list">
-      <button class="hub-card" onclick="navigateTo('tracking')" aria-label="Mon évolution">
-        <span class="hub-icon">📈</span>
-        <span class="hub-text"><h3>Mon évolution</h3><p>Visualise l'évolution + tes derniers check-ins</p></span>
-        <span class="hub-chevron">›</span>
-      </button>
-      <button class="hub-card" onclick="navigateTo('diary')" aria-label="Journal positif">
-        <span class="hub-icon">📗</span>
-        <span class="hub-text"><h3>Journal positif</h3><p>Contrebalance le filtre négatif</p></span>
-        <span class="hub-chevron">›</span>
-      </button>
-    </div>
+    <div class="section-title">Derniers check-ins</div>
+    <div class="checkin-history" id="checkinHistory"></div>
 
+    <div class="divider"></div>
+
+    <button class="btn" style="border:1px solid var(--color-border);color:var(--color-muted);background:none;width:100%;font-size:0.8rem;"
+      onclick="clearAnxietyLog()" aria-label="Effacer toutes les données de suivi">
+      Effacer les données de suivi
+    </button>
   </div>
 
   <!-- ═══ ÉCRAN : RÉGLAGES ═══ -->
@@ -2380,19 +2324,17 @@ function loadStats() {
     data.lastDay = today;
     Store.set('serein_tcc_stats', JSON.stringify(data));
   }
-  document.getElementById('statStreak').textContent = data.totalDays || 0;
-  const moods = data.moods || [];
-  if (moods.length > 0) {
-    const avg = moods.reduce((a, b) => a + b, 0) / moods.length;
-    document.getElementById('statMood').textContent = ['😶','😕','😐','🙂','😊'][Math.min(4, Math.round(avg / 2))];
+  // Encouragement non punitif : cumul de jours de pratique, affiché en tête de Parcours.
+  const line = document.getElementById('parcoursPractice');
+  if (line) {
+    const d = data.totalDays || 0;
+    if (d >= 1) {
+      line.innerHTML = `<span class="mp-item">🔥 <strong>${d}</strong> jours de pratique</span>`;
+      line.style.display = 'flex';
+    } else {
+      line.style.display = 'none';
+    }
   }
-  // Nouvel utilisateur (aucune séance, aucune humeur) : on remplace le mur de zéros
-  // par un état vide chaleureux. La série passe à 1 dès l'ouverture, donc on ne s'y fie pas.
-  const isNew = (data.sessions || 0) === 0 && moods.length === 0;
-  const emptyEl = document.getElementById('parcoursEmpty');
-  const gridEl = document.querySelector('#screen-parcours .stats-grid');
-  if (emptyEl) emptyEl.style.display = isNew ? 'block' : 'none';
-  if (gridEl) gridEl.style.display = isNew ? 'none' : '';
 }
 function incrementSessions() {
   const data = safeParse('serein_tcc_stats', {});
@@ -2445,7 +2387,7 @@ const screenMap = {
   home: 'screen-home', checkin: 'screen-checkin', journal: 'screen-journal',
   calm: 'screen-calm', schemas: 'screen-schemas', ladder: 'screen-ladder',
   cards: 'screen-cards', diary: 'screen-diary', whatup: 'screen-whatup', quiz: 'screen-quiz',
-  tracking: 'screen-tracking', catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
+  catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
   experiments: 'screen-experiments', jhistory: 'screen-jhistory',
   apaiser: 'screen-apaiser', comprendre: 'screen-comprendre', parcours: 'screen-parcours',
   reglages: 'screen-reglages',
@@ -2453,11 +2395,11 @@ const screenMap = {
 // Chaque écran pointe vers son onglet parent (par besoin, pas par technique)
 const navMap = {
   home: 'nav-home', checkin: 'nav-home', whatup: 'nav-home',
-  apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser',
+  apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser', diary: 'nav-apaiser',
   comprendre: 'nav-comprendre', journal: 'nav-comprendre', jhistory: 'nav-comprendre',
   schemas: 'nav-comprendre', quiz: 'nav-comprendre', catastrophe: 'nav-comprendre',
   experiments: 'nav-comprendre', ladder: 'nav-comprendre',
-  parcours: 'nav-parcours', tracking: 'nav-parcours', diary: 'nav-parcours',
+  parcours: 'nav-parcours',
 };
 // Onglets de premier niveau (atteints par la barre du bas) : pas de chevron retour.
 const MAIN_TABS = ['home', 'apaiser', 'comprendre', 'parcours'];
@@ -2468,7 +2410,7 @@ function parentOf(screen) {
 }
 const screenInitFns = {
   home: () => { renderMiniProgress(); updateMoodOrb(); },
-  parcours: loadStats,
+  parcours: () => { loadStats(); renderTracking(); },
   checkin: initCheckin,
   cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
   diary: initDiary,
@@ -2476,7 +2418,6 @@ const screenInitFns = {
   quiz: initQuiz,
   schemas: () => renderDefusion(currentDefusion),
   calm: loadBells,
-  tracking: renderTracking,
   catastrophe: initCatastrophe,
   experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
@@ -3814,7 +3755,7 @@ function logAnxiety(intensity) {
   const idx = log.findIndex(e => e.date === today);
   if (idx >= 0) log[idx].intensity = intensity; else log.push({ date: today, intensity });
   saveAnxietyLog(log);
-  if (state.currentScreen === 'tracking') renderTracking();
+  if (state.currentScreen === 'parcours') renderTracking();
 }
 function getTodayAnxiety() {
   const today = ymd();

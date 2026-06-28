@@ -773,8 +773,9 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .crisis-overlay {
   position: fixed; inset: 0; z-index: 400;
   background: var(--color-bg);
-  display: none; flex-direction: column; align-items: center; justify-content: center;
+  display: none; flex-direction: column; align-items: center; justify-content: safe center;
   padding: 2rem 1.5rem;
+  overflow-y: auto; /* un panneau déployé peut dépasser sur petit écran */
   animation: fadeIn 0.25s ease;
 }
 .crisis-overlay.visible { display: flex; }
@@ -829,6 +830,31 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   font-size: 0.8rem; color: var(--color-muted); text-align: center;
 }
 .crisis-3114 strong { color: var(--color-text); }
+/* Outils dépliables du mode crise (cartes de coping + ancrage) */
+.crisis-tools { display: flex; gap: 0.6rem; width: 100%; margin-bottom: 1rem; }
+.crisis-tool-btn {
+  flex: 1; background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 0.7rem 0.5rem; cursor: pointer;
+  color: var(--color-text); font-family: var(--font-body); font-size: 0.82rem; font-weight: 600;
+  transition: border-color var(--transition), background var(--transition);
+}
+.crisis-tool-btn:hover, .crisis-tool-btn:active { border-color: var(--color-primary); background: var(--color-primary-light); }
+.crisis-panel {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1.1rem; width: 100%; margin-bottom: 1.25rem; text-align: center;
+}
+.crisis-card-thought {
+  font-family: var(--font-title); font-size: 1rem; font-weight: 600;
+  color: var(--color-text); line-height: 1.45; margin-bottom: 0.6rem;
+}
+.crisis-card-next {
+  background: none; border: 1.5px solid var(--color-border); border-radius: var(--radius-sm);
+  padding: 0.35rem 0.9rem; cursor: pointer; color: var(--color-muted);
+  font-family: var(--font-body); font-size: 0.78rem; transition: all var(--transition);
+}
+.crisis-card-next:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.crisis-ground-line { display: flex; align-items: center; gap: 0.6rem; text-align: left; font-size: 0.92rem; color: var(--color-text); padding: 0.3rem 0; }
+.crisis-ground-line span { font-size: 1.2rem; flex-shrink: 0; }
 
 /* ─── SOS FAB ─── */
 .fab-sos {
@@ -1226,6 +1252,21 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <button class="crisis-anchor-btn" onclick="prevAnchor()" aria-label="Phrase précédente">‹</button>
       <button class="crisis-anchor-btn" onclick="nextAnchor()" aria-label="Phrase suivante">›</button>
     </div>
+  </div>
+  <div class="crisis-tools">
+    <button class="crisis-tool-btn" onclick="crisisShowCard()" aria-label="Afficher une de mes cartes de coping">🃏 Une de mes cartes</button>
+    <button class="crisis-tool-btn" onclick="crisisToggleGrounding()" aria-label="Afficher l'ancrage 5-4-3-2-1">🌍 Ancrage 5·4·3·2·1</button>
+  </div>
+  <div class="crisis-panel" id="crisisCardPanel" hidden>
+    <div class="crisis-card-thought" id="crisisCardThought"></div>
+    <button class="crisis-card-next" id="crisisCardNext" onclick="crisisNextCard()" aria-label="Une autre carte">Autre carte ↻</button>
+  </div>
+  <div class="crisis-panel" id="crisisGroundingPanel" hidden>
+    <div class="crisis-ground-line"><span aria-hidden="true">👁️</span> 5 choses que tu <strong>vois</strong></div>
+    <div class="crisis-ground-line"><span aria-hidden="true">👂</span> 4 choses que tu <strong>entends</strong></div>
+    <div class="crisis-ground-line"><span aria-hidden="true">✋</span> 3 choses que tu <strong>touches</strong></div>
+    <div class="crisis-ground-line"><span aria-hidden="true">👃</span> 2 choses que tu <strong>sens</strong></div>
+    <div class="crisis-ground-line"><span aria-hidden="true">👅</span> 1 chose que tu <strong>goûtes</strong></div>
   </div>
   <div class="crisis-3114">Détresse : <strong>3114</strong> (24h/24)</div>
 </div>
@@ -3234,6 +3275,9 @@ function showCrisis() {
   ov.classList.add('visible');
   anchorIdx = 0;
   document.getElementById('crisisAnchor').textContent = anchorPhrases[0];
+  // chaque session de crise repart avec les outils repliés
+  document.getElementById('crisisCardPanel').hidden = true;
+  document.getElementById('crisisGroundingPanel').hidden = true;
   startCrisisBreath();
   Haptics.medium();
   const f = ov.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
@@ -3245,6 +3289,37 @@ function hideCrisis() {
   crisisInterval = null;
   if (crisisReturnFocus && crisisReturnFocus.focus) { try { crisisReturnFocus.focus(); } catch (e) {} }
   crisisReturnFocus = null;
+}
+// ─── Outils dépliables du mode crise : carte de coping perso + ancrage 5-4-3-2-1 ───
+let crisisCardIdx = 0;
+function crisisShowCard() {
+  const panel = document.getElementById('crisisCardPanel');
+  if (!panel.hidden) { panel.hidden = true; return; }
+  document.getElementById('crisisGroundingPanel').hidden = true;
+  renderCrisisCard();
+  panel.hidden = false;
+  Haptics.light();
+}
+function renderCrisisCard() {
+  const cards = loadCards();
+  const txt = document.getElementById('crisisCardThought');
+  const next = document.getElementById('crisisCardNext');
+  if (!cards.length) {
+    txt.textContent = "Tu n'as pas encore de carte. Tu pourras créer tes phrases-ressources dans Apaiser, à tête reposée.";
+    next.hidden = true;
+    return;
+  }
+  crisisCardIdx = ((crisisCardIdx % cards.length) + cards.length) % cards.length;
+  txt.textContent = '« ' + (cards[crisisCardIdx].thought || '') + ' »';
+  next.hidden = cards.length < 2;
+}
+function crisisNextCard() { crisisCardIdx++; renderCrisisCard(); Haptics.light(); }
+function crisisToggleGrounding() {
+  const panel = document.getElementById('crisisGroundingPanel');
+  if (!panel.hidden) { panel.hidden = true; return; }
+  document.getElementById('crisisCardPanel').hidden = true;
+  panel.hidden = false;
+  Haptics.light();
 }
 function startCrisisBreath() {
   loadBells(); // précharge les cloches (le tap SOS débloque l'audio iOS)

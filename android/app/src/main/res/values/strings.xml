@@ -4,4 +4,6 @@
     <string name="title_activity_main">Serein TCC-ACT</string>
     <string name="package_name">fr.sereinapp.tcc</string>
     <string name="custom_url_scheme">fr.sereinapp.tcc</string>
+    <string name="widget_title">Carte de coping</string>
+    <string name="widget_description">Une carte de coping sur ton écran d\'accueil</string>
 </resources>

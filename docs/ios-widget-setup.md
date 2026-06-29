@@ -1,75 +1,127 @@
-# Widget iOS « Carte de coping » - étapes manuelles (Xcode)
+# Widget iOS « Carte de coping » - mise en place (sans Xcode au quotidien)
 
-Le code est déjà en place côté dépôt :
+Contexte : pas de Mac au quotidien, build via **Codemagic**. Un widget iOS impose une
+**target d'extension** qui ne peut pas être créée par simple édition de fichiers de façon fiable.
+Plan retenu : **une seule session Mac/Xcode** pour créer la target, on committe le résultat, puis
+Codemagic build pour toujours. L'App Group se règle au **portail Apple (web, sans Mac)**.
 
-- `ios/App/App/AppDelegate.swift` - recopie les cartes (`CapacitorStorage.serein_cards` dans
-  `UserDefaults.standard`) vers l'App Group `group.fr.sereinapp.tccact`, puis recharge le widget
-  (au lancement + à chaque passage en arrière-plan).
-- `ios/App/App/Info.plist` - schéma d'URL `serein-tcc` (deep-link du widget).
-- `ios/App/CopingWidget/CopingWidget.swift` - le widget WidgetKit (à rattacher à la target ci-dessous).
+Code déjà présent dans le dépôt (rien à écrire) :
+- `ios/App/App/AppDelegate.swift` - recopie les cartes vers l'App Group + recharge le widget.
+- `ios/App/App/Info.plist` - schéma d'URL `serein-tcc` (deep-link).
+- `ios/App/CopingWidget/CopingWidget.swift` - le widget (accueil + écran verrouillé).
 - `serein-tcc-act.html` - écouteur `appUrlOpen` -> `navigateTo('cards')`.
 
-Il reste les étapes qui **ne peuvent pas être automatisées par édition de fichiers** (création de
-target + capacités de signature). Tout se fait dans Xcode.
+Ces fichiers compilent déjà sans rien casser (l'entitlement App Group ne sert qu'au runtime).
 
-## 1. Créer la target d'extension
+---
 
-1. Ouvrir `ios/App/App.xcworkspace` dans Xcode.
-2. **File → New → Target… → Widget Extension**.
-3. Product Name : **CopingWidget**. Décocher *Include Live Activity* et *Include Configuration App
-   Intent* (on utilise une `StaticConfiguration`). Finish. Activer le scheme si proposé.
-4. Xcode crée un dossier `CopingWidget/` avec un fichier d'exemple. **Remplacer tout le contenu du
-   `.swift` généré** par celui de `ios/App/CopingWidget/CopingWidget.swift` de ce dépôt.
-   - Veiller à n'avoir **qu'un seul `@main`** dans la target (supprimer le bundle d'exemple si Xcode
-     en a créé un séparé).
-5. Régler **iOS Deployment Target** de la target CopingWidget sur **15.0** (comme l'app).
+## Partie A - Portail Apple Developer (web, AUCUN Mac requis)
 
-## 2. Activer l'App Group sur LES DEUX targets
+À faire sur https://developer.apple.com → Certificates, Identifiers & Profiles → **Identifiers**.
 
-Avec la signature automatique (recommandé) :
+1. **App Groups** → créer un groupe : identifiant `group.fr.sereinapp.tccact`.
+2. Ouvrir l'App ID **`fr.sereinapp.tccact`** → activer la capacité **App Groups** → cocher le groupe
+   `group.fr.sereinapp.tccact` → Save.
+3. Créer un App ID **`fr.sereinapp.tccact.CopingWidget`** (type App) → activer **App Groups** →
+   cocher `group.fr.sereinapp.tccact` → Save.
 
-1. Target **App** → onglet **Signing & Capabilities** → **+ Capability** → **App Groups** →
-   ajouter `group.fr.sereinapp.tccact`.
-2. Target **CopingWidget** → idem → ajouter **le même** `group.fr.sereinapp.tccact`.
+Les profils de provisioning seront créés/récupérés automatiquement par Codemagic (intégration App
+Store Connect). Il suffit que la capacité soit activée sur les deux App IDs ci-dessus.
 
-Xcode crée le groupe dans le compte développeur et gère les fichiers `.entitlements`. Sans cette
-capacité, `UserDefaults(suiteName:)` renvoie `nil` et le widget reste vide (échec silencieux).
+---
 
-## 3. Aligner les versions (sinon `npm test` casse)
+## Partie B - Session Mac/Xcode (une seule fois, ~1 h)
 
-`tests/versions.test.js` vérifie que **tous** les `MARKETING_VERSION` du `project.pbxproj` valent la
-version marketing (actuellement `1.0`). La nouvelle target ajoute ses propres réglages :
+Sur le Mac : cloner le dépôt, puis ouvrir **`ios/App/App.xcodeproj`** (il n'y a pas de
+`.xcworkspace`, le projet utilise Swift Package Manager).
 
-- Mettre **MARKETING_VERSION = 1.0** sur la target CopingWidget (Debug + Release).
-- Faire pointer son `CFBundleVersion`/`CFBundleShortVersionString` sur `$(CURRENT_PROJECT_VERSION)` /
-  `$(MARKETING_VERSION)` (comme l'app) pour que l'auto-incrément Codemagic (`agvtool`) reste cohérent
-  entre l'app et l'extension - App Store exige des numéros de build identiques.
+### B1. Créer la target d'extension
+1. **File → New → Target… → Widget Extension**.
+2. Product Name : **CopingWidget**. **Décocher** *Include Live Activity* et *Include Configuration
+   App Intent*. Finish. (« Activate scheme ? » → peu importe.)
 
-## 4. Tester sur device
+### B2. Brancher NOTRE code widget (éviter le doublon)
+Xcode a généré un `CopingWidget.swift` d'exemple (au même endroit que le nôtre).
+1. Dans le navigateur de projet, **supprimer** (Move to Trash) les fichiers Swift d'exemple générés
+   par Xcode pour la target (`CopingWidget.swift` d'exemple et un éventuel `*Bundle.swift`).
+   - Si Xcode a écrasé notre fichier sur le disque, le restaurer d'abord :
+     `git checkout ios/App/CopingWidget/CopingWidget.swift`
+2. **File → Add Files to "App"…** → sélectionner `ios/App/CopingWidget/CopingWidget.swift` →
+   dans « Add to targets », cocher **CopingWidget** (et décocher App). Add.
+3. Il ne doit rester **qu'un seul `@main`** dans la target (le nôtre).
 
-1. Lancer le scheme **App** sur un iPhone.
-2. Créer 1-2 cartes de coping dans l'app.
-3. **Mettre l'app en arrière-plan** (l'AppDelegate recopie alors les cartes dans l'App Group).
-4. Écran d'accueil → ajouter le widget **Carte de coping** (taille Medium ou Large).
-5. **Écran verrouillé (iOS 16+)** : verrouiller → appui long → Personnaliser → écran verrouillé →
-   ajouter un widget → **Carte de coping** (format rectangulaire, sous l'heure). Le rendu y est
-   monochrome (imposé par le système) ; le tap ouvre l'app sur **Cartes**.
-6. Vérifier : la carte s'affiche, la rotation se fait dans le temps, le tap ouvre l'app sur **Cartes**.
+### B3. App Group sur LES DEUX targets
+Signature automatique recommandée (Xcode gère les `.entitlements`) :
+1. Target **App** → **Signing & Capabilities** → **+ Capability → App Groups** → cocher
+   `group.fr.sereinapp.tccact`.
+2. Target **CopingWidget** → idem → cocher **le même** groupe.
 
-## 5. Codemagic (build iOS de release)
+### B4. Réglages de la target widget
+- **iOS Deployment Target = 15.0** (le code gère l'écran verrouillé en iOS 16+ via `@available`).
+- **MARKETING_VERSION = 1.0** (Debug + Release) - sinon `tests/versions.test.js` échoue, et l'App
+  Store exige la même version marketing que l'app.
+- **Versioning System = Apple Generic** (défaut Xcode) pour que l'auto-bump Codemagic
+  (`agvtool new-version -all`) incrémente aussi le widget.
 
-- L'extension fait partie du même projet : elle est buildée automatiquement.
-- **Provisioning** : le bundle `fr.sereinapp.tccact.CopingWidget` a besoin de son propre profil
-  incluant la capacité **App Groups**. Avec la signature automatique via clé App Store Connect,
-  Codemagic crée/récupère les profils des deux bundle ids. Vérifier dans le portail Apple que l'App
-  Group est bien attaché aux **deux** App IDs.
-- Re-tester un build TestFlight après l'ajout de la target (premier build avec extension).
+### B5. Vérif locale rapide (si possible)
+Sélectionner le scheme **App**, build (⌘B). Lancer sur simulateur, créer une carte de coping,
+mettre l'app en arrière-plan, ajouter le widget. (Pas bloquant : le vrai test se fera via TestFlight.)
+
+---
+
+## Partie C - Ce qu'il faut COMMITTER après la session
+
+Depuis le Mac (ou après récupération du dépôt) :
+
+```
+git add ios/App/App.xcodeproj/project.pbxproj
+git add ios/App/App/App.entitlements                 # créé par Xcode (App Group)
+git add ios/App/CopingWidget/                          # Info.plist, .entitlements, Assets générés
+git status   # vérifier qu'aucun fichier de target n'est oublié
+git commit -m "build(ios): target widget CopingWidget + App Group"
+git push
+```
+
+Vérifier que `project.pbxproj` contient bien : la target `CopingWidget`, sa phase « Embed App
+Extensions » sur la target App, et `CODE_SIGN_ENTITLEMENTS` sur les deux targets.
+
+---
+
+## Partie D - Codemagic (à ajuster en même temps)
+
+Dans `codemagic.yaml`, workflow `ios-release` :
+
+1. **Signature des deux bundle ids.** Retirer la ligne qui restreint à un seul id :
+   ```yaml
+   environment:
+     ios_signing:
+       distribution_type: app_store
+       # bundle_identifier: fr.sereinapp.tccact   <-- SUPPRIMER cette ligne
+   ```
+   Sans `bundle_identifier`, Codemagic récupère/crée les profils pour **tous** les bundle ids du
+   projet (app + extension). Vérifier dans les logs que les deux profils sont bien récupérés.
+2. **Build number** : `agvtool new-version -all` (déjà en place) couvre le widget grâce à
+   « Apple Generic » versioning. Rien à changer.
+3. Le reste (`xcode-project use-profiles`, `build-ipa --scheme App`) embarque automatiquement
+   l'extension via la phase « Embed App Extensions ».
+
+---
+
+## Partie E - Vérifier après le 1er build Codemagic
+
+- Le build passe et publie sur TestFlight (le widget gonfle un peu l'IPA, normal).
+- Sur device TestFlight : créer une carte, arrière-plan, ajouter le widget (accueil **et** écran
+  verrouillé), taper dessus → l'app s'ouvre sur **Cartes**.
+
+---
 
 ## Notes
 
 - Le bouton ↻ « carte suivante » du widget Android n'a pas d'équivalent interactif sous iOS < 17
-  (widgets interactifs = iOS 17 + AppIntent). Ici le widget iOS fait défiler les cartes dans le temps
+  (widgets interactifs = iOS 17 + AppIntent). Le widget iOS fait défiler les cartes dans le temps
   (une toutes les ~3 h). Un bouton interactif iOS 17+ pourra être ajouté plus tard.
 - Le widget lit `serein_cards` (clé brute) dans l'App Group ; c'est l'AppDelegate qui l'y dépose
   depuis le store Capacitor. On ne touche PAS au `group` global de `@capacitor/preferences` (cela
   casserait Android et migrerait les données existantes).
+- Sur l'écran verrouillé, le rendu est monochrome (imposé par iOS) - les couleurs de marque ne
+  s'appliquent qu'aux widgets de l'écran d'accueil.

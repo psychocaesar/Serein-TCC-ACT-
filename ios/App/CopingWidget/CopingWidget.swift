@@ -89,11 +89,12 @@ struct CopingWidgetEntryView: View {
         .widgetURL(URL(string: "serein-tcc://cards"))
     }
 
+    @ViewBuilder
     private var homeView: some View {
         if #available(iOS 17.0, *) {
-            return AnyView(homeInner.padding(16).containerBackground(bgColor, for: .widget))
+            homeInner.padding(16).containerBackground(bgColor, for: .widget)
         } else {
-            return AnyView(homeInner.padding(16).background(bgColor))
+            homeInner.padding(16).background(bgColor)
         }
     }
 
@@ -117,11 +118,12 @@ struct CopingWidgetEntryView: View {
     }
 
     @available(iOS 16.0, *)
+    @ViewBuilder
     private var lockRectView: some View {
         if #available(iOS 17.0, *) {
-            return AnyView(lockRectInner.containerBackground(.clear, for: .widget).widgetAccentable())
+            lockRectInner.containerBackground(.clear, for: .widget).widgetAccentable()
         } else {
-            return AnyView(lockRectInner.widgetAccentable())
+            lockRectInner.widgetAccentable()
         }
     }
 

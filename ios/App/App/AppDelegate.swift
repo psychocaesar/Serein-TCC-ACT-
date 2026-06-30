@@ -21,16 +21,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    /// Recopie les cartes de coping du store Capacitor (UserDefaults.standard,
-    /// clé préfixée "CapacitorStorage.serein_cards") vers le conteneur partagé de
-    /// l'App Group, puis rafraîchit le widget. Nécessite l'App Group activé sur la
-    /// target App (sinon UserDefaults(suiteName:) est nil → no-op silencieux).
+    /// Clés du store Capacitor lues par un widget. Ajouter une clé ici suffit pour
+    /// qu'un futur widget puisse y accéder (ex. humeur du jour, stats) - pas besoin
+    /// de toucher ailleurs.
+    private let widgetSyncKeys = ["serein_cards"]
+
+    /// Recopie ces clés du store Capacitor (UserDefaults.standard, préfixe
+    /// "CapacitorStorage.") vers le conteneur partagé de l'App Group, puis rafraîchit
+    /// le widget - seulement si une valeur a réellement changé (évite un
+    /// reloadAllTimelines() inutile à chaque lancement/passage en arrière-plan).
+    /// Nécessite l'App Group activé sur la target App (sinon UserDefaults(suiteName:)
+    /// est nil → no-op silencieux).
     func syncWidgetData() {
         let appGroup = "group.fr.sereinapp.tccact"
-        let raw = UserDefaults.standard.string(forKey: "CapacitorStorage.serein_cards") ?? "[]"
-        if let shared = UserDefaults(suiteName: appGroup) {
-            shared.set(raw, forKey: "serein_cards")
+        guard let shared = UserDefaults(suiteName: appGroup) else { return }
+        var changed = false
+        for key in widgetSyncKeys {
+            let raw = UserDefaults.standard.string(forKey: "CapacitorStorage.\(key)") ?? "[]"
+            if shared.string(forKey: key) != raw {
+                shared.set(raw, forKey: key)
+                changed = true
+            }
         }
+        guard changed else { return }
         if #available(iOS 14.0, *) {
             WidgetCenter.shared.reloadAllTimelines()
         }

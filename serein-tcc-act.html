@@ -318,11 +318,10 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 }
 .ms-emoji { font-size: 3rem; line-height: 1; margin-bottom: 1rem; }
 .ms-action { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; color: var(--color-text); line-height: 1.35; }
-.ms-main-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.ms-main-actions, .ms-done-actions { display: flex; flex-direction: column; gap: 0.6rem; }
 .ms-done { text-align: center; padding: 1.5rem 1rem; }
 .ms-done-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .ms-done p { color: var(--color-text); font-size: 1.05rem; line-height: 1.45; margin-bottom: 1.25rem; }
-.ms-done-actions { display: flex; flex-direction: column; gap: 0.6rem; }
 
 /* ─── CARDS ─── */
 .card {
@@ -822,24 +821,27 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   color: var(--color-primary); text-align: center;
 }
 .crisis-breath-info { font-size: 0.78rem; color: var(--color-muted); margin-bottom: 1.5rem; min-height: 1.2em; }
-.crisis-anchor-wrap {
+/* Boîte de contenu partagée par les panneaux du mode crise (ancrage + outils dépliables) */
+.crisis-box {
   background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: var(--radius); padding: 1.25rem;
-  width: 100%; text-align: center; margin-bottom: 1.25rem;
-  position: relative;
+  border-radius: var(--radius); width: 100%; text-align: center; margin-bottom: 1.25rem;
 }
+.crisis-anchor-wrap { padding: 1.25rem; position: relative; }
 .crisis-anchor-text {
   font-family: var(--font-title); font-size: 1rem; font-weight: 600;
   color: var(--color-text); line-height: 1.4;
 }
 .crisis-anchor-nav { display: flex; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
-.crisis-anchor-btn {
-  background: none; border: 1.5px solid var(--color-border); border-radius: 50%;
-  width: 32px; height: 32px; cursor: pointer; color: var(--color-muted);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; transition: all var(--transition);
+/* Mini-bouton partagé (cercle de nav, pill "autre carte") */
+.crisis-mini-btn {
+  background: none; border: 1.5px solid var(--color-border); cursor: pointer;
+  color: var(--color-muted); transition: all var(--transition);
 }
-.crisis-anchor-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.crisis-mini-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.crisis-anchor-btn {
+  border-radius: 50%; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center; font-size: 1rem;
+}
 .crisis-3114 {
   font-size: 0.8rem; color: var(--color-muted); text-align: center;
 }
@@ -853,20 +855,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   transition: border-color var(--transition), background var(--transition);
 }
 .crisis-tool-btn:hover, .crisis-tool-btn:active { border-color: var(--color-primary); background: var(--color-primary-light); }
-.crisis-panel {
-  background: var(--color-surface); border: 1px solid var(--color-border);
-  border-radius: var(--radius); padding: 1.1rem; width: 100%; margin-bottom: 1.25rem; text-align: center;
-}
+.crisis-panel { padding: 1.1rem; }
 .crisis-card-thought {
   font-family: var(--font-title); font-size: 1rem; font-weight: 600;
   color: var(--color-text); line-height: 1.45; margin-bottom: 0.6rem;
 }
 .crisis-card-next {
-  background: none; border: 1.5px solid var(--color-border); border-radius: var(--radius-sm);
-  padding: 0.35rem 0.9rem; cursor: pointer; color: var(--color-muted);
-  font-family: var(--font-body); font-size: 0.78rem; transition: all var(--transition);
+  border-radius: var(--radius-sm); padding: 0.35rem 0.9rem;
+  font-family: var(--font-body); font-size: 0.78rem;
 }
-.crisis-card-next:hover { border-color: var(--color-primary); color: var(--color-primary); }
 .crisis-ground-line { display: flex; align-items: center; gap: 0.6rem; text-align: left; font-size: 0.92rem; color: var(--color-text); padding: 0.3rem 0; }
 .crisis-ground-line span { font-size: 1.2rem; flex-shrink: 0; }
 
@@ -1260,25 +1257,25 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="crisis-breath-text" id="crisisBreathText">Inspire...</div>
   </div>
   <div class="crisis-breath-info" id="crisisBreathInfo">Respire lentement avec le cercle</div>
-  <div class="crisis-anchor-wrap">
+  <div class="crisis-box crisis-anchor-wrap">
     <div class="crisis-anchor-text" id="crisisAnchor">Cette sensation va passer. Tu as déjà traversé des moments difficiles.</div>
     <div class="crisis-anchor-nav">
-      <button class="crisis-anchor-btn" onclick="prevAnchor()" aria-label="Phrase précédente">‹</button>
-      <button class="crisis-anchor-btn" onclick="nextAnchor()" aria-label="Phrase suivante">›</button>
+      <button class="crisis-mini-btn crisis-anchor-btn" onclick="prevAnchor()" aria-label="Phrase précédente">‹</button>
+      <button class="crisis-mini-btn crisis-anchor-btn" onclick="nextAnchor()" aria-label="Phrase suivante">›</button>
     </div>
   </div>
   <div class="crisis-tools">
     <button class="crisis-tool-btn" onclick="crisisShowCard()" aria-label="Afficher une de mes cartes de coping">🃏 Une de mes cartes</button>
     <button class="crisis-tool-btn" onclick="crisisToggleGrounding()" aria-label="Afficher l'ancrage 5-4-3-2-1">🌍 Ancrage 5·4·3·2·1</button>
   </div>
-  <div class="crisis-panel" id="crisisCardPanel" hidden>
+  <div class="crisis-box crisis-panel" id="crisisCardPanel" hidden>
     <div class="crisis-card-thought" id="crisisCardThought"></div>
-    <button class="crisis-card-next" id="crisisCardNext" onclick="crisisNextCard()" aria-label="Une autre carte">Autre carte ↻</button>
+    <button class="crisis-mini-btn crisis-card-next" id="crisisCardNext" onclick="crisisNextCard()" aria-label="Une autre carte">Autre carte ↻</button>
   </div>
-  <div class="crisis-panel" id="crisisGroundingPanel" hidden>
+  <div class="crisis-box crisis-panel" id="crisisGroundingPanel" hidden>
     <div class="crisis-ground-line"><span aria-hidden="true">👁️</span> 5 choses que tu <strong>vois</strong></div>
     <div class="crisis-ground-line"><span aria-hidden="true">👂</span> 4 choses que tu <strong>entends</strong></div>
-    <div class="crisis-ground-line"><span aria-hidden="true">✋</span> 3 choses que tu <strong>touches</strong></div>
+    <div class="crisis-ground-line"><span aria-hidden="true">🤚</span> 3 choses que tu <strong>touches</strong></div>
     <div class="crisis-ground-line"><span aria-hidden="true">👃</span> 2 choses que tu <strong>sens</strong></div>
     <div class="crisis-ground-line"><span aria-hidden="true">👅</span> 1 chose que tu <strong>goûtes</strong></div>
   </div>
@@ -3323,9 +3320,10 @@ function showCrisis() {
   ov.classList.add('visible');
   anchorIdx = 0;
   document.getElementById('crisisAnchor').textContent = anchorPhrases[0];
-  // chaque session de crise repart avec les outils repliés
+  // chaque session de crise repart avec les outils repliés et relit les cartes (une a pu être ajoutée depuis)
   document.getElementById('crisisCardPanel').hidden = true;
   document.getElementById('crisisGroundingPanel').hidden = true;
+  crisisCardsCache = null;
   startCrisisBreath();
   Haptics.medium();
   const f = ov.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
@@ -3340,16 +3338,18 @@ function hideCrisis() {
 }
 // ─── Outils dépliables du mode crise : carte de coping perso + ancrage 5-4-3-2-1 ───
 let crisisCardIdx = 0;
+let crisisCardsCache = null; // lue une fois par session de crise (le panneau est modal : la liste ne peut pas changer pendant)
 function crisisShowCard() {
   const panel = document.getElementById('crisisCardPanel');
   if (!panel.hidden) { panel.hidden = true; return; }
   document.getElementById('crisisGroundingPanel').hidden = true;
+  if (!crisisCardsCache) crisisCardsCache = loadCards();
   renderCrisisCard();
   panel.hidden = false;
   Haptics.light();
 }
 function renderCrisisCard() {
-  const cards = loadCards();
+  const cards = crisisCardsCache || [];
   const txt = document.getElementById('crisisCardThought');
   const next = document.getElementById('crisisCardNext');
   if (!cards.length) {
@@ -3402,28 +3402,25 @@ function renderMicroStep() {
   if (em) em.textContent = s.emoji;
   if (ac) ac.textContent = s.text;
 }
+// Bascule entre les 2 états de l'écran : 'step' (carte + boutons) ou 'done' (félicitation).
+function setMicroStepView(view) {
+  document.getElementById('msCard').hidden = view !== 'step';
+  document.getElementById('msMainActions').hidden = view !== 'step';
+  document.getElementById('msDone').hidden = view !== 'done';
+}
 function initMicroStep() {
   microStepIdx = Math.floor(Math.random() * MICRO_STEPS.length); // variété entre les visites
-  const done = document.getElementById('msDone');
-  const card = document.getElementById('msCard');
-  const main = document.getElementById('msMainActions');
-  if (done) done.hidden = true;
-  if (card) card.hidden = false;
-  if (main) main.hidden = false;
+  setMicroStepView('step');
   renderMicroStep();
 }
 function microStepAnother() { microStepIdx = (microStepIdx + 1) % MICRO_STEPS.length; renderMicroStep(); Haptics.light(); }
 function microStepRestart() {
-  document.getElementById('msDone').hidden = true;
-  document.getElementById('msCard').hidden = false;
-  document.getElementById('msMainActions').hidden = false;
+  setMicroStepView('step');
   microStepAnother();
 }
 function microStepDone() {
-  document.getElementById('msCard').hidden = true;
-  document.getElementById('msMainActions').hidden = true;
   document.getElementById('msDoneText').textContent = MICRO_PRAISE[Math.floor(Math.random() * MICRO_PRAISE.length)];
-  document.getElementById('msDone').hidden = false;
+  setMicroStepView('done');
   Haptics.medium();
 }
 function startCrisisBreath() {

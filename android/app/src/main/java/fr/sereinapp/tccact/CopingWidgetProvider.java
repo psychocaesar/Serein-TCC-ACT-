@@ -3,6 +3,7 @@ package fr.sereinapp.tccact;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +26,29 @@ public class CopingWidgetProvider extends AppWidgetProvider {
     private static final String WIDGET_PREFS = "serein_widget";   // index courant par widget
     private static final String CAP_PREFS = "CapacitorStorage";   // store @capacitor/preferences
     private static final String CARDS_KEY = "serein_cards";
+    private static final String LAST_SYNCED_KEY = "last_synced_cards";
+
+    /**
+     * Demande un rafraîchissement du widget, mais seulement si les cartes ont changé
+     * depuis le dernier appel (évite un rebuild RemoteViews inutile à chaque passage
+     * de l'app en arrière-plan). Appelé depuis MainActivity.onPause.
+     */
+    static void requestUpdateIfChanged(Context context) {
+        SharedPreferences cap = context.getSharedPreferences(CAP_PREFS, Context.MODE_PRIVATE);
+        String current = cap.getString(CARDS_KEY, "[]");
+        SharedPreferences wp = context.getSharedPreferences(WIDGET_PREFS, Context.MODE_PRIVATE);
+        if (current.equals(wp.getString(LAST_SYNCED_KEY, null))) return; // rien n'a changé
+
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+        int[] ids = mgr.getAppWidgetIds(new ComponentName(context, CopingWidgetProvider.class));
+        if (ids == null || ids.length == 0) return;
+        wp.edit().putString(LAST_SYNCED_KEY, current).apply();
+
+        Intent intent = new Intent(context, CopingWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        context.sendBroadcast(intent);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager mgr, int[] ids) {

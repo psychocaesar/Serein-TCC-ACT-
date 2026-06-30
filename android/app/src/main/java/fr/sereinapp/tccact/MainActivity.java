@@ -1,7 +1,5 @@
 package fr.sereinapp.tccact;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -51,14 +49,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onPause() {
         super.onPause();
-        // L'utilisateur quitte l'app -> rafraîchit le widget (cartes éventuellement créées/supprimées).
-        AppWidgetManager mgr = AppWidgetManager.getInstance(this);
-        int[] ids = mgr.getAppWidgetIds(new ComponentName(this, CopingWidgetProvider.class));
-        if (ids != null && ids.length > 0) {
-            Intent intent = new Intent(this, CopingWidgetProvider.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-            sendBroadcast(intent);
-        }
+        // L'utilisateur quitte l'app -> rafraîchit le widget si les cartes ont changé.
+        CopingWidgetProvider.requestUpdateIfChanged(this);
     }
 }

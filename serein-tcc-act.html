@@ -2345,8 +2345,8 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
     <div class="reglages-block">
       <div class="section-title">Widget d'écran d'accueil</div>
-      <p class="data-note">Affiche une de tes cartes de coping directement sur ton écran d'accueil ou verrouillé, sans avoir à ouvrir l'app.</p>
-      <p class="data-note"><strong>Pour l'ajouter :</strong> appuie longuement sur ton écran d'accueil, appuie sur « + » en haut de l'écran, cherche « Serein TCC·ACT », puis choisis le widget Carte de coping.</p>
+      <p class="data-note" id="widgetIntroNote">Affiche une de tes cartes de coping directement sur ton écran, sans avoir à ouvrir l'app.</p>
+      <p class="data-note" id="widgetHowToNote"></p>
     </div>
 
     <div class="reglages-block">
@@ -2535,7 +2535,7 @@ const screenInitFns = {
   catastrophe: initCatastrophe,
   experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
-  reglages: loadReminderPrefs,
+  reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); },
   microstep: initMicroStep,
 };
 
@@ -3707,6 +3707,21 @@ function loadReminderPrefs() {
   if (toggle) toggle.checked = enabled;
   if (btn) { btn.textContent = time + ' ›'; btn.style.display = enabled ? '' : 'none'; }
   if (input) input.value = time;
+}
+// Le geste pour ajouter un widget diffère entre iOS et Android ; l'écran verrouillé
+// n'existe aussi que sur iOS (16+). Capacitor.getPlatform() renvoie 'ios'/'android'/'web'.
+function renderWidgetInstructions() {
+  const intro = document.getElementById('widgetIntroNote');
+  const howTo = document.getElementById('widgetHowToNote');
+  if (!intro || !howTo) return;
+  const platform = window.Capacitor && window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'web';
+  if (platform === 'android') {
+    intro.textContent = "Affiche une de tes cartes de coping directement sur ton écran d'accueil, sans avoir à ouvrir l'app.";
+    howTo.innerHTML = '<strong>Pour l\'ajouter :</strong> appuie longuement sur ton écran d\'accueil, ouvre « Widgets », cherche « Serein TCC·ACT », puis dépose le widget Carte de coping.';
+  } else {
+    intro.textContent = "Affiche une de tes cartes de coping directement sur ton écran d'accueil ou verrouillé, sans avoir à ouvrir l'app.";
+    howTo.innerHTML = '<strong>Pour l\'ajouter :</strong> appuie longuement sur ton écran d\'accueil, appuie sur « + » en haut, cherche « Serein TCC·ACT », puis choisis le widget Carte de coping. Pour l\'écran verrouillé (iOS 16+) : verrouille ton téléphone, appuie longuement, puis Personnaliser.';
+  }
 }
 function openReminderTimePicker() {
   const input = document.getElementById('reminderTimeInput');

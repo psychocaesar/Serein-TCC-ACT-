@@ -870,7 +870,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 /* ─── SOS FAB ─── */
 .fab-sos {
   position: fixed;
-  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem); right: 1rem;
+  /* À gauche (pas à droite) : les boutons d'action des listes (supprimer, ×) sont presque
+     toujours alignés à droite - un FAB fixe à droite finit par les recouvrir selon la
+     position de scroll (constaté : bouton supprimer d'une carte de coping masqué). */
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem); left: 1rem;
   z-index: 90;
   width: 48px; height: 48px;
   background: linear-gradient(135deg, #c0504a, #e07060);

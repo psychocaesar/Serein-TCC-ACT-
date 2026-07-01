@@ -16,6 +16,10 @@
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
 		AA0100000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA0100000000000000000002 /* PrivacyInfo.xcprivacy */; };
+		CC2A8BDF0CEF4B8888A7D30F /* CopingWidget.appex in Copy Files */ = {isa = PBXBuildFile; fileRef = D2E16181384E4D3C9D1A413C /* CopingWidget.appex */; };
+		7560A3D4F5904B5F9E098CB4 /* CopingWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FE93D2F838419380828270 /* CopingWidget.swift */; };
+		3C8319A6A216442C8EE8D020 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06198C93ED994B3980380186 /* WidgetKit.framework */; };
+		7650152D239D427E81F2D17C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E91DFEC4D014AAA98DCE970 /* SwiftUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +34,10 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		AA0100000000000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D2E16181384E4D3C9D1A413C /* CopingWidget.appex */ = {isa = PBXFileReference; name = "CopingWidget.appex"; path = "CopingWidget.appex"; sourceTree = BUILT_PRODUCTS_DIR; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; };
+		96FE93D2F838419380828270 /* CopingWidget.swift */ = {isa = PBXFileReference; name = "CopingWidget.swift"; path = "CopingWidget/CopingWidget.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; includeInIndex = 0; };
+		06198C93ED994B3980380186 /* WidgetKit.framework */ = {isa = PBXFileReference; name = "WidgetKit.framework"; path = "System/Library/Frameworks/WidgetKit.framework"; sourceTree = SDKROOT; lastKnownFileType = wrapper.framework; includeInIndex = 0; };
+		2E91DFEC4D014AAA98DCE970 /* SwiftUI.framework */ = {isa = PBXFileReference; name = "SwiftUI.framework"; path = "System/Library/Frameworks/SwiftUI.framework"; sourceTree = SDKROOT; lastKnownFileType = wrapper.framework; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +46,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD5488B40D444FBD807F61FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C8319A6A216442C8EE8D020 /* WidgetKit.framework in Frameworks */,
+				7650152D239D427E81F2D17C /* SwiftUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				504EC3041FED79650016851F /* App.app */,
+				D2E16181384E4D3C9D1A413C /* CopingWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,6 +95,15 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		B130303A27F44B948A6F71D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				06198C93ED994B3980380186 /* WidgetKit.framework */,
+				2E91DFEC4D014AAA98DCE970 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -87,10 +114,12 @@
 				504EC3001FED79650016851F /* Sources */,
 				504EC3011FED79650016851F /* Frameworks */,
 				504EC3021FED79650016851F /* Resources */,
+				990B261923DB4A2B8CC63456 /* Copy Files */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				896BD0B3C7314A74AD53BC3E /* PBXTargetDependency */,
 			);
 			name = App;
 			packageProductDependencies = (
@@ -99,6 +128,22 @@
 			productName = App;
 			productReference = 504EC3041FED79650016851F /* App.app */;
 			productType = "com.apple.product-type.application";
+		};
+		F515B007A5C246C188458D92 /* "CopingWidget" */ = {
+			isa = PBXNativeTarget;
+			name = "CopingWidget";
+			productName = "CopingWidget";
+			productReference = D2E16181384E4D3C9D1A413C;
+			productType = "com.apple.product-type.app-extension";
+			buildConfigurationList = 6992ED2EE98E46D0BB6B4F2D;
+			buildPhases = (
+				475889AC524F41C0A58F673E /* Sources */,
+				AD5488B40D444FBD807F61FC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
 		};
 /* End PBXNativeTarget section */
 
@@ -133,6 +178,7 @@
 			projectRoot = "";
 			targets = (
 				504EC3031FED79650016851F /* App */,
+				F515B007A5C246C188458D92 /* "CopingWidget" */,
 			);
 		};
 /* End PBXProject section */
@@ -160,6 +206,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		475889AC524F41C0A58F673E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7560A3D4F5904B5F9E098CB4 /* CopingWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +369,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 			};
 			name = Debug;
 		};
@@ -337,8 +392,51 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 			};
 			name = Release;
+		};
+		0600A174E4F3476CB069DE55 /* Debug */ = {
+			name = Debug;
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CopingWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_NAME = "CopingWidget";
+				SKIP_INSTALL = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "fr.sereinapp.tccact.CopingWidget";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 5;
+				VERSIONING_SYSTEM = "apple-generic";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = CopingWidget/CopingWidget.entitlements;
+			};
+		};
+		34AA279BEBC540D489EB4E1C /* Release */ = {
+			name = Release;
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = CopingWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_NAME = "CopingWidget";
+				SKIP_INSTALL = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "fr.sereinapp.tccact.CopingWidget";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 5;
+				VERSIONING_SYSTEM = "apple-generic";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = CopingWidget/CopingWidget.entitlements;
+			};
 		};
 /* End XCBuildConfiguration section */
 
@@ -361,6 +459,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		6992ED2EE98E46D0BB6B4F2D /* Build configuration list for PBXNativeTarget "CopingWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0600A174E4F3476CB069DE55 /* Debug */,
+				34AA279BEBC540D489EB4E1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -377,6 +484,38 @@
 			productName = "CapApp-SPM";
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		9F7BA5F1CD6C4041887D1374 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 504EC2FC1FED79650016851F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F515B007A5C246C188458D92;
+			remoteInfo = "CopingWidget";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		896BD0B3C7314A74AD53BC3E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F515B007A5C246C188458D92 /* "CopingWidget" */;
+			targetProxy = 9F7BA5F1CD6C4041887D1374 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		990B261923DB4A2B8CC63456 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC2A8BDF0CEF4B8888A7D30F /* CopingWidget.appex in Copy Files */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			name = "Copy Files";
+			dstPath = "";
+			dstSubfolderSpec = 13;
+		};
+/* End PBXCopyFilesBuildPhase section */
 	};
 	rootObject = 504EC2FC1FED79650016851F /* Project object */;
 }

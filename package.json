@@ -12,7 +12,8 @@
     "bump:android": "node scripts/bump-android-version.mjs",
     "release:android": "npm run build:web && npx cap sync android && npm run bump:android",
     "open:android": "cap open android",
-    "open:ios": "cap open ios"
+    "open:ios": "cap open ios",
+    "ios:add-widget-target": "node scripts/add-ios-widget-target.cjs ios/App/App.xcodeproj/project.pbxproj ios/App/App.xcodeproj/project.pbxproj"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.0",
@@ -28,6 +29,7 @@
     "@capacitor/text-zoom": "^8.0.1"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.5"
+    "@capacitor/assets": "^3.0.5",
+    "xcode": "^3.0.1"
   }
 }

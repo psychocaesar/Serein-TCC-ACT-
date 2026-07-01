@@ -42,10 +42,13 @@ et être attaché aux 2 App IDs AVANT le premier build avec la target).
 
 ## Partie B - Codemagic (déjà ajusté)
 
-`codemagic.yaml` : la ligne `bundle_identifier: fr.sereinapp.tccact` a été retirée
-du bloc `ios_signing` (le projet a maintenant 2 bundle ids : l'app et l'extension).
-Sans cette clé, Codemagic récupère/crée automatiquement les profils pour **tous**
-les bundle ids présents dans le projet. Le reste du pipeline est inchangé :
+`codemagic.yaml` : `distribution_type` ET `bundle_identifier` sont **tous les deux
+obligatoires** pour la récupération auto des signatures Codemagic (les retirer
+fait échouer la validation du yaml - erreur rencontrée et corrigée). Le
+`bundle_identifier: fr.sereinapp.tccact` (l'app, inchangé) suffit : Codemagic
+matche automatiquement tout bundle id de la forme `fr.sereinapp.tccact.*` pour
+les extensions (donc `fr.sereinapp.tccact.CopingWidget` est couvert sans rien
+ajouter). Le reste du pipeline est inchangé :
 `agvtool new-version -all` couvre aussi la target widget (elle est en
 `VERSIONING_SYSTEM = apple-generic`, comme l'app), `xcode-project use-profiles`
 puis `build-ipa --scheme App` embarquent l'extension automatiquement (phase

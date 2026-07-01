@@ -10,10 +10,12 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        # Pas de bundle_identifier ici : le projet a 2 bundle ids depuis l'ajout
-        # du widget (fr.sereinapp.tccact + fr.sereinapp.tccact.CopingWidget).
-        # Sans cette clé, Codemagic récupère/crée les profils pour TOUS les
-        # bundle ids présents dans le projet Xcode.
+        bundle_identifier: fr.sereinapp.tccact
+        # distribution_type + bundle_identifier sont tous les deux obligatoires
+        # pour la récupération auto des signatures (Codemagic). Le bundle id de
+        # l'app suffit : Codemagic va aussi chercher/créer les profils pour tout
+        # ce qui matche "fr.sereinapp.tccact.*" (donc le widget
+        # fr.sereinapp.tccact.CopingWidget est couvert automatiquement).
       vars:
         XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"

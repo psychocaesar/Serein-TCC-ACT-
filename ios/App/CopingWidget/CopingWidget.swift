@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 // IMPORTANT : ce fichier doit appartenir à la target d'extension "CopingWidget"
 // (créée dans Xcode), et l'App Group "group.fr.sereinapp.tccact" doit être activé
@@ -30,6 +31,31 @@ private func loadThoughts() -> [String] {
     }
 }
 
+// Index de la carte actuellement affichée, partagé entre tous les widgets de ce kind
+// (StaticConfiguration ne donne pas d'identité par instance, contrairement à Android).
+private func currentCardIndex(count: Int) -> Int {
+    guard count > 0, let shared = UserDefaults(suiteName: appGroup) else { return 0 }
+    let idx = shared.integer(forKey: "widget_card_index")
+    return ((idx % count) + count) % count
+}
+
+// Bouton "carte suivante" du widget (écran d'accueil, iOS 17+ uniquement - les widgets
+// interactifs n'existent pas avant). Incrémente l'index partagé puis force un rechargement
+// de la timeline ; getTimeline() lit ce même index pour choisir la carte à afficher.
+@available(iOS 17.0, *)
+struct NextCopingCardIntent: AppIntent {
+    static var title: LocalizedStringResource = "Carte de coping suivante"
+    static var description = IntentDescription("Affiche la carte de coping suivante sur le widget.")
+
+    func perform() async throws -> some IntentResult {
+        if let shared = UserDefaults(suiteName: appGroup) {
+            shared.set(shared.integer(forKey: "widget_card_index") + 1, forKey: "widget_card_index")
+        }
+        WidgetCenter.shared.reloadTimelines(ofKind: "CopingWidget")
+        return .result()
+    }
+}
+
 struct CopingEntry: TimelineEntry {
     let date: Date
     let thought: String?   // nil = aucune carte
@@ -42,25 +68,18 @@ struct CopingProvider: TimelineProvider {
 
     func getSnapshot(in context: Context, completion: @escaping (CopingEntry) -> Void) {
         let thoughts = loadThoughts()
-        completion(CopingEntry(date: Date(), thought: thoughts.first))
+        let thought = thoughts.isEmpty ? nil : thoughts[currentCardIndex(count: thoughts.count)]
+        completion(CopingEntry(date: Date(), thought: thought))
     }
 
+    // Une seule entrée "courante" : pas de rotation programmée dans le temps (comme sur
+    // Android). La timeline se recharge uniquement sur événement explicite - tap sur le
+    // bouton ↻ (NextCopingCardIntent) ou sync de nouvelles cartes (AppDelegate.syncWidgetData).
     func getTimeline(in context: Context, completion: @escaping (Timeline<CopingEntry>) -> Void) {
         let thoughts = loadThoughts()
-        var entries: [CopingEntry] = []
-        let now = Date()
-        if thoughts.isEmpty {
-            entries.append(CopingEntry(date: now, thought: nil))
-        } else {
-            // Rotation : une carte toutes les 3 h (max 8 entrées), recharge à la fin.
-            let step: TimeInterval = 3 * 3600
-            let maxEntries = min(thoughts.count, 8)
-            for i in 0..<maxEntries {
-                let date = now.addingTimeInterval(Double(i) * step)
-                entries.append(CopingEntry(date: date, thought: thoughts[i % thoughts.count]))
-            }
-        }
-        completion(Timeline(entries: entries, policy: .atEnd))
+        let thought = thoughts.isEmpty ? nil : thoughts[currentCardIndex(count: thoughts.count)]
+        let entry = CopingEntry(date: Date(), thought: thought)
+        completion(Timeline(entries: [entry], policy: .never))
     }
 }
 
@@ -71,10 +90,21 @@ struct CopingWidgetEntryView: View {
     // ── Écran d'accueil (systemMedium / systemLarge) : carte brandée ──
     private var homeInner: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("CARTE DE COPING")
-                .font(.system(size: 11, weight: .bold))
-                .tracking(0.5)
-                .foregroundColor(brandAccent)
+            HStack(spacing: 6) {
+                Text("CARTE DE COPING")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(0.5)
+                    .foregroundColor(brandAccent)
+                Spacer(minLength: 4)
+                if #available(iOS 17.0, *), entry.thought != nil {
+                    Button(intent: NextCopingCardIntent()) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(brandAccent)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
             if let thought = entry.thought {
                 Text("« \(thought) »")
                     .font(.system(size: 15))
@@ -82,7 +112,7 @@ struct CopingWidgetEntryView: View {
                     .lineLimit(6)
                     .minimumScaleFactor(0.8)
             } else {
-                Text("Crée ta première carte de coping dans l'app.")
+                Text("Choisis une carte-modèle dans l'app pour commencer.")
                     .font(.system(size: 14))
                     .foregroundColor(mutedColor)
             }
@@ -112,7 +142,7 @@ struct CopingWidgetEntryView: View {
                     .font(.system(size: 13))
                     .lineLimit(3)
             } else {
-                Text("Crée une carte dans l'app")
+                Text("Choisis un modèle dans l'app")
                     .font(.system(size: 12))
             }
         }

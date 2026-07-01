@@ -76,7 +76,7 @@ public class CopingWidgetProvider extends AppWidgetProvider {
         int count = (cards != null) ? cards.length() : 0;
 
         if (count == 0) {
-            views.setTextViewText(R.id.widget_thought, "Crée ta première carte de coping dans l'app.");
+            views.setTextViewText(R.id.widget_thought, "Choisis une carte-modèle dans l'app pour commencer.");
             views.setViewVisibility(R.id.widget_refresh, View.GONE);
         } else {
             SharedPreferences wp = context.getSharedPreferences(WIDGET_PREFS, Context.MODE_PRIVATE);

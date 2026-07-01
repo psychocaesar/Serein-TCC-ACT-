@@ -3560,6 +3560,14 @@ const copingPresets = {
     "Je fais juste un petit pas en avant : une action concrète et engagée pour reprendre le contrôle de mon quotidien.",
   ]},
 };
+// Widget (iOS + Android) : tant que l'utilisateur n'a aucune carte personnelle, on lui montre
+// une carte-modèle plutôt qu'un écran vide - stockée à part de "serein_cards" (jamais touchée
+// par l'export/import/effacement, ce n'est pas une donnée utilisateur). Recalculée à chaque
+// boot() pour rester à jour si les modèles changent.
+function seedWidgetExamples() {
+  const all = Object.values(copingPresets).flatMap(cat => cat.cards);
+  Store.set('serein_cards_examples', JSON.stringify(all));
+}
 let copingCat = 'worry';
 function renderCopingCats() {
   const c = document.getElementById('copingCatChips');
@@ -4678,6 +4686,7 @@ async function boot() {
   initOnboarding();
   initDisclaimer();
   Notify.flushWeb();
+  seedWidgetExamples();
 }
 boot();
 </script>

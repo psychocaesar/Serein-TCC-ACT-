@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     /// Clés du store Capacitor lues par un widget. Ajouter une clé ici suffit pour
     /// qu'un futur widget puisse y accéder (ex. humeur du jour, stats) - pas besoin
     /// de toucher ailleurs.
-    private let widgetSyncKeys = ["serein_cards"]
+    private let widgetSyncKeys = ["serein_cards", "serein_cards_examples"]
 
     /// Recopie ces clés du store Capacitor (UserDefaults.standard, préfixe
     /// "CapacitorStorage.") vers le conteneur partagé de l'App Group, puis rafraîchit

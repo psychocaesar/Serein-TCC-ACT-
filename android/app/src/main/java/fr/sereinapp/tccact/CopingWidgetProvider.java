@@ -26,6 +26,9 @@ public class CopingWidgetProvider extends AppWidgetProvider {
     private static final String WIDGET_PREFS = "serein_widget";   // index courant par widget
     private static final String CAP_PREFS = "CapacitorStorage";   // store @capacitor/preferences
     private static final String CARDS_KEY = "serein_cards";
+    // Cartes-modèles (générées par l'app, JAMAIS de données utilisateur) : filet de
+    // sécurité tant que l'utilisateur n'a créé aucune carte personnelle.
+    private static final String EXAMPLES_KEY = "serein_cards_examples";
     private static final String LAST_SYNCED_KEY = "last_synced_cards";
 
     /**
@@ -72,8 +75,12 @@ public class CopingWidgetProvider extends AppWidgetProvider {
     private void updateWidget(Context context, AppWidgetManager mgr, int id) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_coping);
 
-        JSONArray cards = readCards(context);
+        JSONArray cards = readJsonArray(context, CARDS_KEY);
         int count = (cards != null) ? cards.length() : 0;
+        // Aucune carte perso -> on retombe sur les cartes-modèles plutôt que sur un écran vide.
+        boolean usingExamples = count == 0;
+        JSONArray examples = usingExamples ? readJsonArray(context, EXAMPLES_KEY) : null;
+        if (usingExamples) count = (examples != null) ? examples.length() : 0;
 
         if (count == 0) {
             views.setTextViewText(R.id.widget_thought, "Choisis une carte-modèle dans l'app pour commencer.");
@@ -84,8 +91,7 @@ public class CopingWidgetProvider extends AppWidgetProvider {
             int pos = ((idx % count) + count) % count;   // index sûr (même si la liste a rétréci)
             String thought = "";
             try {
-                JSONObject card = cards.getJSONObject(pos);
-                thought = card.optString("thought", "");
+                thought = usingExamples ? examples.getString(pos) : cards.getJSONObject(pos).optString("thought", "");
             } catch (Exception e) { /* carte illisible -> texte vide */ }
             views.setTextViewText(R.id.widget_thought, "« " + thought + " »");
             views.setViewVisibility(R.id.widget_refresh, View.VISIBLE);
@@ -96,10 +102,10 @@ public class CopingWidgetProvider extends AppWidgetProvider {
         mgr.updateAppWidget(id, views);
     }
 
-    private JSONArray readCards(Context context) {
+    private JSONArray readJsonArray(Context context, String key) {
         try {
             SharedPreferences cap = context.getSharedPreferences(CAP_PREFS, Context.MODE_PRIVATE);
-            String json = cap.getString(CARDS_KEY, null);
+            String json = cap.getString(key, null);
             if (json == null || json.isEmpty()) return null;
             return new JSONArray(json);
         } catch (Exception e) {

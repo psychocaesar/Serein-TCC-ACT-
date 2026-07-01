@@ -31,6 +31,24 @@ private func loadThoughts() -> [String] {
     }
 }
 
+// Cartes-modèles (générées par l'app, jamais de données utilisateur - cf. seedWidgetExamples()
+// côté JS) : filet de sécurité tant que l'utilisateur n'a créé aucune carte personnelle.
+private func loadExamples() -> [String] {
+    guard let shared = UserDefaults(suiteName: appGroup),
+          let json = shared.string(forKey: "serein_cards_examples"),
+          let data = json.data(using: .utf8),
+          let arr = try? JSONSerialization.jsonObject(with: data) as? [String] else {
+        return []
+    }
+    return arr
+}
+
+// Cartes personnelles si l'utilisateur en a ; sinon cartes-modèles.
+private func currentThoughts() -> [String] {
+    let personal = loadThoughts()
+    return personal.isEmpty ? loadExamples() : personal
+}
+
 // Index de la carte actuellement affichée, partagé entre tous les widgets de ce kind
 // (StaticConfiguration ne donne pas d'identité par instance, contrairement à Android).
 private func currentCardIndex(count: Int) -> Int {
@@ -67,7 +85,7 @@ struct CopingProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (CopingEntry) -> Void) {
-        let thoughts = loadThoughts()
+        let thoughts = currentThoughts()
         let thought = thoughts.isEmpty ? nil : thoughts[currentCardIndex(count: thoughts.count)]
         completion(CopingEntry(date: Date(), thought: thought))
     }
@@ -76,7 +94,7 @@ struct CopingProvider: TimelineProvider {
     // Android). La timeline se recharge uniquement sur événement explicite - tap sur le
     // bouton ↻ (NextCopingCardIntent) ou sync de nouvelles cartes (AppDelegate.syncWidgetData).
     func getTimeline(in context: Context, completion: @escaping (Timeline<CopingEntry>) -> Void) {
-        let thoughts = loadThoughts()
+        let thoughts = currentThoughts()
         let thought = thoughts.isEmpty ? nil : thoughts[currentCardIndex(count: thoughts.count)]
         let entry = CopingEntry(date: Date(), thought: thought)
         completion(Timeline(entries: [entry], policy: .never))

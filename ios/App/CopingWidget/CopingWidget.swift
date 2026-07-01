@@ -9,8 +9,11 @@ import SwiftUI
 private let appGroup = "group.fr.sereinapp.tccact"
 
 // Couleurs de marque (cohérentes avec le widget Android)
+// "brandAccent" (pas "accentColor") : ce nom entre en collision avec View.accentColor(_:),
+// toujours présente dans le SDK malgré la dépréciation - Swift résout alors l'identifiant
+// nu vers la méthode (self implicite) plutôt que vers cette constante de fichier.
 private let bgColor = Color(red: 0.110, green: 0.192, blue: 0.153)      // #1C3127
-private let accentColor = Color(red: 0.576, green: 0.788, blue: 0.675)  // #93C9AC
+private let brandAccent = Color(red: 0.576, green: 0.788, blue: 0.675)  // #93C9AC
 private let textColor = Color(red: 0.94, green: 0.957, blue: 0.94)      // #F0F4F0
 private let mutedColor = Color(red: 0.78, green: 0.84, blue: 0.80)
 
@@ -71,7 +74,7 @@ struct CopingWidgetEntryView: View {
             Text("CARTE DE COPING")
                 .font(.system(size: 11, weight: .bold))
                 .tracking(0.5)
-                .foregroundColor(accentColor)
+                .foregroundColor(brandAccent)
             if let thought = entry.thought {
                 Text("« \(thought) »")
                     .font(.system(size: 15))

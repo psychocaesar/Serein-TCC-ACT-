@@ -402,6 +402,22 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
 }
 .mood-confirm-btn { width: 100%; margin-top: 0.25rem; }
+/* État "check-in déjà fait aujourd'hui" : remplace le curseur par un récap + Modifier
+   (sinon revenir sur l'accueil après coup donne l'impression que le geste n'a rien laissé). */
+.checkin-recap-row {
+  display: flex; align-items: center; gap: 0.9rem;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 1rem 1.1rem;
+}
+.checkin-recap-orb {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; line-height: 1;
+}
+.checkin-recap-text { flex: 1; min-width: 0; }
+.checkin-recap-label { font-size: 0.78rem; color: var(--color-muted); }
+.checkin-recap-mood { font-family: var(--font-title); font-size: 1.15rem; font-weight: 700; color: var(--color-text); }
+.checkin-recap-edit { flex-shrink: 0; font-size: 0.82rem; padding: 0.45rem 0.9rem; }
 
 /* ─── STATS GRID ─── */
 
@@ -887,6 +903,24 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 }
 .fab-sos:hover, .fab-sos:active { transform: scale(1.07); box-shadow: 0 6px 22px rgba(192,80,74,0.55); }
 
+/* ─── TOAST ANNULER ─── */
+.undo-toast {
+  position: fixed; left: 1rem; right: 1rem;
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem);
+  z-index: 95;
+  background: var(--color-surface-2); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 0.85rem 1.1rem;
+  display: none; align-items: center; justify-content: space-between; gap: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  animation: fadeIn 0.2s ease;
+}
+.undo-toast.visible { display: flex; }
+.undo-toast span { font-size: 0.85rem; color: var(--color-text); }
+.undo-toast button {
+  background: none; border: none; color: var(--color-primary); font-weight: 700;
+  font-size: 0.85rem; cursor: pointer; flex-shrink: 0; padding: 0.2rem 0.3rem;
+}
+
 /* ─── COPING CARDS ─── */
 .cards-list { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
 .coping-card-item {
@@ -1298,6 +1332,12 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 <!-- ─── SOS FAB ─── -->
 <button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide - SOS, ouvre l'espace de crise">SOS</button>
 
+<!-- ─── TOAST ANNULER (suppression cartes/journal/journal positif) ─── -->
+<div class="undo-toast" id="undoToast" role="status" aria-live="polite">
+  <span id="undoToastText"></span>
+  <button onclick="undoToastAction()" aria-label="Annuler la suppression">Annuler</button>
+</div>
+
 <!-- ─── DISCLAIMER MODAL (first launch) ─── -->
 <div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal-box">
@@ -1343,23 +1383,36 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
 
     <div id="checkin-card">
-      <div id="mood-orb-container" aria-live="polite">
-        <div id="mood-orb" aria-hidden="true"></div>
-        <div id="mood-label"></div>
-        <div id="mood-desc"></div>
-      </div>
-
-      <div class="slider-block">
-        <label for="slider-valence">Ton humeur</label>
-        <div class="slider-row">
-          <span aria-hidden="true">😔</span>
-          <input type="range" id="slider-valence" min="0" max="100" value="50" oninput="onMoodSliderInput()" aria-label="Ton humeur, de difficile à bien">
-          <span aria-hidden="true">😊</span>
+      <div id="checkinSliderMode">
+        <div id="mood-orb-container" aria-live="polite">
+          <div id="mood-orb" aria-hidden="true"></div>
+          <div id="mood-label"></div>
+          <div id="mood-desc"></div>
         </div>
-        <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
+
+        <div class="slider-block">
+          <label for="slider-valence">Ton humeur</label>
+          <div class="slider-row">
+            <span aria-hidden="true">😔</span>
+            <input type="range" id="slider-valence" min="0" max="100" value="50" oninput="onMoodSliderInput()" aria-label="Ton humeur, de difficile à bien">
+            <span aria-hidden="true">😊</span>
+          </div>
+          <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
+        </div>
+
+        <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Continuer avec l'état sélectionné">Continuer →</button>
       </div>
 
-      <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Continuer avec l'état sélectionné">Continuer →</button>
+      <div id="checkinRecapMode" style="display:none;">
+        <div class="checkin-recap-row">
+          <div class="checkin-recap-orb" id="recapOrb" aria-hidden="true"></div>
+          <div class="checkin-recap-text">
+            <div class="checkin-recap-label">Aujourd'hui, tu te sens</div>
+            <div class="checkin-recap-mood" id="recapMoodLabel"></div>
+          </div>
+          <button class="btn btn-ghost checkin-recap-edit" onclick="editTodayMood()" aria-label="Modifier mon humeur du jour">Modifier</button>
+        </div>
+      </div>
     </div>
 
     <div class="section-title">Accès rapide</div>
@@ -2536,7 +2589,7 @@ function parentOf(screen) {
   return { 'nav-home': 'home', 'nav-apaiser': 'apaiser', 'nav-comprendre': 'comprendre', 'nav-parcours': 'parcours' }[navMap[screen]] || 'home';
 }
 const screenInitFns = {
-  home: () => { renderMiniProgress(); updateMoodOrb(); },
+  home: () => { renderMiniProgress(); updateMoodOrb(); renderCheckinState(); },
   parcours: () => { loadStats(); renderTracking(); },
   checkin: initCheckin,
   cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
@@ -2679,7 +2732,45 @@ function confirmMood() {
   // valence 100 (bien) → 2 ; valence 0 (difficile) → 10 ; valence 50 → 6.
   const v = +document.getElementById('slider-valence').value;
   logAnxiety(Math.round(2 + (100 - v) * 0.08));
+  saveTodayMood(currentSliderMood, v);
   selectMood(currentSliderMood); // réutilise le flux existant (suggestions, journal positif, etc.)
+}
+// Mémorise l'humeur confirmée aujourd'hui, pour que revenir sur l'accueil montre un récap
+// plutôt qu'un curseur revenu à zéro (sinon le geste du jour semble n'avoir rien laissé).
+function saveTodayMood(mood, valence) {
+  Store.set('serein_today_mood', JSON.stringify({ date: ymd(), mood, valence }));
+}
+function getTodayMood() {
+  const saved = safeParse('serein_today_mood', null);
+  return (saved && saved.date === ymd()) ? saved : null;
+}
+function renderCheckinState() {
+  const today = getTodayMood();
+  const sliderMode = document.getElementById('checkinSliderMode');
+  const recapMode = document.getElementById('checkinRecapMode');
+  if (!sliderMode || !recapMode) return;
+  if (today) {
+    const s = MOOD_STATES[today.mood];
+    const orb = document.getElementById('recapOrb');
+    orb.textContent = s.emoji;
+    orb.style.background = `radial-gradient(circle at 35% 35%, ${s.light}, ${s.bg})`;
+    document.getElementById('recapMoodLabel').textContent = s.label;
+    sliderMode.style.display = 'none';
+    recapMode.style.display = 'block';
+  } else {
+    sliderMode.style.display = 'block';
+    recapMode.style.display = 'none';
+  }
+}
+// Rouvre le curseur (positionné là où l'utilisateur l'avait laissé) pour corriger l'humeur du jour.
+function editTodayMood() {
+  const today = getTodayMood();
+  if (today && typeof today.valence === 'number') {
+    document.getElementById('slider-valence').value = today.valence;
+  }
+  document.getElementById('checkinSliderMode').style.display = 'block';
+  document.getElementById('checkinRecapMode').style.display = 'none';
+  updateMoodOrb();
 }
 
 // ─── CHECK-IN ───
@@ -2964,8 +3055,19 @@ function renderJournalHistory() {
 }
 function deleteJournalEntry(ts) {
   if (editingJournalTs === ts) editingJournalTs = null;
-  Store.set('serein_journal', JSON.stringify(loadJournalEntries().filter(e => e.ts !== ts)));
+  const all = loadJournalEntries();
+  const idx = all.findIndex(e => e.ts === ts);
+  const removed = idx >= 0 ? all[idx] : null;
+  Store.set('serein_journal', JSON.stringify(all.filter(e => e.ts !== ts)));
   renderJournalHistory();
+  if (removed) {
+    showUndoToast('Entrée supprimée.', () => {
+      const cur = loadJournalEntries();
+      cur.splice(Math.min(idx, cur.length), 0, removed);
+      Store.set('serein_journal', JSON.stringify(cur));
+      renderJournalHistory();
+    });
+  }
 }
 
 // ─── DEFUSION EXERCISES ───
@@ -3600,6 +3702,29 @@ function useCopingPreset(btn) {
   document.getElementById('cardTrigger').focus();
 }
 
+// ─── TOAST ANNULER (réutilisé par les 3 suppressions ci-dessous et le journal) ───
+// La suppression est immédiate et persistée (pas de perte si l'app se ferme pendant la
+// fenêtre) ; le toast garde juste de quoi restaurer l'élément si l'utilisateur tape "Annuler".
+// Une nouvelle suppression pendant la fenêtre remplace la précédente (un seul niveau d'undo).
+let undoToastTimer = null;
+let undoToastRestore = null;
+function showUndoToast(message, restoreFn) {
+  clearTimeout(undoToastTimer);
+  undoToastRestore = restoreFn;
+  document.getElementById('undoToastText').textContent = message;
+  document.getElementById('undoToast').classList.add('visible');
+  undoToastTimer = setTimeout(() => {
+    document.getElementById('undoToast').classList.remove('visible');
+    undoToastRestore = null;
+  }, 5000);
+}
+function undoToastAction() {
+  clearTimeout(undoToastTimer);
+  document.getElementById('undoToast').classList.remove('visible');
+  if (undoToastRestore) { undoToastRestore(); Haptics.light(); }
+  undoToastRestore = null;
+}
+
 // ─── COPING CARDS ───
 function loadCards() {
   return safeParse('serein_cards', []);
@@ -3672,9 +3797,16 @@ function saveCard() {
 function deleteCard(i) {
   if (editingCardIndex === i) editingCardIndex = null;
   const cards = loadCards();
+  const removed = cards[i];
   cards.splice(i, 1);
   saveCards(cards);
   renderCards();
+  showUndoToast('Carte supprimée.', () => {
+    const c = loadCards();
+    c.splice(i, 0, removed);
+    saveCards(c);
+    renderCards();
+  });
 }
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
@@ -3960,9 +4092,16 @@ function deleteDiaryEntry(i) {
     document.getElementById('diarySaveBtn').textContent = 'Ajouter +';
   }
   const entries = loadDiaryEntries();
+  const removed = entries[i];
   entries.splice(i, 1);
   Store.set('serein_diary', JSON.stringify(entries));
   renderDiary();
+  showUndoToast('Note supprimée.', () => {
+    const e = loadDiaryEntries();
+    e.splice(i, 0, removed);
+    Store.set('serein_diary', JSON.stringify(e));
+    renderDiary();
+  });
 }
 function renderDiary() {
   const entries = loadDiaryEntries();
@@ -4683,6 +4822,7 @@ async function boot() {
   renderDailyQuote();
   renderMiniProgress();
   updateMoodOrb(); // peint la bulle d'humeur (50/50 → « Ça va ») au démarrage
+  renderCheckinState(); // affiche le récap si déjà check-in aujourd'hui (écran-home actif par défaut, pas de navigateTo au boot)
   initOnboarding();
   initDisclaimer();
   Notify.flushWeb();

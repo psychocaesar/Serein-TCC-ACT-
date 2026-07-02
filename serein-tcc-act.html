@@ -126,6 +126,19 @@ body {
 .disclaimer-note strong { color: var(--color-text); }
 .disclaimer-note a { color: var(--color-primary-2); text-decoration: none; font-weight: 600; }
 
+/* Astuce widget (écran Cartes de coping) : ponctuelle, se ferme une fois vue */
+.widget-tip {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: var(--color-primary-light); border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin: 0.75rem 0;
+  font-size: 0.8rem; color: var(--color-text); line-height: 1.4;
+}
+.widget-tip a { color: var(--color-primary); font-weight: 600; cursor: pointer; }
+.widget-tip button {
+  background: none; border: none; color: var(--color-muted); font-size: 1.1rem;
+  cursor: pointer; flex-shrink: 0; padding: 0.1rem 0.3rem; line-height: 1;
+}
+
 /* ─── HEADER ─── */
 .app-header {
   display: flex;
@@ -1942,6 +1955,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
     <div class="divider"></div>
 
+    <div class="widget-tip" id="widgetTip" hidden role="note">
+      <span>💡 Affiche une de tes cartes directement sur ton écran d'accueil grâce à un widget. <a onclick="navigateTo('reglages')" aria-label="Voir comment ajouter le widget dans Réglages">Comment faire →</a></span>
+      <button onclick="dismissWidgetTip()" aria-label="Fermer cette astuce">×</button>
+    </div>
+
     <div class="section-title">Mes cartes</div>
     <div class="cards-list" id="cardsList"></div>
 
@@ -2601,7 +2619,7 @@ const screenInitFns = {
   home: () => { renderMiniProgress(); updateMoodOrb(); renderCheckinState(); },
   parcours: () => { loadStats(); renderTracking(); },
   checkin: initCheckin,
-  cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); },
+  cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); initWidgetTip(); },
   diary: initDiary,
   whatup: () => { fcQuestions = [...allQuestions]; fcIdx = 0; fcSeen = 0; showFcQuestion(); },
   quiz: initQuiz,
@@ -3817,6 +3835,16 @@ function deleteCard(i) {
     renderCards();
   });
 }
+// Astuce ponctuelle (écran Cartes de coping) : le widget affiche justement ces cartes-là.
+function initWidgetTip() {
+  const tip = document.getElementById('widgetTip');
+  if (!tip) return;
+  tip.hidden = localStorage.getItem('serein_widget_tip_dismissed') === '1';
+}
+function dismissWidgetTip() {
+  Store.set('serein_widget_tip_dismissed', '1');
+  document.getElementById('widgetTip').hidden = true;
+}
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
@@ -3836,6 +3864,7 @@ const STORE_KEYS = [
   'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
+  'serein_today_mood', 'serein_widget_tip_dismissed',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },

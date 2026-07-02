@@ -819,6 +819,19 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 }
 
 /* ─── CRISIS OVERLAY ─── */
+/* Toujours au-dessus de tout le reste (y compris le mode crise) : c'est la porte d'entrée. */
+.lock-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--color-bg);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem 1.5rem; text-align: center; gap: 0.5rem;
+}
+.lock-overlay.visible { display: flex; }
+.lock-overlay .lock-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.lock-overlay h2 { font-family: var(--font-title); font-size: 1.3rem; }
+.lock-overlay p { color: var(--color-muted); font-size: 0.88rem; margin-bottom: 1rem; }
+.lock-overlay .btn { width: 100%; max-width: 280px; margin-top: 0.5rem; }
+
 .crisis-overlay {
   position: fixed; inset: 0; z-index: 400;
   background: var(--color-bg);
@@ -1369,6 +1382,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
 <!-- ─── SOS FAB ─── -->
 <button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide - SOS, ouvre l'espace de crise">SOS</button>
+
+<!-- ─── VERROUILLAGE BIOMÉTRIQUE (optionnel, Réglages) ─── -->
+<div class="lock-overlay" id="lockOverlay" role="dialog" aria-modal="true" aria-label="Application verrouillée">
+  <div class="lock-icon" aria-hidden="true">🔒</div>
+  <h2>Serein TCC·ACT est verrouillé</h2>
+  <p id="lockStatusText">Authentifie-toi pour continuer.</p>
+  <button class="btn btn-primary" onclick="attemptUnlock()" aria-label="Déverrouiller l'application">Déverrouiller</button>
+  <button class="btn btn-ghost" id="lockFallbackBtn" onclick="disableLockAndContinue()" hidden aria-label="Désactiver le verrouillage et continuer">Désactiver le verrou et continuer</button>
+</div>
 
 <!-- ─── TOAST ANNULER (suppression cartes/journal/journal positif) ─── -->
 <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
@@ -2463,6 +2485,18 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="reglages-block">
       <div class="section-title">Données & confidentialité</div>
       <p class="data-note">Tes données restent sur ton téléphone et ne sont jamais transmises à nos serveurs ni à des tiers. Tu peux les sauvegarder, les restaurer, ou tout effacer à tout moment.</p>
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Verrouiller l'app</strong>
+          <span>Face ID, empreinte ou code à l'ouverture</span>
+        </div>
+        <div class="setting-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="appLockToggle" onchange="onAppLockToggle(this.checked)" aria-label="Verrouiller l'app avec la biométrie">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
       <div class="setting-actions">
         <button class="btn btn-secondary" onclick="exportData()" aria-label="Exporter mes données">⬇️ Exporter mes données</button>
         <button class="btn btn-secondary" onclick="importData()" aria-label="Importer une sauvegarde">⬆️ Importer une sauvegarde</button>
@@ -2646,7 +2680,7 @@ const screenInitFns = {
   catastrophe: initCatastrophe,
   experiments: () => { renderExperiments(); renderNotifRow(); },
   jhistory: renderJournalHistory,
-  reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); },
+  reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); loadAppLockPrefs(); },
   microstep: initMicroStep,
 };
 
@@ -3941,6 +3975,7 @@ const STORE_KEYS = [
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_today_mood', 'serein_widget_tip_dismissed', 'serein_journal_draft',
+  'serein_app_lock_enabled',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -4011,6 +4046,75 @@ async function wipeAllData() {
   Haptics.medium();
   location.reload();
 }
+
+// ─── VERROUILLAGE BIOMÉTRIQUE (optionnel, Réglages) ───
+// Fichier unique sans bundler : impossible d'importer l'enum BiometryErrorType du plugin
+// (elle n'existe que côté module TS, pas sur le pont natif window.Capacitor.Plugins). On ne
+// distingue donc pas annulation/échec/indisponibilité par code - un message générique + une
+// échappatoire ("Désactiver le verrou") systématique évitent tout risque de blocage définitif.
+function bioPlugin() {
+  return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BiometricAuth;
+}
+function isAppLockEnabled() {
+  return localStorage.getItem('serein_app_lock_enabled') === '1';
+}
+async function onAppLockToggle(enabled) {
+  if (!enabled) { Store.set('serein_app_lock_enabled', '0'); return; }
+  const plugin = bioPlugin();
+  if (!plugin) {
+    await alertDialog("La biométrie n'est pas disponible sur cet appareil.", 'Verrouillage');
+    document.getElementById('appLockToggle').checked = false;
+    return;
+  }
+  try {
+    const check = await plugin.checkBiometry();
+    if (!check.isAvailable && !check.deviceIsSecure) {
+      await alertDialog("Configure Face ID, une empreinte ou un code de verrouillage sur ton téléphone pour activer cette option.", 'Verrouillage indisponible');
+      document.getElementById('appLockToggle').checked = false;
+      return;
+    }
+  } catch (e) {
+    await alertDialog("Impossible de vérifier la biométrie sur cet appareil.", 'Verrouillage');
+    document.getElementById('appLockToggle').checked = false;
+    return;
+  }
+  Store.set('serein_app_lock_enabled', '1');
+  Haptics.light();
+}
+function loadAppLockPrefs() {
+  const toggle = document.getElementById('appLockToggle');
+  if (toggle) toggle.checked = isAppLockEnabled();
+}
+function showLockOverlay() {
+  document.getElementById('lockFallbackBtn').hidden = true;
+  document.getElementById('lockStatusText').textContent = 'Authentifie-toi pour continuer.';
+  document.getElementById('lockOverlay').classList.add('visible');
+}
+function hideLockOverlay() {
+  document.getElementById('lockOverlay').classList.remove('visible');
+}
+async function attemptUnlock() {
+  const plugin = bioPlugin();
+  if (!plugin) { hideLockOverlay(); return; } // pas de plugin natif (web) -> verrou impossible, on laisse passer
+  try {
+    await plugin.authenticate({
+      reason: 'Déverrouille Serein TCC·ACT',
+      allowDeviceCredential: true, // repli automatique sur le code si la biométrie échoue/n'est pas configurée
+      cancelTitle: 'Annuler',
+    });
+    hideLockOverlay();
+    Haptics.light();
+  } catch (e) {
+    document.getElementById('lockStatusText').textContent = 'Authentification annulée ou indisponible. Réessaie, ou désactive le verrou.';
+    document.getElementById('lockFallbackBtn').hidden = false;
+  }
+}
+function disableLockAndContinue() {
+  Store.set('serein_app_lock_enabled', '0');
+  hideLockOverlay();
+}
+// Reverrouille au retour au premier plan (téléphone prêté/regardé par-dessus l'épaule).
+let appLockPendingOnResume = false;
 
 // ─── RAPPEL QUOTIDIEN ───
 // Notification répétée chaque jour à l'heure choisie. Repeats natif uniquement
@@ -4930,6 +5034,12 @@ async function boot() {
     try { App.addListener('appUrlOpen', (data) => {
       if (data && data.url && data.url.indexOf('cards') !== -1) navigateTo('cards');
     }); } catch (e) {}
+    // Reverrouille au retour au premier plan si le verrouillage est activé (téléphone
+    // prêté ou laissé sans surveillance pendant que l'app était en arrière-plan).
+    try { App.addListener('appStateChange', ({ isActive }) => {
+      if (!isActive) { appLockPendingOnResume = isAppLockEnabled(); }
+      else if (appLockPendingOnResume) { appLockPendingOnResume = false; showLockOverlay(); attemptUnlock(); }
+    }); } catch (e) {}
   }
   initTheme();
   setGreeting();
@@ -4942,6 +5052,7 @@ async function boot() {
   initDisclaimer();
   Notify.flushWeb();
   seedWidgetExamples();
+  if (isAppLockEnabled()) { showLockOverlay(); await attemptUnlock(); } // dernier, verrouille l'app déjà rendue plutôt que de retarder tout le reste
 }
 boot();
 </script>

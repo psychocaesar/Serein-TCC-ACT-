@@ -47,6 +47,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Utilisé pour déverrouiller l'app si tu actives le verrouillage dans Réglages.</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

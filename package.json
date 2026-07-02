@@ -16,6 +16,7 @@
     "ios:add-widget-target": "node scripts/add-ios-widget-target.cjs ios/App/App.xcodeproj/project.pbxproj ios/App/App.xcodeproj/project.pbxproj"
   },
   "dependencies": {
+    "@aparajita/capacitor-biometric-auth": "^10.0.0",
     "@capacitor/android": "^8.4.0",
     "@capacitor/app": "^8.0.1",
     "@capacitor/cli": "^8.4.0",

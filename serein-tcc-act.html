@@ -2748,6 +2748,9 @@ function updateMoodOrb() {
   const desc = document.getElementById("mood-desc");
   if (lab) lab.textContent = s.label;
   if (desc) desc.textContent = s.desc;
+  // Sans ça, un lecteur d'écran annonce la valeur brute (ex. "28"), incompréhensible ici -
+  // aria-valuetext la remplace par le libellé d'humeur ("Stressé·e").
+  vEl.setAttribute('aria-valuetext', `${s.label}, ${vEl.value} sur 100`);
   return changed;
 }
 function onMoodSliderInput() {

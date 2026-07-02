@@ -1586,7 +1586,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <p class="mb-1">Décris objectivement ce qui s'est passé, sans interprétation.</p>
       <div class="form-group">
         <label class="form-label" for="situationField">Situation</label>
-        <textarea id="situationField" rows="4" placeholder="Ex. : J'ai raté une réunion importante par oubli…" aria-label="Description de la situation"></textarea>
+        <textarea id="situationField" rows="4" placeholder="Ex. : J'ai raté une réunion importante par oubli…" aria-label="Description de la situation" oninput="saveJournalDraft()"></textarea>
       </div>
       <div class="row mt-2">
         <button class="btn btn-ghost" onclick="journalStep(0)" aria-label="Retour">← Retour</button>
@@ -1600,7 +1600,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <p class="mb-1">Quelle pensée négative t'est venue spontanément ?</p>
       <div class="form-group">
         <label class="form-label" for="autoThoughtField">Pensée automatique</label>
-        <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Je suis incompétent·e, tout le monde l'a remarqué…" aria-label="Pensée automatique"></textarea>
+        <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Je suis incompétent·e, tout le monde l'a remarqué…" aria-label="Pensée automatique" oninput="saveJournalDraft()"></textarea>
       </div>
       <div class="row mt-2">
         <button class="btn btn-ghost" onclick="journalStep(1)" aria-label="Retour">← Retour</button>
@@ -1614,7 +1614,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <p class="mb-1">Quelle émotion ressens-tu ? Note son intensité de 0 à 10.</p>
       <div class="form-group">
         <label class="form-label" for="emotionField">Émotion & intensité</label>
-        <textarea id="emotionField" rows="3" placeholder="Ex. : Honte 7/10, anxiété 8/10…" aria-label="Émotion et intensité"></textarea>
+        <textarea id="emotionField" rows="3" placeholder="Ex. : Honte 7/10, anxiété 8/10…" aria-label="Émotion et intensité" oninput="saveJournalDraft()"></textarea>
       </div>
       <div class="row mt-2">
         <button class="btn btn-ghost" onclick="journalStep(2)" aria-label="Retour">← Retour</button>
@@ -1662,7 +1662,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       </details>
       <div class="form-group">
         <label class="form-label" for="balancedThoughtField">Pensée équilibrée</label>
-        <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : Cet examen est difficile et je peux faire des erreurs, mais je me suis préparé - je vais faire de mon mieux." aria-label="Pensée équilibrée" oninput="updateReformulation()"></textarea>
+        <textarea id="balancedThoughtField" rows="4" placeholder="Ex. : Cet examen est difficile et je peux faire des erreurs, mais je me suis préparé - je vais faire de mon mieux." aria-label="Pensée équilibrée" oninput="updateReformulation(); saveJournalDraft();"></textarea>
       </div>
       <div class="reformulation-card" id="reformulationCard">
         <div class="section-title">✨ Reformulation</div>
@@ -2990,6 +2990,7 @@ function journalStep(n) {
   document.getElementById('journalProgress').parentElement.setAttribute('aria-valuenow', progressPct[n]);
   if (n === 4) renderJournalTrapChips();
   if (n === 5) renderTrapExamples();
+  saveJournalDraft(); // mémorise aussi l'étape courante (restaurée avec le brouillon)
 }
 function renderJournalTrapChips() {
   const c = document.getElementById('journalTrapChips');
@@ -3005,6 +3006,7 @@ function toggleJournalTrap(k) {
   if (i >= 0) state.journalTraps.splice(i, 1);
   else { if (state.journalTraps.length >= 3) return; state.journalTraps.push(k); }
   renderJournalTrapChips();
+  saveJournalDraft();
 }
 function renderTrapExamples() {
   const box = document.getElementById('trapExamples');
@@ -3040,7 +3042,58 @@ function resetJournal() {
   const tex = document.getElementById('trapExamples'); if (tex) { tex.style.display = 'none'; tex.innerHTML = ''; }
   journalStep(1);
 }
-function startNewJournal() { resetJournal(); navigateTo('journal'); }
+// ─── BROUILLON DU JOURNAL ───
+// Le journal 5 étapes représente un vrai effort de saisie ; si l'OS tue l'app pendant une
+// interruption (public interruptible par définition), tout serait perdu. Autosauvegarde
+// débouncée à chaque frappe/étape, restauration silencieuse si le brouillon a moins de 24 h.
+const JOURNAL_DRAFT_KEY = 'serein_journal_draft';
+let journalDraftTimer = null;
+function saveJournalDraft() {
+  clearTimeout(journalDraftTimer);
+  journalDraftTimer = setTimeout(() => {
+    const draft = {
+      situation: document.getElementById('situationField').value,
+      thought: document.getElementById('autoThoughtField').value,
+      emotion: document.getElementById('emotionField').value,
+      balanced: document.getElementById('balancedThoughtField').value,
+      traps: [...state.journalTraps],
+      step: state.journalStep,
+      editingTs: editingJournalTs,
+      savedAt: Date.now(),
+    };
+    const empty = !draft.situation && !draft.thought && !draft.emotion && !draft.balanced && !draft.traps.length;
+    if (empty) { Store.remove(JOURNAL_DRAFT_KEY); return; }
+    Store.set(JOURNAL_DRAFT_KEY, JSON.stringify(draft));
+  }, 400);
+}
+function clearJournalDraft() {
+  clearTimeout(journalDraftTimer);
+  journalDraftTimer = null;
+  Store.remove(JOURNAL_DRAFT_KEY);
+}
+function loadJournalDraft() {
+  const d = safeParse(JOURNAL_DRAFT_KEY, null);
+  if (!d || (Date.now() - (d.savedAt || 0)) > 24 * 3600 * 1000) return null;
+  return d;
+}
+function startNewJournal() {
+  const draft = loadJournalDraft();
+  if (draft) {
+    document.getElementById('situationField').value = draft.situation || '';
+    document.getElementById('autoThoughtField').value = draft.thought || '';
+    document.getElementById('emotionField').value = draft.emotion || '';
+    document.getElementById('balancedThoughtField').value = draft.balanced || '';
+    state.journalTraps = [...(draft.traps || [])];
+    editingJournalTs = draft.editingTs || null;
+    navigateTo('journal');
+    journalStep(Math.min(Math.max(draft.step || 1, 1), JOURNAL_STEPS));
+    updateReformulation();
+    showUndoToast('Brouillon restauré.', () => { clearJournalDraft(); resetJournal(); });
+  } else {
+    resetJournal();
+    navigateTo('journal');
+  }
+}
 // Recharge une entrée existante dans le formulaire (mêmes champs que startNewJournal,
 // mais pré-remplis) - finishJournal() met à jour l'entrée au lieu d'en créer une nouvelle.
 function editJournalEntry(ts) {
@@ -3055,6 +3108,7 @@ function editJournalEntry(ts) {
   const ref = document.getElementById('reformulationCard'); if (ref) ref.classList.remove('visible');
   navigateTo('journal');
   journalStep(1);
+  saveJournalDraft(); // le brouillon reflète désormais l'entrée en cours d'édition
   Haptics.light();
 }
 function finishJournal() {
@@ -3074,6 +3128,7 @@ function finishJournal() {
     }
     Store.set('serein_journal', JSON.stringify(all));
   }
+  clearJournalDraft(); // entrée validée -> le brouillon n'a plus de raison d'être
   resetJournal();
   navigateTo('jhistory');
 }
@@ -3885,7 +3940,7 @@ const STORE_KEYS = [
   'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
-  'serein_today_mood', 'serein_widget_tip_dismissed',
+  'serein_today_mood', 'serein_widget_tip_dismissed', 'serein_journal_draft',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -3944,6 +3999,7 @@ async function alertDialog(message, title) {
 const DATA_KEYS = [
   'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
   'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
+  'serein_journal_draft',
 ];
 async function wipeAllData() {
   if (!await confirmDialog(

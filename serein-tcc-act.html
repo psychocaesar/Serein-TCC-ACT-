@@ -878,10 +878,18 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   border-radius: 50%; width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center; font-size: 1rem;
 }
-.crisis-3114 {
-  font-size: 0.8rem; color: var(--color-muted); text-align: center;
+/* Vrai bouton d'appel (pas du texte) : en crise, personne ne doit mémoriser un numéro
+   puis quitter l'app pour le composer. Cible large, contraste fort. */
+.crisis-3114-btn {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 48px; padding: 0.7rem 1.4rem;
+  background: rgba(192,80,74,0.14); border: 1.5px solid #c0504a;
+  border-radius: var(--radius-md); text-decoration: none;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 700;
+  color: var(--color-text);
 }
-.crisis-3114 strong { color: var(--color-text); }
+.crisis-3114-btn span { font-size: 0.72rem; font-weight: 400; color: var(--color-muted); }
+.crisis-3114-btn:active { background: rgba(192,80,74,0.25); }
 /* Outils dépliables du mode crise (cartes de coping + ancrage) */
 .crisis-tools { display: flex; gap: 0.6rem; width: 100%; margin-bottom: 1rem; }
 .crisis-tool-btn {
@@ -939,6 +947,16 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .undo-toast button {
   background: none; border: none; color: var(--color-primary); font-weight: 700;
   font-size: 0.85rem; cursor: pointer; flex-shrink: 0; padding: 0.2rem 0.3rem;
+}
+
+/* ─── CIBLES TACTILES ─── */
+/* ≥44px (HIG Apple / Material) sur tous les petits boutons d'action : l'anxiété
+   s'accompagne parfois de tremblements, les cibles étroites deviennent punitives.
+   min-width/min-height priment sur les width/height fixes (ex. crisis-anchor-btn 32px). */
+.coping-card-edit, .coping-card-del, .widget-tip button, .undo-toast button,
+.crisis-anchor-btn, .crisis-card-next, .crisis-close, .crisis-tool-btn,
+.entry-action-btn, .checkin-recap-edit, .coping-preset-add {
+  min-width: 44px; min-height: 44px;
 }
 
 /* ─── COPING CARDS ─── */
@@ -1346,7 +1364,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     <div class="crisis-ground-line"><span aria-hidden="true">👃</span> 2 choses que tu <strong>sens</strong></div>
     <div class="crisis-ground-line"><span aria-hidden="true">👅</span> 1 chose que tu <strong>goûtes</strong></div>
   </div>
-  <div class="crisis-3114">Détresse : <strong>3114</strong> (24h/24)</div>
+  <a class="crisis-3114-btn" href="tel:3114" aria-label="Appeler le 3114, numéro national de prévention du suicide, gratuit, 24 heures sur 24">📞 Appeler le 3114 <span>gratuit · 24h/24</span></a>
 </div>
 
 <!-- ─── SOS FAB ─── -->

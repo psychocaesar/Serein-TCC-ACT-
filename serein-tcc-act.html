@@ -478,6 +478,13 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   display: block; font-size: 0.8rem; font-weight: 600;
   color: var(--color-muted); margin-bottom: 0.4rem; letter-spacing: 0.04em;
 }
+/* Symptômes physiques repliés par défaut : la liste de 15 chips est l'écran le plus dense
+   de l'app, présenté au pire moment (juste après une émotion difficile). */
+.symptom-disclosure summary { cursor: pointer; list-style: none; }
+.symptom-disclosure summary::-webkit-details-marker { display: none; }
+.symptom-disclosure summary::after { content: ' ▸'; color: var(--color-muted); }
+.symptom-disclosure[open] summary::after { content: ' ▾'; }
+.symptom-disclosure .symptom-chips { margin-top: 0.6rem; }
 textarea, input[type="text"] {
   width: 100%; background: var(--color-surface);
   border: 1.5px solid var(--color-border); border-radius: var(--radius-sm);
@@ -1499,8 +1506,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
 
     <div class="form-group">
-      <label class="form-label">Symptômes ressentis <span style="font-weight:400;color:var(--color-muted);">(optionnel)</span></label>
-      <div class="symptom-chips" id="symptomChips" role="group" aria-label="Symptômes ressentis"></div>
+      <details class="symptom-disclosure">
+        <summary class="form-label">Préciser mes sensations physiques <span style="font-weight:400;color:var(--color-muted);">(optionnel)</span></summary>
+        <div class="symptom-chips" id="symptomChips" role="group" aria-label="Symptômes ressentis"></div>
+      </details>
     </div>
 
     <div class="suggestion-card" id="checkinSuggestion" aria-live="polite">

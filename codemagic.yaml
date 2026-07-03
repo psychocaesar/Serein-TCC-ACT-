@@ -27,6 +27,11 @@ workflows:
       - name: Install npm dependencies
         script: npm install
 
+      # Fait échouer le build AVANT toute étape Mac coûteuse si les tests cassent
+      # (versions incohérentes, logique clinique de routage des humeurs, etc.).
+      - name: Run tests
+        script: npm test
+
       - name: Build web (www) + Capacitor sync iOS
         script: |
           npm run build:web

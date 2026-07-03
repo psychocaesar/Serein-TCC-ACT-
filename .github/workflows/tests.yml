@@ -1,0 +1,20 @@
+# Lance la suite de tests à chaque push/PR : contrairement à Codemagic (déclenché
+# manuellement), ce workflow protège TOUS les commits — une régression dans la logique
+# clinique (routage des humeurs, boussole des valeurs) ou une incohérence de versions
+# est signalée immédiatement, sans attendre le prochain build TestFlight.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test

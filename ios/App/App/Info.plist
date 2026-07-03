@@ -32,18 +32,19 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<!-- Portrait uniquement : la mise en page (nav basse, FAB SOS, curseurs) n'est pas
+	     conçue pour le paysage. UIRequiresFullScreen est obligatoire côté App Store dès
+	     qu'un iPad ne supporte pas les 4 orientations (renonce au multitâche Split View). -->
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>

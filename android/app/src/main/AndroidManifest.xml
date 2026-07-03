@@ -7,7 +7,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- Portrait uniquement : mise en page non conçue pour le paysage (nav basse, FAB SOS).
+             NB : Android 16+ ignore ce verrou sur grands écrans (tablettes/pliables), même
+             esprit que le choix iPad côté iOS. -->
         <activity
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

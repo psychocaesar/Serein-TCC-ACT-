@@ -50,6 +50,13 @@
   --color-border: rgba(0,0,0,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Piège classique : un `display` posé par une règle de classe (ex. .btn, .ms-main-actions)
+   est une déclaration AUTEUR normale, qui l'emporte TOUJOURS sur le [hidden]{display:none}
+   du navigateur (déclaration AGENT UTILISATEUR) - quelle que soit la spécificité. Sans ce
+   !important, `el.hidden = true` reste sans effet visuel sur tout élément qui a par
+   ailleurs une classe fixant display (bouton "M'y emmener" de la boussole des valeurs
+   toujours visible en a été un exemple réel, cf. 2026-07-03). Restaure le comportement natif. */
+[hidden] { display: none !important; }
 html, body {
   height: 100%;
   font-family: var(--font-body);
@@ -1165,7 +1172,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .visually-hidden-input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 
 /* ─── DONNÉES & CONFIDENTIALITÉ ─── */
-.data-note { font-size: 0.78rem; color: var(--color-muted); line-height: 1.5; margin: 0.25rem 0 0.75rem; }
+/* Même traitement que .onboarding-tip (pourtour vert translucide) : les notes de Réglages
+   flottaient en texte brut, visuellement décrochées des blocs encadrés (.setting-row,
+   .setting-link-row) qui les entourent - uniformisé sur tout l'écran (César, 2026-07-03). */
+.data-note {
+  background: var(--color-primary-light); border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+  font-size: 0.82rem; color: var(--color-text); line-height: 1.5; margin: 0.5rem 0 0.75rem;
+}
+.data-note:empty { display: none; } /* widgetHowToNote est vide avant renderWidgetInstructions() */
 .btn-wipe {
   width: 100%; padding: 0.7rem 1rem; border-radius: var(--radius-sm);
   border: 1px solid #c0504a; background: none; color: #c0504a;
@@ -2812,6 +2827,34 @@ function goBack() {
   const p = parentOf(state.currentScreen);
   if (p) { Haptics.light(); navigateTo(p); }
 }
+
+// ─── SWIPE BORD GAUCHE POUR REVENIR EN ARRIÈRE ───
+// Équivalent tactile du bouton retour matériel Android (même cible goBack, qui no-op déjà
+// sans parent - donc jamais de sortie accidentelle de l'app depuis l'accueil). Démarrage
+// limité au bord gauche (24px) : l'app est pleine de curseurs plein-largeur (humeur,
+// intensité, importance/alignement de la boussole) qu'un swipe déclenché n'importe où
+// aurait percutés en permanence.
+const SWIPE_EDGE_ZONE = 24, SWIPE_MIN_DISTANCE = 60, SWIPE_MAX_VERTICAL_DRIFT = 60;
+let swipeStartX = null, swipeStartY = null, swipeTracking = false;
+(() => {
+  const el = document.querySelector('.screen-container');
+  if (!el) return;
+  el.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1 || getOpenModal()) { swipeTracking = false; return; }
+    const t = e.touches[0];
+    swipeTracking = t.clientX <= SWIPE_EDGE_ZONE;
+    swipeStartX = t.clientX;
+    swipeStartY = t.clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', (e) => {
+    if (!swipeTracking) return;
+    swipeTracking = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - swipeStartX;
+    const dy = Math.abs(t.clientY - swipeStartY);
+    if (dx >= SWIPE_MIN_DISTANCE && dy <= SWIPE_MAX_VERTICAL_DRIFT) goBack();
+  }, { passive: true });
+})();
 
 // ─── MOOD CHIPS ───
 const POSITIVE_MOODS = ['bien', 'serein', 'forme'];

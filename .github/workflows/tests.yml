@@ -16,5 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22+ requis : le script test passe un glob quoté à node --test,
+          # dont le support natif date de Node 21 (local : 24, Codemagic : latest).
+          node-version: 22
       - run: npm test

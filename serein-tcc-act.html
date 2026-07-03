@@ -4421,13 +4421,27 @@ function loadAppLockPrefs() {
   const toggle = document.getElementById('appLockToggle');
   if (toggle) toggle.checked = isAppLockEnabled();
 }
+// Le z-index seul ne protège pas des lecteurs d'écran (VoiceOver/TalkBack navi-
+// guent l'arbre d'accessibilité, pas l'empilement visuel) : sans aria-hidden, le
+// contenu réel resterait atteignable au doigt/swipe MÊME quand le verrou est affiché.
+function setAppContentHidden(hidden) {
+  ['.app-header', '.screen-container', '.bottom-nav'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) { if (hidden) el.setAttribute('aria-hidden', 'true'); else el.removeAttribute('aria-hidden'); }
+  });
+}
 function showLockOverlay() {
   document.getElementById('lockFallbackBtn').hidden = true;
   document.getElementById('lockStatusText').textContent = 'Authentifie-toi pour continuer.';
   document.getElementById('lockOverlay').classList.add('visible');
+  // aria-hidden sur un ancêtre du champ actif est invalide (spec ARIA) : si le focus
+  // clavier traînait encore dans l'app au moment du verrouillage, on le libère d'abord.
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  setAppContentHidden(true);
 }
 function hideLockOverlay() {
   document.getElementById('lockOverlay').classList.remove('visible');
+  setAppContentHidden(false);
 }
 async function attemptUnlock() {
   const plugin = bioPlugin();
@@ -4601,7 +4615,9 @@ function handleImportFile(input) {
 
 // Focus-trap clavier pour les overlays (VoiceOver/TalkBack + clavier physique)
 function getOpenModal() {
-  for (const id of ['crisisOverlay', 'onboardingModal', 'disclaimerModal']) {
+  // 'lockOverlay' en premier : bloque le retour matériel Android ET le focus-trap
+  // clavier pendant que l'app est verrouillée (sinon on navigue "sous" l'overlay).
+  for (const id of ['lockOverlay', 'crisisOverlay', 'onboardingModal', 'disclaimerModal']) {
     const el = document.getElementById(id);
     if (el && el.classList.contains('visible')) return el;
   }

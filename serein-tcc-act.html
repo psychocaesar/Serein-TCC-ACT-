@@ -336,6 +336,27 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .ms-done-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .ms-done p { color: var(--color-text); font-size: 1.05rem; line-height: 1.45; margin-bottom: 1.25rem; }
 
+/* ─── BOUSSOLE DES VALEURS (ACT) ─── */
+.val-psycho p { font-size: 0.84rem; line-height: 1.5; margin: 0.6rem 0; }
+.val-psycho strong { color: var(--color-text); }
+.val-rate-head { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.6rem; }
+.val-rate-head .val-rate-emoji { font-size: 2rem; line-height: 1.2; flex-shrink: 0; }
+.val-rate-head h2 { font-size: 1.1rem; margin-bottom: 0.15rem; }
+.val-rate-head p { font-size: 0.85rem; }
+.val-row {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 0.9rem 1rem; margin-bottom: 0.7rem;
+}
+.val-row-title { font-family: var(--font-title); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.55rem; color: var(--color-text); }
+.val-bar-line { display: flex; align-items: center; gap: 0.5rem; margin: 0.3rem 0; font-size: 0.72rem; color: var(--color-muted); }
+.val-bar-line .val-bar-label { width: 4.8rem; flex-shrink: 0; }
+.val-bar { flex: 1; height: 6px; border-radius: 3px; background: var(--color-border); overflow: hidden; }
+.val-bar i { display: block; height: 100%; border-radius: 3px; background: var(--color-primary); }
+/* Barre "actions récentes" en gris : le contraste avec le vert rend l'écart lisible d'un coup d'œil */
+.val-bar.align i { background: var(--color-muted); }
+.val-bar-num { width: 1.4rem; text-align: right; font-weight: 700; color: var(--color-text); font-family: var(--font-title); font-size: 0.8rem; }
+.val-feedback { font-size: 0.82rem; line-height: 1.45; margin-top: 0.55rem; }
+
 /* ─── CARDS ─── */
 .card {
   background: var(--color-surface);
@@ -2360,6 +2381,77 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
     </div>
   </div>
 
+  <!-- ═══ SCREEN : BOUSSOLE DES VALEURS (ACT) ═══ -->
+  <div class="screen" id="screen-valeurs" role="main" aria-label="Boussole des valeurs">
+    <div class="greeting-block">
+      <div class="time-label">Valeurs (ACT)</div>
+      <h1>Ta <span>boussole</span> intérieure</h1>
+    </div>
+
+    <!-- Vue 1 : choix des domaines (1 à 3, anti-surcharge) -->
+    <div id="valSelect">
+      <p class="ms-intro">Tes valeurs sont des directions de vie qui comptent pour toi. Contrairement à un objectif qu'on atteint et qu'on coche, une valeur est un processus continu - comme marcher vers l'Ouest : tu n'y « arrives » jamais, mais ça guide chaque pas.</p>
+      <details class="onboarding-tip" style="margin-bottom:1rem;cursor:pointer;">
+        <summary style="font-weight:600;list-style:none;">Pourquoi ça aide</summary>
+        <div class="val-psycho">
+          <p><strong>Valeurs ou objectifs ?</strong> Les valeurs sont une direction constante, comme l'Ouest. Les objectifs sont des étapes concrètes, comme des montagnes à franchir. On atteint un objectif ; on incarne une valeur chaque jour, par ses actes.</p>
+          <p><strong>Agir malgré l'inconfort.</strong> Avancer vers ce qui compte déclenche parfois de l'inconfort ou de la peur. La défusion permet d'avancer avec ces émotions « sous le bras », sans attendre qu'elles disparaissent pour commencer.</p>
+          <p><strong>Le pouvoir du petit pas.</strong> Une micro-action de deux minutes suffit pour réorienter ta trajectoire. L'important n'est pas l'ampleur du pas, mais sa direction.</p>
+          <p><strong>Plus grand que soi.</strong> Le domaine spirituel, au sens large, définit ce qui te dépasse et te relie. Il aide à replacer les moments difficiles dans une perspective plus vaste - religieuse ou totalement laïque.</p>
+        </div>
+      </details>
+      <div class="form-label">Choisis 1 à 3 domaines qui comptent pour toi en ce moment - pour toi, pas pour les attentes des autres</div>
+      <div class="emotion-grid" id="valDomainGrid" role="group" aria-label="Choix des domaines de vie"></div>
+      <button class="btn btn-primary" id="valSelectNext" onclick="valStartRating()" disabled aria-label="Continuer vers la notation">Continuer →</button>
+    </div>
+
+    <!-- Vue 2 : notation domaine par domaine (importance puis alignement) -->
+    <div id="valRate" hidden>
+      <div class="form-label" id="valRateProgress" aria-live="polite">Domaine 1 / 3</div>
+      <div class="ms-card" style="text-align:left;padding:1.25rem;">
+        <div class="val-rate-head">
+          <span class="val-rate-emoji" id="valRateEmoji" aria-hidden="true"></span>
+          <div><h2 id="valRateLabel"></h2><p id="valRateDesc"></p></div>
+        </div>
+        <div class="suggestion-tags" id="valRateValues" aria-label="Exemples de valeurs de ce domaine"></div>
+      </div>
+      <div class="range-group">
+        <label for="valImp">Quelle importance accordes-tu à ce domaine ? <span><span class="range-val" id="valImpVal">5</span><span style="font-weight:400;color:var(--color-muted);font-size:0.8rem;">/10</span></span></label>
+        <input type="range" id="valImp" min="0" max="10" value="5" oninput="document.getElementById('valImpVal').textContent=this.value" aria-label="Importance de 0 à 10">
+      </div>
+      <div class="range-group">
+        <label for="valAlign">À quel point tes actions récentes vont-elles dans ce sens ? <span><span class="range-val" id="valAlignVal">5</span><span style="font-weight:400;color:var(--color-muted);font-size:0.8rem;">/10</span></span></label>
+        <input type="range" id="valAlign" min="0" max="10" value="5" oninput="document.getElementById('valAlignVal').textContent=this.value" aria-label="Alignement des actions récentes de 0 à 10">
+      </div>
+      <button class="btn btn-primary mt-1" onclick="valRateNext()" id="valRateNextBtn" aria-label="Continuer">Continuer →</button>
+    </div>
+
+    <!-- Vue 3 : la boussole (résultat + micro-action vers le cap prioritaire) -->
+    <div id="valResult" hidden>
+      <div class="section-title">Ta boussole</div>
+      <div id="valResultList"></div>
+      <div class="positive-card" id="valFocusCard">
+        <h3 id="valFocusTitle"></h3>
+        <p id="valFocusText"></p>
+        <div class="positive-action">
+          <span class="pa-label">🧭 Une micro-action dans ce sens</span>
+          <span id="valActionText" aria-live="polite"></span>
+        </div>
+        <div class="ms-main-actions" style="margin-top:0.9rem;" id="valActionBtns">
+          <button class="btn btn-primary" onclick="valActionDone()" aria-label="C'est fait">C'est fait ✓</button>
+          <button class="btn btn-ghost" id="valActionGo" onclick="valActionGo()" hidden aria-label="Ouvrir l'exercice correspondant dans l'app">M'y emmener →</button>
+          <button class="btn btn-ghost" onclick="valActionAnother()" aria-label="Proposer une autre idée">Une autre idée ↻</button>
+        </div>
+        <div class="ms-done" id="valDone" role="status" hidden>
+          <div class="ms-done-emoji" aria-hidden="true">🧭</div>
+          <p id="valDoneText"></p>
+          <button class="btn btn-ghost" onclick="valActionRestart()" aria-label="Une autre micro-action">Une autre micro-action</button>
+        </div>
+      </div>
+      <button class="btn btn-ghost mt-1" onclick="valRestart()" aria-label="Refaire l'exercice de la boussole">↺ Refaire l'exercice</button>
+    </div>
+  </div>
+
   <!-- ═══ HUB : COMPRENDRE ═══ -->
   <div class="screen" id="screen-comprendre" role="main" aria-label="Comprendre">
     <div class="greeting-block">
@@ -2391,6 +2483,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 
     <div class="section-title" style="margin-top:1.75rem;">Passer à l'action</div>
     <div class="hub-list">
+      <button class="hub-card" onclick="navigateTo('valeurs')" aria-label="Boussole des valeurs">
+        <span class="hub-icon">🧭</span>
+        <span class="hub-text"><h3>Boussole des valeurs</h3><p>Clarifie ce qui compte pour orienter tes actions</p></span>
+        <span class="hub-chevron">›</span>
+      </button>
       <button class="hub-card" onclick="navigateTo('experiments')" aria-label="Expériences comportementales">
         <span class="hub-icon">🔬</span>
         <span class="hub-text"><h3>Expériences comportementales</h3><p>Teste une croyance anxieuse dans la vraie vie</p></span>
@@ -2649,7 +2746,7 @@ const screenMap = {
   catastrophe: 'screen-catastrophe', metaphores: 'screen-metaphores',
   experiments: 'screen-experiments', jhistory: 'screen-jhistory',
   apaiser: 'screen-apaiser', comprendre: 'screen-comprendre', parcours: 'screen-parcours',
-  reglages: 'screen-reglages', microstep: 'screen-microstep',
+  reglages: 'screen-reglages', microstep: 'screen-microstep', valeurs: 'screen-valeurs',
 };
 // Chaque écran pointe vers son onglet parent (par besoin, pas par technique)
 const navMap = {
@@ -2657,7 +2754,7 @@ const navMap = {
   apaiser: 'nav-apaiser', calm: 'nav-apaiser', cards: 'nav-apaiser', metaphores: 'nav-apaiser', diary: 'nav-apaiser', microstep: 'nav-apaiser',
   comprendre: 'nav-comprendre', journal: 'nav-comprendre', jhistory: 'nav-comprendre',
   schemas: 'nav-comprendre', quiz: 'nav-comprendre', catastrophe: 'nav-comprendre',
-  experiments: 'nav-comprendre', ladder: 'nav-comprendre',
+  experiments: 'nav-comprendre', ladder: 'nav-comprendre', valeurs: 'nav-comprendre',
   parcours: 'nav-parcours',
 };
 // Onglets de premier niveau (atteints par la barre du bas) : pas de chevron retour.
@@ -2682,6 +2779,7 @@ const screenInitFns = {
   jhistory: renderJournalHistory,
   reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); loadAppLockPrefs(); },
   microstep: initMicroStep,
+  valeurs: initValeurs,
 };
 
 function navigateTo(screen) {
@@ -3708,6 +3806,244 @@ function microStepDone() {
   setMicroStepView('done');
   Haptics.medium();
 }
+
+// ─── BOUSSOLE DES VALEURS (ACT) ───
+// Contenu clinique validé par César (VLQ / Bull's Eye adaptés au mobile). Les domaines sont
+// choisis par l'utilisateur (1-3) : un domaine non investi n'est jamais présenté comme un manque.
+const VALUES_DOMAINS = [
+  { key: 'famille', emoji: '👨‍👩‍👧', label: 'Relations familiales', desc: 'Cultiver des liens authentiques et de soutien avec tes proches.',
+    values: ['Présence', 'Bienveillance', 'Soutien'], actions: [
+      { text: 'Envoyer un message court de pensée affectueuse à un proche.' },
+      { text: 'Appeler un membre de la famille pendant deux minutes.' },
+      { text: 'Noter un souvenir positif partagé avec un parent ou un enfant.' },
+      { text: 'Remercier un proche pour un geste récent, même simple.' },
+    ] },
+  { key: 'amour', emoji: '💞', label: 'Vie amoureuse', desc: "Nourrir l'intimité, la complicité et la tendresse amoureuses.",
+    values: ['Écoute', 'Tendresse', 'Authenticité'], actions: [
+      { text: 'Faire un compliment sincère et factuel à ton ou ta partenaire.' },
+      { text: 'Proposer une activité de détente commune pour plus tard.' },
+      { text: "Prendre un instant pour exprimer de la gratitude à l'autre." },
+      { text: 'Préparer une attention simple, comme un thé ou un café.' },
+    ] },
+  { key: 'amis', emoji: '🤝', label: 'Amis & vie sociale', desc: "Partager des moments, s'ouvrir aux autres et cultiver l'amitié.",
+    values: ['Partage', 'Loyauté', 'Curiosité'], actions: [
+      { text: 'Répondre à un message ou une invitation restée en suspens.' },
+      { text: 'Initier une discussion brève avec une connaissance ou un collègue.' },
+      { text: 'Lancer une proposition de café ou de promenade rapide.' },
+      { text: "Sourire et saluer un voisin lors d'un croisement." },
+    ] },
+  { key: 'travail', emoji: '💼', label: 'Vie professionnelle', desc: "S'investir dans une activité ou un métier qui fait sens.",
+    values: ['Compétence', 'Coopération', 'Créativité'], actions: [
+      { text: 'Ranger un tiroir ou une zone de ton espace de travail.' },
+      { text: "Demander de l'aide à un collègue pour une petite tâche." },
+      { text: 'Noter une réussite précise ou un apprentissage de la journée.' },
+      { text: 'Planifier une seule tâche prioritaire pour la prochaine heure.' },
+    ] },
+  { key: 'loisirs', emoji: '🎨', label: 'Loisirs & créativité', desc: "S'accorder des moments de plaisir, de découverte et d'expression.",
+    values: ['Curiosité', 'Amusement', 'Apprentissage'], actions: [
+      { text: 'Dessiner ou gribouiller sur un papier pendant deux minutes.' },
+      { text: "Écouter une musique qui t'inspire ou te détend." },
+      { text: 'Lire une seule page d\'un livre que tu apprécies.' },
+      { text: 'Faire un étirement lent pour ressentir tes muscles.' },
+    ] },
+  { key: 'sante', emoji: '🌿', label: 'Santé & bien-être', desc: "Prendre soin de ton corps, de ton énergie et de ton équilibre.",
+    values: ['Respect de soi', 'Vitalité', 'Équilibre'], actions: [
+      { text: 'Faire trois cycles de respiration ventrale consciente.', screen: 'calm' },
+      { text: 'Scanner tes sensations physiques actuelles, sans les juger.', screen: 'calm' },
+      { text: "Marcher quelques minutes, même à l'intérieur, pour bouger." },
+      { text: 'Prévoir une vraie pause dans ta journée, même courte.' },
+    ] },
+  // Micro-actions volontairement physiques et locales (pas de pétition/actualités en ligne :
+  // trou de lapin anxiogène pour ce public, et l'app perd la main).
+  { key: 'engagement', emoji: '🌍', label: 'Engagement & citoyenneté', desc: "Contribuer à la vie de la cité, à l'entraide ou à l'environnement.",
+    values: ['Entraide', 'Respect', 'Durabilité'], actions: [
+      { text: 'Trier correctement un déchet ou ranger un objet qui traîne.' },
+      { text: 'Mettre de côté un vêtement ou un objet à donner.' },
+      { text: "Prendre des nouvelles d'une personne isolée ou seule." },
+      { text: "Tenir la porte ou aider quelqu'un avec un geste simple." },
+    ] },
+  { key: 'spirituel', emoji: '🕊️', label: 'Vie spirituelle & croissance', desc: 'Nourrir ton monde intérieur, ta philosophie de vie et ton évolution.',
+    values: ['Sagesse', 'Curiosité', 'Sérénité'], actions: [
+      { text: 'Lire une citation inspirante ou un court texte philosophique.' },
+      { text: 'Observer un élément naturel (plante, ciel) pendant deux minutes.' },
+      { text: 'Noter une découverte faite sur ton propre fonctionnement aujourd\'hui.' },
+      { text: 'Exprimer mentalement de la gratitude pour un aspect de la vie.' },
+    ] },
+];
+const VALUES_FEEDBACK = {
+  ecart: "Ce domaine est précieux pour toi, mais tes actions récentes s'en écartent. C'est une information utile pour réorienter ta boussole vers ce qui compte vraiment - pas un reproche.",
+  aligne: 'Tes actes et tes valeurs sont en harmonie : tu nourris activement ce domaine, ce qui renforce le sens de ton quotidien.',
+  faible: "Il est normal de ne pas investir tous les domaines avec la même intensité. Ta boussole se concentre simplement sur d'autres priorités pour le moment.",
+  // Variante validée cliniquement : ne pas se reconnaître dans « spiritualité » est sain, pas un manque.
+  faibleSpirituel: "Il est parfaitement sain de ne pas se reconnaître dans le terme « spiritualité ». Ta boussole peut s'orienter vers des valeurs laïques, rationnelles ou créatives sans perdre son efficacité.",
+};
+const VALUES_PRAISE = [
+  "Un pas dans la direction qui compte. C'est exactement ça, une valeur en action.",
+  "L'ampleur du pas importe peu : sa direction, si. Et elle était la bonne.",
+  "Tu viens d'incarner une de tes valeurs, concrètement. C'est ça, marcher vers l'Ouest.",
+];
+// Seuils : importance ≤4 = domaine peu investi (choix légitime) ; écart ≥3 = décalage notable.
+function getValuesProfile(importance, alignment) {
+  if (importance <= 4) return 'faible';
+  if (importance - alignment >= 3) return 'ecart';
+  return 'aligne';
+}
+function valuesFeedbackFor(key, imp, align) {
+  const p = getValuesProfile(imp, align);
+  if (p === 'faible' && key === 'spirituel') return VALUES_FEEDBACK.faibleSpirituel;
+  return VALUES_FEEDBACK[p];
+}
+// Cap prioritaire : le plus grand écart parmi les domaines importants ; si tout est
+// aligné ou peu investi, le plus important (on nourrit, on ne corrige pas).
+function pickFocusDomain(ratings) {
+  let focus = null;
+  for (const r of ratings) {
+    if (getValuesProfile(r.imp, r.align) !== 'ecart') continue;
+    if (!focus || (r.imp - r.align) > (focus.imp - focus.align)) focus = r;
+  }
+  if (focus) return { rating: focus, mode: 'ecart' };
+  const sorted = [...ratings].sort((a, b) => b.imp - a.imp);
+  return { rating: sorted[0], mode: 'entretien' };
+}
+
+let valState = { chosen: [], idx: 0, ratings: [] };
+let valFocusKey = null;
+let valActionIdx = 0;
+
+function loadValues() { return safeParse('serein_values', null); }
+function saveValues(ratings) { Store.set('serein_values', JSON.stringify({ date: ymd(), ratings })); }
+function valDomain(key) { return VALUES_DOMAINS.find(d => d.key === key); }
+
+function setValeursView(view) {
+  document.getElementById('valSelect').hidden = view !== 'select';
+  document.getElementById('valRate').hidden = view !== 'rate';
+  document.getElementById('valResult').hidden = view !== 'result';
+}
+function initValeurs() {
+  const saved = loadValues();
+  if (saved && Array.isArray(saved.ratings) && saved.ratings.length && saved.ratings.every(r => valDomain(r.key))) {
+    // Une boussole existe déjà : on la remontre (même logique que le récap check-in),
+    // « Refaire l'exercice » permet de repartir de zéro.
+    valState = { chosen: saved.ratings.map(r => r.key), idx: 0, ratings: saved.ratings };
+    renderValResult();
+    setValeursView('result');
+  } else {
+    valState = { chosen: [], idx: 0, ratings: [] };
+    renderValDomainGrid();
+    updateValSelectBtn();
+    setValeursView('select');
+  }
+}
+function renderValDomainGrid() {
+  document.getElementById('valDomainGrid').innerHTML = VALUES_DOMAINS.map(d => {
+    const sel = valState.chosen.includes(d.key);
+    return `<button class="emotion-btn${sel ? ' selected' : ''}" onclick="toggleValDomain('${d.key}')" aria-label="${d.label}" aria-pressed="${sel}">
+      <span class="emoji">${d.emoji}</span>
+      <span class="label">${d.label}</span>
+      <span class="desc">${d.values.join(' · ')}</span>
+    </button>`;
+  }).join('');
+}
+function toggleValDomain(key) {
+  const i = valState.chosen.indexOf(key);
+  if (i >= 0) valState.chosen.splice(i, 1);
+  else if (valState.chosen.length < 3) valState.chosen.push(key); // 3 max : anti-surcharge
+  else return;
+  renderValDomainGrid();
+  updateValSelectBtn();
+  Haptics.light();
+}
+function updateValSelectBtn() {
+  const btn = document.getElementById('valSelectNext');
+  btn.disabled = valState.chosen.length === 0;
+  btn.textContent = valState.chosen.length ? 'Continuer →' : 'Choisis au moins un domaine';
+}
+function valStartRating() {
+  valState.idx = 0;
+  valState.ratings = [];
+  renderValRate();
+  setValeursView('rate');
+}
+function renderValRate() {
+  const d = valDomain(valState.chosen[valState.idx]);
+  document.getElementById('valRateProgress').textContent = `Domaine ${valState.idx + 1} / ${valState.chosen.length}`;
+  document.getElementById('valRateEmoji').textContent = d.emoji;
+  document.getElementById('valRateLabel').textContent = d.label;
+  document.getElementById('valRateDesc').textContent = d.desc;
+  document.getElementById('valRateValues').innerHTML = d.values.map(v => `<span class="tag">${v}</span>`).join('');
+  setValSlider('valImp', 5); // curseurs remis au centre pour chaque domaine
+  setValSlider('valAlign', 5);
+  document.getElementById('valRateNextBtn').textContent = valState.idx + 1 < valState.chosen.length ? 'Continuer →' : 'Voir ma boussole →';
+}
+function setValSlider(id, v) {
+  document.getElementById(id).value = v;
+  document.getElementById(id + 'Val').textContent = v;
+}
+function valRateNext() {
+  valState.ratings.push({
+    key: valState.chosen[valState.idx],
+    imp: +document.getElementById('valImp').value,
+    align: +document.getElementById('valAlign').value,
+  });
+  valState.idx++;
+  if (valState.idx < valState.chosen.length) { renderValRate(); Haptics.light(); return; }
+  saveValues(valState.ratings);
+  incrementSessions();
+  renderValResult();
+  setValeursView('result');
+  Haptics.medium();
+}
+function renderValResult() {
+  document.getElementById('valResultList').innerHTML = valState.ratings.map(r => {
+    const d = valDomain(r.key);
+    return `<div class="val-row">
+      <div class="val-row-title">${d.emoji} ${d.label}</div>
+      <div class="val-bar-line"><span class="val-bar-label">Importance</span><div class="val-bar"><i style="width:${r.imp * 10}%"></i></div><span class="val-bar-num">${r.imp}</span></div>
+      <div class="val-bar-line"><span class="val-bar-label">Actions</span><div class="val-bar align"><i style="width:${r.align * 10}%"></i></div><span class="val-bar-num">${r.align}</span></div>
+      <p class="val-feedback">${valuesFeedbackFor(r.key, r.imp, r.align)}</p>
+    </div>`;
+  }).join('');
+  const { rating, mode } = pickFocusDomain(valState.ratings);
+  const d = valDomain(rating.key);
+  valFocusKey = rating.key;
+  document.getElementById('valFocusTitle').textContent = `${d.emoji} Ton cap : ${d.label}`;
+  document.getElementById('valFocusText').textContent = mode === 'ecart'
+    ? "C'est le domaine où l'écart entre ce qui compte et tes actions est le plus grand. Un tout petit pas suffit pour commencer à le réduire."
+    : 'Ta boussole est plutôt bien orientée. Continue de nourrir ce qui compte le plus pour toi :';
+  valActionIdx = Math.floor(Math.random() * d.actions.length); // variété entre les visites
+  renderValAction();
+  document.getElementById('valActionBtns').hidden = false;
+  document.getElementById('valDone').hidden = true;
+}
+function renderValAction() {
+  const a = valDomain(valFocusKey).actions[valActionIdx % valDomain(valFocusKey).actions.length];
+  document.getElementById('valActionText').textContent = a.text;
+  document.getElementById('valActionGo').hidden = !a.screen; // « M'y emmener » si l'action existe comme écran
+}
+function valActionAnother() { valActionIdx++; renderValAction(); Haptics.light(); }
+function valActionGo() {
+  const a = valDomain(valFocusKey).actions[valActionIdx % valDomain(valFocusKey).actions.length];
+  if (a.screen) navigateTo(a.screen);
+}
+function valActionDone() {
+  document.getElementById('valDoneText').textContent = VALUES_PRAISE[Math.floor(Math.random() * VALUES_PRAISE.length)];
+  document.getElementById('valActionBtns').hidden = true;
+  document.getElementById('valDone').hidden = false;
+  Haptics.medium();
+}
+function valActionRestart() {
+  document.getElementById('valDone').hidden = true;
+  document.getElementById('valActionBtns').hidden = false;
+  valActionAnother();
+}
+function valRestart() {
+  // Repart du choix des domaines en gardant la dernière sélection pré-cochée
+  // (re-noter les mêmes domaines une autre semaine est l'usage attendu de l'outil).
+  valState = { chosen: valState.ratings.map(r => r.key), idx: 0, ratings: [] };
+  renderValDomainGrid();
+  updateValSelectBtn();
+  setValeursView('select');
+}
 function startCrisisBreath() {
   loadBells(); // précharge les cloches (le tap SOS débloque l'audio iOS)
   const c = document.getElementById('crisisCircle');
@@ -3975,7 +4311,7 @@ const STORE_KEYS = [
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_today_mood', 'serein_widget_tip_dismissed', 'serein_journal_draft',
-  'serein_app_lock_enabled',
+  'serein_app_lock_enabled', 'serein_values',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -4034,7 +4370,7 @@ async function alertDialog(message, title) {
 const DATA_KEYS = [
   'serein_tcc_stats', 'serein_cards', 'serein_diary', 'serein_anxiety_log',
   'serein_checkins', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
-  'serein_journal_draft',
+  'serein_journal_draft', 'serein_values',
 ];
 async function wipeAllData() {
   if (!await confirmDialog(

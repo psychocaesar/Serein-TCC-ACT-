@@ -85,6 +85,11 @@ const SHIM = `
   emotionSuggestions: emotionSuggestions,
   POSITIVE_MOODS: POSITIVE_MOODS,
   screenMap: screenMap,
+  VALUES_DOMAINS: VALUES_DOMAINS,
+  VALUES_FEEDBACK: VALUES_FEEDBACK,
+  getValuesProfile: getValuesProfile,
+  valuesFeedbackFor: valuesFeedbackFor,
+  pickFocusDomain: pickFocusDomain,
 };`;
 
 vm.createContext(sandbox);
@@ -154,4 +159,58 @@ test('chaque émotion négative/neutre a une suggestion complète et pointe vers
     assert.ok(sugg.ctaScreen, `ctaScreen manquant pour "${key}"`);
     assert.ok(C.screenMap[sugg.ctaScreen], `ctaScreen "${sugg.ctaScreen}" (${key}) n'existe pas dans screenMap`);
   }
+});
+
+// ── Boussole des valeurs (ACT) ──
+
+test('VALUES_DOMAINS : 8 domaines complets, clés uniques, liens d\'écran valides', () => {
+  assert.strictEqual(C.VALUES_DOMAINS.length, 8);
+  const keys = new Set();
+  for (const d of C.VALUES_DOMAINS) {
+    assert.ok(d.key && !keys.has(d.key), `clé dupliquée ou manquante : "${d.key}"`);
+    keys.add(d.key);
+    assert.ok(d.emoji && d.label && d.desc, `domaine "${d.key}" incomplet`);
+    assert.strictEqual(d.values.length, 3, `"${d.key}" : 3 valeurs-exemples attendues`);
+    assert.strictEqual(d.actions.length, 4, `"${d.key}" : 4 micro-actions attendues`);
+    for (const a of d.actions) {
+      assert.ok(a.text && a.text.length > 10, `micro-action vide ou trop courte (${d.key})`);
+      if (a.screen) assert.ok(C.screenMap[a.screen], `screen "${a.screen}" (${d.key}) n'existe pas dans screenMap`);
+    }
+  }
+});
+
+test('getValuesProfile : seuils documentés (faible ≤4, écart ≥3, sinon aligné)', () => {
+  const cases = [
+    [4, 0, 'faible'], [4, 10, 'faible'], [0, 0, 'faible'],
+    [5, 2, 'ecart'], [10, 7, 'ecart'], [10, 0, 'ecart'],
+    [5, 3, 'aligne'], [10, 8, 'aligne'], [5, 10, 'aligne'],
+  ];
+  for (const [imp, align, expected] of cases) {
+    assert.strictEqual(C.getValuesProfile(imp, align), expected, `(imp:${imp}, align:${align}) devrait donner "${expected}"`);
+  }
+});
+
+test('feedback spiritualité faible : variante dédiée, non culpabilisante, réservée à ce domaine', () => {
+  assert.strictEqual(C.valuesFeedbackFor('spirituel', 3, 5), C.VALUES_FEEDBACK.faibleSpirituel);
+  assert.strictEqual(C.valuesFeedbackFor('travail', 3, 5), C.VALUES_FEEDBACK.faible);
+  assert.strictEqual(C.valuesFeedbackFor('spirituel', 8, 2), C.VALUES_FEEDBACK.ecart); // la variante ne s'applique qu'au profil faible
+});
+
+test('pickFocusDomain : plus grand écart parmi les importants, sinon le plus important', () => {
+  // Deux écarts : le plus grand gagne
+  const r1 = C.pickFocusDomain([
+    { key: 'travail', imp: 8, align: 4 },  // écart 4
+    { key: 'famille', imp: 9, align: 2 },  // écart 7 → cap
+    { key: 'sante', imp: 3, align: 1 },    // faible, ignoré
+  ]);
+  assert.strictEqual(r1.rating.key, 'famille');
+  assert.strictEqual(r1.mode, 'ecart');
+  // Tout aligné ou peu investi : on nourrit le plus important
+  const r2 = C.pickFocusDomain([
+    { key: 'amis', imp: 7, align: 6 },
+    { key: 'loisirs', imp: 9, align: 8 },  // le plus important → cap
+    { key: 'spirituel', imp: 2, align: 2 },
+  ]);
+  assert.strictEqual(r2.rating.key, 'loisirs');
+  assert.strictEqual(r2.mode, 'entretien');
 });

@@ -4389,7 +4389,12 @@ async function wipeAllData() {
 // distingue donc pas annulation/échec/indisponibilité par code - un message générique + une
 // échappatoire ("Désactiver le verrou") systématique évitent tout risque de blocage définitif.
 function bioPlugin() {
-  return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BiometricAuth;
+  // Nom de pont natif réel : le plugin s'enregistre sous "BiometricAuthNative" des deux
+  // côtés (registerPlugin('BiometricAuthNative', ...) en JS, identifier/jsName identiques
+  // en Swift ET la classe Android s'appelle pareil) - PAS "BiometricAuth", qui n'est que
+  // le nom d'import npm (@aparajita/capacitor-biometric-auth) côté module TS, jamais exposé
+  // tel quel sur le pont natif. Vérifié dans node_modules/@aparajita/.../dist/plugin.js.
+  return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BiometricAuthNative;
 }
 function isAppLockEnabled() {
   return localStorage.getItem('serein_app_lock_enabled') === '1';

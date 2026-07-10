@@ -443,6 +443,9 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
 }
 .mood-confirm-btn { width: 100%; margin-top: 0.25rem; }
+/* Micro-copie sous le bouton : lève l'ambiguïté de l'ancien "Continuer →" (continuer vers quoi ?)
+   en annonçant les 2 effets - enregistrement dans le suivi + exercice adapté à l'humeur choisie. */
+.mood-confirm-hint { font-size: 0.75rem; color: var(--color-muted); text-align: center; line-height: 1.4; margin-top: 0.5rem; }
 /* État "check-in déjà fait aujourd'hui" : remplace le curseur par un récap + Modifier
    (sinon revenir sur l'accueil après coup donne l'impression que le geste n'a rien laissé). */
 .checkin-recap-row {
@@ -458,6 +461,7 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .checkin-recap-text { flex: 1; min-width: 0; }
 .checkin-recap-label { font-size: 0.78rem; color: var(--color-muted); }
 .checkin-recap-mood { font-family: var(--font-title); font-size: 1.15rem; font-weight: 700; color: var(--color-text); }
+.checkin-recap-tracked { font-size: 0.72rem; color: var(--color-primary); font-weight: 600; margin-top: 0.15rem; }
 .checkin-recap-edit { flex-shrink: 0; font-size: 0.82rem; padding: 0.45rem 0.9rem; }
 
 /* ─── STATS GRID ─── */
@@ -845,6 +849,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.75rem;
   font-size: 0.82rem; color: var(--color-text); line-height: 1.5;
 }
+/* Mini-carte de l'app (slide 4 de l'onboarding) : oriente vers l'USAGE (où sont les choses). */
+.ob-map { display: flex; flex-direction: column; gap: 0.55rem; margin: 1rem 0 0.25rem; text-align: left; }
+.ob-map-row { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.84rem; line-height: 1.4; color: var(--color-muted); }
+.ob-map-row strong { color: var(--color-text); }
+.ob-map-icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; width: 1.6rem; text-align: center; }
 
 /* ─── CRISIS OVERLAY ─── */
 /* Toujours au-dessus de tout le reste (y compris le mode crise) : c'est la porte d'entrée. */
@@ -985,6 +994,19 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 }
 .undo-toast.visible { display: flex; }
 .undo-toast span { font-size: 0.85rem; color: var(--color-text); }
+
+/* Indice de swipe-retour : pilule discrète en bas, auto-disparaît. */
+.swipe-hint {
+  position: fixed; left: 50%; transform: translateX(-50%) translateY(0.5rem);
+  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem);
+  z-index: 94; pointer-events: none; opacity: 0;
+  background: var(--color-surface-2); border: 1px solid var(--color-border);
+  border-radius: 2rem; padding: 0.55rem 1rem;
+  font-size: 0.8rem; color: var(--color-text); white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.swipe-hint.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 .undo-toast button {
   background: none; border: none; color: var(--color-primary); font-weight: 700;
   font-size: 0.85rem; cursor: pointer; flex-shrink: 0; padding: 0.2rem 0.3rem;
@@ -1034,6 +1056,9 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .card-add-form.visible { display: block; }
 .card-empty { text-align: center; padding: 2rem 1rem; color: var(--color-muted); font-size: 0.88rem; }
 .card-empty .empty-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+/* CTA d'état vide : transforme un message-cul-de-sac en point de départ cliquable
+   (largeur auto + centré, pas pleine largeur comme les .btn-primary de formulaire). */
+.empty-cta { width: auto; display: inline-flex; margin-top: 1rem; }
 
 /* ─── POSITIVE DIARY ─── */
 .diary-entries { display: flex; flex-direction: column; gap: 0.625rem; margin: 1rem 0; }
@@ -1353,6 +1378,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <div class="ob-dot active" id="obdot-1"></div>
       <div class="ob-dot" id="obdot-2"></div>
       <div class="ob-dot" id="obdot-3"></div>
+      <div class="ob-dot" id="obdot-4"></div>
     </div>
 
     <div class="onboarding-slide active" id="obslide-1">
@@ -1374,6 +1400,20 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
       <h2>Un compagnon, pas un thérapeute</h2>
       <p>Cet outil s'utilise entre deux séances, dans les moments difficiles du quotidien, ou pour mieux te connaître. Il est conçu pour t'aider à t'entraîner - repérer tes pensées automatiques, nommer tes émotions, et prendre soin de toi au jour le jour. Il ne remplace pas un suivi professionnel.</p>
       <div class="onboarding-tip">Tout est stocké localement, jamais transmis à nos serveurs ni à des tiers.</div>
+    </div>
+
+    <!-- Slide 4 : orientation d'USAGE (où sont les choses), pas de la théorie -->
+    <div class="onboarding-slide" id="obslide-4">
+      <div class="onboarding-emoji">🧭</div>
+      <h2>Comment t'y retrouver</h2>
+      <p>Quatre espaces, en bas de l'écran. Tu peux passer de l'un à l'autre à tout moment.</p>
+      <div class="ob-map">
+        <div class="ob-map-row"><span class="ob-map-icon">🏠</span><span><strong>Accueil</strong> — ton humeur du jour et tes accès rapides</span></div>
+        <div class="ob-map-row"><span class="ob-map-icon">🌿</span><span><strong>Apaiser</strong> — respirer, s'ancrer, revenir au calme</span></div>
+        <div class="ob-map-row"><span class="ob-map-icon">🧠</span><span><strong>Comprendre</strong> — travailler tes pensées : journal, valeurs…</span></div>
+        <div class="ob-map-row"><span class="ob-map-icon">📈</span><span><strong>Parcours</strong> — suivre ton évolution au fil des jours</span></div>
+      </div>
+      <div class="onboarding-tip">🆘 Le bouton <strong>SOS</strong> (en bas à gauche) ouvre un espace de crise à tout moment. Et tu peux revenir en arrière d'un glissement depuis le bord gauche de l'écran.</div>
     </div>
 
     <div class="mt-3">
@@ -1433,6 +1473,10 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   <span id="undoToastText"></span>
   <button onclick="undoToastAction()" aria-label="Annuler la suppression">Annuler</button>
 </div>
+
+<!-- Indice ponctuel (1 seule fois) : le geste de retour par swipe est invisible sinon.
+     Surtout utile aux utilisateurs déjà onboardés, qui ne reverront pas la slide 4. -->
+<div class="swipe-hint" id="swipeHint" role="status" aria-hidden="true">← Glisse depuis le bord gauche pour revenir</div>
 
 <!-- ─── DISCLAIMER MODAL (first launch) ─── -->
 <div class="modal-overlay" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -1496,7 +1540,8 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
           <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
         </div>
 
-        <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Continuer avec l'état sélectionné">Continuer →</button>
+        <button class="btn btn-primary mood-confirm-btn" onclick="confirmMood()" aria-label="Enregistrer mon humeur et voir un exercice adapté">Enregistrer mon humeur →</button>
+        <p class="mood-confirm-hint">Ajouté à ton suivi. On te proposera ensuite un exercice adapté à ton état.</p>
       </div>
 
       <div id="checkinRecapMode" style="display:none;">
@@ -1505,6 +1550,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
           <div class="checkin-recap-text">
             <div class="checkin-recap-label">Aujourd'hui, tu te sens</div>
             <div class="checkin-recap-mood" id="recapMoodLabel"></div>
+            <div class="checkin-recap-tracked">✓ Ajouté à ton suivi</div>
           </div>
           <button class="btn btn-ghost checkin-recap-edit" onclick="editTodayMood()" aria-label="Modifier mon humeur du jour">Modifier</button>
         </div>
@@ -2822,10 +2868,25 @@ function navigateTo(screen) {
   state.currentScreen = screen;
   if (screen !== 'calm' && breathActive) stopBreathing();
   if (screenInitFns[screen]) screenInitFns[screen]();
+  maybeShowSwipeHint(screen);
 }
 function goBack() {
   const p = parentOf(state.currentScreen);
   if (p) { Haptics.light(); navigateTo(p); }
+}
+// Indice de swipe-retour, une seule fois : à la première arrivée sur un écran qui a un
+// parent (donc où "revenir" a un sens). Le geste étant invisible, sans ça personne ne le
+// découvre - surtout les utilisateurs déjà onboardés qui ne reverront pas la slide 4.
+let swipeHintTimer = null;
+function maybeShowSwipeHint(screen) {
+  if (localStorage.getItem('serein_swipe_hint_seen') === '1') return;
+  if (parentOf(screen) === null) return; // accueil : pas de retour possible
+  Store.set('serein_swipe_hint_seen', '1');
+  const hint = document.getElementById('swipeHint');
+  if (!hint) return;
+  requestAnimationFrame(() => hint.classList.add('visible'));
+  clearTimeout(swipeHintTimer);
+  swipeHintTimer = setTimeout(() => hint.classList.remove('visible'), 4200);
 }
 
 // ─── SWIPE BORD GAUCHE POUR REVENIR EN ARRIÈRE ───
@@ -3705,14 +3766,15 @@ function initOnboarding() {
     document.getElementById('onboardingModal').classList.add('visible');
   }
 }
+const OB_LAST_SLIDE = 4;
 function onboardingNext() {
-  if (obCurrentSlide < 3) {
+  if (obCurrentSlide < OB_LAST_SLIDE) {
     document.getElementById(`obslide-${obCurrentSlide}`).classList.remove('active');
     document.getElementById(`obdot-${obCurrentSlide}`).classList.remove('active');
     obCurrentSlide++;
     document.getElementById(`obslide-${obCurrentSlide}`).classList.add('active');
     document.getElementById(`obdot-${obCurrentSlide}`).classList.add('active');
-    if (obCurrentSlide === 3) document.getElementById('obNextBtn').textContent = 'Commencer →';
+    if (obCurrentSlide === OB_LAST_SLIDE) document.getElementById('obNextBtn').textContent = 'Commencer →';
   } else {
     Store.set('serein_onboarding_done', '1');
     const m = document.getElementById('onboardingModal');
@@ -4252,7 +4314,7 @@ function renderCards() {
   const cards = loadCards();
   const list = document.getElementById('cardsList');
   if (cards.length === 0) {
-    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Crée-en une après avoir complété un journal.</p></div>';
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Pioche un modèle ci-dessus, ou crée la tienne.</p><button class="btn btn-primary empty-cta" onclick="toggleCardForm()" aria-label="Créer ma première carte de coping">+ Créer ma première carte</button></div>';
     return;
   }
   list.innerHTML = cards.map((c, i) => `
@@ -4354,7 +4416,7 @@ const STORE_KEYS = [
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_today_mood', 'serein_widget_tip_dismissed', 'serein_journal_draft',
-  'serein_app_lock_enabled', 'serein_values',
+  'serein_app_lock_enabled', 'serein_values', 'serein_swipe_hint_seen',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -4874,7 +4936,7 @@ function renderTracking() {
   const filled = entries.filter(e => e.intensity !== null);
 
   if (!filled.length) {
-    container.innerHTML = `<div class="track-empty"><span class="track-empty-emoji">📊</span><p>Aucune donnée pour cette période.<br>Note ton humeur depuis l'accueil pour commencer.</p></div>`;
+    container.innerHTML = `<div class="track-empty"><span class="track-empty-emoji">📊</span><p>Aucune donnée pour cette période.<br>Note ton humeur pour commencer à suivre ton évolution.</p><button class="btn btn-primary empty-cta" onclick="navigateTo('home')" aria-label="Aller à l'accueil pour noter mon humeur">Noter mon humeur →</button></div>`;
     statsGrid.innerHTML = ''; insight.textContent = ''; return;
   }
 

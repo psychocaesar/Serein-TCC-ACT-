@@ -2845,6 +2845,13 @@ const screenInitFns = {
 
 function navigateTo(screen) {
   if (state.currentScreen === screen) return;
+  // Ne JAMAIS perdre une humeur en cours de saisie : si le curseur a été bougé sur l'accueil
+  // et qu'on file vers un exercice (accès rapide, onglet, réglages…) sans passer par
+  // « Enregistrer mon humeur → », on l'enregistre quand même en quittant l'accueil.
+  if (state.currentScreen === 'home' && screen !== 'home' && moodSliderTouched) {
+    persistTodayMood();
+    moodSliderTouched = false;
+  }
   const oldEl = document.getElementById(screenMap[state.currentScreen]);
   const newEl = document.getElementById(screenMap[screen]);
   if (!newEl) return;
@@ -3007,16 +3014,26 @@ function updateMoodOrb() {
   vEl.setAttribute('aria-valuetext', `${s.label}, ${vEl.value} sur 100`);
   return changed;
 }
+// Passe à true dès que l'utilisateur bouge le curseur : sert à distinguer une humeur
+// réellement saisie (à ne pas perdre) d'un accueil simplement affiché (curseur au centre
+// par défaut, qu'il ne faut PAS enregistrer comme un « Ça va » involontaire).
+let moodSliderTouched = false;
 function onMoodSliderInput() {
+  moodSliderTouched = true;
   if (updateMoodOrb()) Haptics.light(); // retour tactile léger à chaque changement d'état
 }
-function confirmMood() {
-  updateMoodOrb();
-  // Fusion : le curseur d'humeur EST le point quotidien de la courbe (plus de carte séparée).
-  // valence 100 (bien) → 2 ; valence 0 (difficile) → 10 ; valence 50 → 6.
+// Enregistre l'humeur du jour (point de courbe + récap), sans router vers un exercice.
+// logAnxiety est idempotent par jour (met à jour l'entrée du jour) : appelable plusieurs
+// fois sans créer de doublon. valence 100 (bien) → 2 ; 0 (difficile) → 10 ; 50 → 6.
+function persistTodayMood() {
   const v = +document.getElementById('slider-valence').value;
   logAnxiety(Math.round(2 + (100 - v) * 0.08));
   saveTodayMood(currentSliderMood, v);
+}
+function confirmMood() {
+  updateMoodOrb();
+  persistTodayMood();
+  moodSliderTouched = false; // déjà enregistré : évite un 2e log au navigateTo différé de selectMood
   selectMood(currentSliderMood); // réutilise le flux existant (suggestions, journal positif, etc.)
 }
 // Mémorise l'humeur confirmée aujourd'hui, pour que revenir sur l'accueil montre un récap

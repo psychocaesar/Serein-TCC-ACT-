@@ -1,0 +1,13 @@
+# Normalise les fins de ligne en LF pour tout le monde, quelle que soit la machine
+# (Windows/Mac) — évite les diffs "tout le fichier a changé" causés par un simple
+# aller-retour CRLF↔LF entre les deux postes de travail.
+* text=auto eol=lf
+
+# Binaires : jamais de conversion de fin de ligne, jamais de diff texte.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.pdf binary
+*.mp3 binary
+*.keystore binary

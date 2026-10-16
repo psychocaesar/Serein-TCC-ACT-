@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Serein Relais (octobre 2026) : le S de Serein (même tracé que l'app sœur) + un carreau de
+       mosaïque sable qui « prend le relais ». Ancienne bulle de pensée : logo-relais-bulle-ancienne.svg -->
   <defs>
     <radialGradient id="bg" cx="50%" cy="50%" r="70%">
       <stop offset="0%" stop-color="#132e26"/>
@@ -13,15 +15,15 @@
       <stop offset="50%" stop-color="#4db896"/>
       <stop offset="100%" stop-color="#2a8a68"/>
     </linearGradient>
-    <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0d9b5"/>
+      <stop offset="100%" stop-color="#c9a370"/>
+    </linearGradient>
+    <filter id="glow-soft" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="10" result="blur"/>
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <filter id="halo-blur"><feGaussianBlur stdDeviation="40"/></filter>
-    <filter id="glow-dot" x="-150%" y="-150%" width="400%" height="400%">
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
   </defs>
 
   <!-- Fond arrondi -->
@@ -30,13 +32,11 @@
   <!-- Halo de profondeur -->
   <ellipse class="halo" cx="256" cy="210" rx="180" ry="160" fill="url(#halo)" filter="url(#halo-blur)"/>
 
-  <!-- Bulle de pensee - trait epais neon -->
-  <ellipse class="fg" cx="256" cy="216" rx="96" ry="78" fill="none" stroke="url(#stroke-grad)" stroke-width="30" filter="url(#glow-soft)"/>
+  <!-- S de Serein, décalé à gauche pour laisser la place au carreau -->
+  <path class="fg" transform="translate(-34 0)" d="M 308 158 C 308 158 242 142 210 178 C 178 214 206 240 244 252 C 282 264 312 284 306 322 C 300 358 228 370 196 362" fill="none" stroke="url(#stroke-grad)" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow-soft)"/>
+  <path class="fg" transform="translate(-34 0)" d="M 308 158 C 308 158 242 142 210 178 C 178 214 206 240 244 252 C 282 264 312 284 306 322 C 300 358 228 370 196 362" fill="none" stroke="#d4f5e2" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+  <circle class="fg" cx="274" cy="158" r="7" fill="#7ee8be" opacity="0.7"/>
 
-  <!-- Filet lumineux par-dessus -->
-  <ellipse class="fg" cx="256" cy="216" rx="96" ry="78" fill="none" stroke="#d4f5e2" stroke-width="3" opacity="0.5"/>
-
-  <!-- Queue de la bulle : deux points (la pensee) -->
-  <circle class="fg" cx="210" cy="332" r="16" fill="url(#stroke-grad)" filter="url(#glow-dot)"/>
-  <circle class="fg" cx="182" cy="368" r="9" fill="url(#stroke-grad)" filter="url(#glow-dot)"/>
+  <!-- Le carreau de mosaïque : la pratique qui continue -->
+  <rect class="fg" x="300" y="300" width="74" height="74" rx="20" fill="url(#sand)" filter="url(#glow-soft)"/>
 </svg>

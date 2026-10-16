@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#132e26"/><stop offset="100%" stop-color="#0a1a14"/></radialGradient>
+    <radialGradient id="halo" cx="50%" cy="46%" r="50%"><stop offset="0%" stop-color="#2f6f5e" stop-opacity="0.35"/><stop offset="100%" stop-color="#2f6f5e" stop-opacity="0"/></radialGradient>
+    <linearGradient id="stroke-grad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7ee8be"/><stop offset="50%" stop-color="#4db896"/><stop offset="100%" stop-color="#2a8a68"/></linearGradient>
+    <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="halo-blur"><feGaussianBlur stdDeviation="40"/></filter>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <ellipse cx="256" cy="236" rx="180" ry="160" fill="url(#halo)" filter="url(#halo-blur)"/>
+  <!-- Bulle recentrée, plus grande -->
+  <ellipse cx="256" cy="232" rx="134" ry="110" fill="none" stroke="url(#stroke-grad)" stroke-width="26" filter="url(#glow-soft)"/>
+  <circle cx="186" cy="374" r="17" fill="url(#stroke-grad)" filter="url(#glow-soft)"/>
+  <circle cx="156" cy="410" r="10" fill="url(#stroke-grad)" filter="url(#glow-soft)"/>
+  <!-- Dedans : une petite échelle qui monte (la pratique, palier par palier) -->
+  <rect x="190" y="262" width="34" height="34" rx="9" fill="#93c9ac"/>
+  <rect x="238" y="226" width="34" height="34" rx="9" fill="#d8b78a"/>
+  <rect x="286" y="190" width="34" height="34" rx="9" fill="none" stroke="#93c9ac" stroke-width="6" stroke-dasharray="9 7"/>
+</svg>

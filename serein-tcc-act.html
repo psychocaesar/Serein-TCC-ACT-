@@ -1421,6 +1421,14 @@ input[type="date"], input[type="tel"] {
 .quote-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary-2); margin-bottom: 0.4rem; }
 .quote-text { font-size: 0.98rem; line-height: 1.45; font-style: italic; color: var(--color-text); }
 
+.calm-frame { font-size: 0.82rem; line-height: 1.5; margin: 0.4rem 0 0.9rem; }
+.crisis-emergency { margin-top: 0.6rem; font-size: 0.82rem; color: var(--color-muted); text-align: center; }
+.crisis-emergency a { color: var(--color-text); font-weight: 700; }
+.rerate-title { font-family: var(--font-title); font-weight: 600; font-size: 0.95rem; text-align: center; margin-bottom: 0.75rem; }
+.ms-feel { margin-top: 0.75rem; }
+.ms-feel-q { font-size: 0.85rem; color: var(--color-muted); margin-bottom: 0.5rem; }
+.ms-feel-q span { opacity: 0.75; }
+.ms-feel-row { justify-content: center; }
 /* ─── Exposition ─── */
 .ladder-step { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.8rem 0.9rem; margin-bottom: 0.55rem; }
 .ladder-step.done { border-color: color-mix(in srgb, #e0a07a 55%, transparent); }
@@ -1514,6 +1522,7 @@ input[type="date"], input[type="tel"] {
   </div>
   <a class="crisis-person-btn" id="crisisPersonBtn" href="#" hidden></a>
   <a class="crisis-3114-btn" href="tel:3114" aria-label="Appeler le 3114, numéro national de prévention du suicide, gratuit, 24 heures sur 24">📞 Appeler le 3114 <span>gratuit · 24h/24</span></a>
+  <div class="crisis-emergency">Danger immédiat : <a href="tel:15">15</a> (SAMU) ou <a href="tel:112">112</a></div>
 </div>
 
 <!-- ─── VERROUILLAGE BIOMÉTRIQUE (optionnel, Réglages) ─── -->
@@ -1636,6 +1645,10 @@ input[type="date"], input[type="tel"] {
           <label class="form-label" for="autoThoughtField">Pensée automatique</label>
           <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Il m'en veut, j'ai dû dire quelque chose de travers." oninput="saveJournalDraft()"></textarea>
         </div>
+        <div class="range-group">
+          <label for="beliefBefore">À combien y crois-tu ? <span><span class="range-val" id="beliefBeforeVal">70</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="beliefBefore" min="0" max="100" step="5" value="70" oninput="document.getElementById('beliefBeforeVal').textContent=this.value; saveJournalDraft()" aria-label="Croyance en la pensée, de 0 à 100">
+        </div>
         <div class="row mt-2">
           <button class="btn btn-ghost" onclick="journalStep(1)">← Retour</button>
           <button class="btn btn-primary" onclick="journalStep(3)">Suivant →</button>
@@ -1692,6 +1705,10 @@ input[type="date"], input[type="tel"] {
             <textarea id="decatWorst" rows="2" oninput="saveJournalDraft()"></textarea>
           </div>
           <div class="form-group">
+            <label class="form-label" for="decatBest">Le meilleur qui pourrait arriver</label>
+            <textarea id="decatBest" rows="2" oninput="saveJournalDraft()"></textarea>
+          </div>
+          <div class="form-group">
             <label class="form-label" for="decatLikely">Le plus probable, honnêtement</label>
             <textarea id="decatLikely" rows="2" oninput="saveJournalDraft()"></textarea>
           </div>
@@ -1731,8 +1748,19 @@ input[type="date"], input[type="tel"] {
 
       <div class="step" id="step-7">
         <div class="step-num">7</div>
-        <h2>Et maintenant, cette <span id="rerateEmotionName">émotion</span> ?</h2>
+        <h2>Et maintenant ?</h2>
         <div class="rerate-card">
+          <div class="rerate-title">Ta pensée de départ, à combien y crois-tu ?</div>
+          <div class="rerate-pair">
+            <div><div class="rerate-cap">Au début</div><div class="rerate-num before" id="beliefBeforeNum">70</div></div>
+            <svg class="rerate-arrow" viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h28M22 3l8 7-8 7"/></svg>
+            <div><div class="rerate-cap">Maintenant</div><div class="rerate-num" id="beliefAfterNum">70</div></div>
+          </div>
+          <input type="range" id="beliefAfter" class="rerate-range" min="0" max="100" step="5" value="70" oninput="updateRerate()" aria-label="Croyance en la pensée de départ maintenant, de 0 à 100">
+          <div class="slider-ends"><span>0 · pas du tout</span><span>100 · totalement</span></div>
+        </div>
+        <div class="rerate-card">
+          <div class="rerate-title">Et cette <span id="rerateEmotionName">émotion</span> ?</div>
           <div class="rerate-pair">
             <div><div class="rerate-cap">Au début</div><div class="rerate-num before" id="rerateBefore">5</div></div>
             <svg class="rerate-arrow" viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h28M22 3l8 7-8 7"/></svg>
@@ -1772,6 +1800,7 @@ input[type="date"], input[type="tel"] {
     <!-- BREATHING -->
     <h2 class="mb-1">🌬️ Respiration guidée</h2>
     <p>Choisis une technique. Appuie sur le cercle pour commencer.</p>
+    <p class="calm-frame">Respirer lentement aide à se réguler, et ça s'entraîne. Le but n'est pas de faire disparaître l'anxiété à tout prix : elle a le droit d'être là. Pendant une exposition, laisse ces exercices de côté.</p>
 
     <div class="breath-tech-tabs" role="group" aria-label="Technique de respiration">
       <button class="breath-tab active" onclick="selectBreathTech('coherence', this)" aria-pressed="true">Cohérence 5-5</button>
@@ -1814,7 +1843,7 @@ input[type="date"], input[type="tel"] {
 
     <!-- GROUNDING -->
     <h2 class="mb-1">🌍 Ancrage 5-4-3-2-1</h2>
-    <p>Pour revenir dans ton corps quand l'anxiété monte. Un sens à la fois.</p>
+    <p>Pour revenir au moment présent quand les pensées s'emballent. Un sens à la fois.</p>
 
     <div class="grounding-progress" id="groundingProgress" aria-label="Progression de l'ancrage" role="progressbar" aria-valuenow="0" aria-valuemax="5">
       <div class="ground-dot" id="gdot-1"></div>
@@ -1897,7 +1926,7 @@ input[type="date"], input[type="tel"] {
     <div class="grounding-done-card" id="groundingDone">
       <div class="big-emoji">🌿</div>
       <h3>Tu es là, dans le présent.</h3>
-      <p>L'ancrage sensoriel interrompt la spirale anxieuse en ramenant l'attention sur ce qui est réel et immédiat. Bien joué.</p>
+      <p>Tu as ramené ton attention sur le moment présent, sur ce qui est là autour de toi. Bien joué.</p>
       <div class="tile-reward" id="groundingReward"></div>
       <button class="btn btn-secondary mt-2" onclick="resetGrounding()" aria-label="Recommencer l'ancrage">Recommencer</button>
     </div>
@@ -1910,16 +1939,18 @@ input[type="date"], input[type="tel"] {
       <h1>Avance à ton <span>rythme</span></h1>
     </div>
 
-    <p>Construis ton échelle, du palier le plus facile au plus difficile, puis monte une marche à la fois.</p>
+    <p>Construis ton échelle, du palier le plus facile au plus difficile, puis monte une marche à la fois. Idéalement avec ton psy.</p>
 
     <details class="onboarding-tip">
       <summary>Pourquoi ça fonctionne</summary>
       <div class="tip-body">
-        <p>L'évitement soulage tout de suite, mais apprend à ton cerveau que fuir est la seule solution. En restant dans la situation, tu découvres que l'anxiété finit par redescendre, et que ce que tu redoutais n'arrive pas toujours.</p>
+        <p>L'évitement soulage tout de suite, mais empêche de découvrir que ce que tu redoutes n'arrive pas, ou que tu peux y faire face. Le but n'est pas que l'anxiété baisse pendant l'exercice : c'est de <strong>vérifier ta prédiction</strong> dans les faits.</p>
         <ul class="tip-list">
           <li><strong>Progressive</strong> : commence par ce qui fait <em>un peu</em> peur.</li>
-          <li><strong>Assez longue</strong> : reste jusqu'à ce que l'anxiété ait le temps de baisser.</li>
-          <li><strong>Sans béquille</strong> : évite les petites sécurités (téléphone en main, se distraire).</li>
+          <li><strong>Avec une question</strong> : avant, note ce que tu crains ; après, ce qui s'est vraiment passé.</li>
+          <li><strong>Sans béquille</strong> : ni téléphone en main, ni distraction, ni exercice de respiration pendant l'exposition. C'est en restant avec la peur qu'on apprend.</li>
+          <li><strong>Varie</strong> les lieux, les moments, les personnes présentes.</li>
+          <li>Si la peur revient un jour, ce n'est pas un échec : c'est fréquent, il suffit de reprendre les paliers.</li>
         </ul>
       </div>
     </details>
@@ -2098,6 +2129,14 @@ input[type="date"], input[type="tel"] {
     <div class="ms-done" id="msDone" role="status" hidden>
       <div class="ms-done-emoji" aria-hidden="true">🌱</div>
       <p id="msDoneText">Bravo. C'est un vrai pas, même s'il paraît petit.</p>
+      <div class="ms-feel" id="msFeel">
+        <div class="ms-feel-q">Et ton humeur, maintenant ? <span>(optionnel)</span></div>
+        <div class="chip-row ms-feel-row">
+          <button type="button" class="chip" onclick="microStepFeel('mieux')">Un peu mieux</button>
+          <button type="button" class="chip" onclick="microStepFeel('pareil')">Pareil</button>
+          <button type="button" class="chip" onclick="microStepFeel('moins')">Moins bien</button>
+        </div>
+      </div>
       <div class="tile-reward" id="msReward"></div>
       <div class="ms-done-actions">
         <button class="btn btn-primary" onclick="microStepRestart()" aria-label="Un autre petit pas">Un autre petit pas</button>
@@ -2364,8 +2403,8 @@ input[type="date"], input[type="tel"] {
     <details class="plan-section">
       <summary><span class="plan-num">3</span><span class="plan-sum"><span class="plan-title">Mes situations à risque</span><span class="plan-preview" id="planPrev-risks"></span></span></summary>
       <div class="plan-body">
-        <label class="form-label" for="plan-risks">Les périodes ou événements où je dois être vigilant·e</label>
-        <textarea id="plan-risks" rows="3" placeholder="Ex. : Les périodes de bouclage au travail." oninput="savePlanField('risks', this.value)"></textarea>
+        <label class="form-label" for="plan-risks">Les périodes ou événements où je dois être vigilant·e, et ce que je ferai alors</label>
+        <textarea id="plan-risks" rows="3" placeholder="Ex. : Les périodes de bouclage au travail → je garde ma marche du midi et je ressors ce plan." oninput="savePlanField('risks', this.value)"></textarea>
       </div>
     </details>
 
@@ -3017,7 +3056,7 @@ const JOURNAL_STEPS = 7;
 const JOURNAL_FIELDS = {
   situation: 'situationField', thought: 'autoThoughtField', emotion: 'emotionField',
   evidenceFor: 'evidenceFor', evidenceAgainst: 'evidenceAgainst',
-  decatWorst: 'decatWorst', decatLikely: 'decatLikely', decatCope: 'decatCope',
+  decatWorst: 'decatWorst', decatBest: 'decatBest', decatLikely: 'decatLikely', decatCope: 'decatCope',
   balanced: 'balancedThoughtField',
 };
 const jField = id => document.getElementById(id);
@@ -3026,6 +3065,8 @@ function readJournalFields() {
   for (const [k, id] of Object.entries(JOURNAL_FIELDS)) o[k] = jField(id).value;
   o.intensityBefore = +jField('emotionIntensity').value;
   o.intensityAfter = +jField('emotionAfter').value;
+  o.beliefBefore = +jField('beliefBefore').value;
+  o.beliefAfter = +jField('beliefAfter').value;
   return o;
 }
 function fillJournalFields(e) {
@@ -3034,6 +3075,10 @@ function fillJournalFields(e) {
   jField('emotionIntensity').value = b;
   jField('emotionIntensityVal').textContent = b;
   jField('emotionAfter').value = typeof e.intensityAfter === 'number' ? e.intensityAfter : b;
+  const cb = typeof e.beliefBefore === 'number' ? e.beliefBefore : 70;
+  jField('beliefBefore').value = cb;
+  jField('beliefBeforeVal').textContent = cb;
+  jField('beliefAfter').value = typeof e.beliefAfter === 'number' ? e.beliefAfter : cb;
 }
 
 // Exemples déséquilibré -> équilibré par piège (guident la restructuration)
@@ -3044,6 +3089,9 @@ const schemaExamples = {
   surgen: { unbalanced: "Je rate toujours tout.", balanced: "J'ai raté cette fois, mais j'ai aussi réussi à d'autres moments." },
   filtre: { unbalanced: "Toute la journée a été nulle.", balanced: "Un moment difficile ne résume pas la journée ; il y a aussi eu des instants neutres ou bons." },
   personnalisation: { unbalanced: "Si l'ambiance est tendue, c'est forcément à cause de moi.", balanced: "Beaucoup de facteurs influencent l'ambiance ; je n'en suis pas la seule cause." },
+  emotionnel: { unbalanced: "Je me sens nul·le, donc je suis nul·le.", balanced: "Je me sens nul·le en ce moment ; c'est une émotion, pas une preuve sur ce que je vaux." },
+  devrais: { unbalanced: "Je dois toujours être disponible pour les autres.", balanced: "J'aime aider, et j'ai aussi le droit de dire non quand je suis épuisé·e." },
+  etiquetage: { unbalanced: "J'ai oublié son anniversaire : je suis un·e égoïste.", balanced: "J'ai oublié une date ; ça ne résume pas la personne que je suis. Je peux m'excuser." },
 };
 
 function setJournalView(view) {
@@ -3106,6 +3154,7 @@ function prepareRerate() {
   const emo = jField('emotionField').value.trim();
   jField('rerateEmotionName').textContent = emo ? emo.toLowerCase() : 'émotion';
   jField('rerateBefore').textContent = jField('emotionIntensity').value;
+  jField('beliefBeforeNum').textContent = jField('beliefBefore').value;
   updateRerate();
 }
 function rerateVerdict(before, after) {
@@ -3122,6 +3171,10 @@ function updateRerate() {
   num.textContent = after;
   num.className = 'rerate-num ' + (after <= 3 ? 'low' : after <= 6 ? 'mid' : 'high');
   jField('rerateVerdict').textContent = rerateVerdict(before, after);
+  const bAfter = +jField('beliefAfter').value;
+  const bNum = jField('beliefAfterNum');
+  bNum.textContent = bAfter;
+  bNum.className = 'rerate-num ' + (bAfter <= 30 ? 'low' : bAfter <= 60 ? 'mid' : 'high');
   saveJournalDraft();
 }
 function loadJournalEntries() { return safeParse('serein_journal', []); }
@@ -3234,8 +3287,9 @@ function renderJournalHistory() {
     const dateStr = d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
     const traps = (e.traps || []).map(k => schemas[k] ? `<span>${schemas[k].title}</span>` : '').join('');
     const hasRerate = typeof e.intensityBefore === 'number' && typeof e.intensityAfter === 'number' && e.emotion;
+    const hasBelief = typeof e.beliefBefore === 'number' && typeof e.beliefAfter === 'number';
     return `<div class="journal-entry">
-      <div class="journal-entry-date">${dateStr}${hasRerate ? ` · ${escHtml(e.emotion)} ${e.intensityBefore} → ${e.intensityAfter}` : ''}</div>
+      <div class="journal-entry-date">${dateStr}${hasBelief ? ` · croyance ${e.beliefBefore} → ${e.beliefAfter}` : ''}${hasRerate ? ` · ${escHtml(e.emotion)} ${e.intensityBefore} → ${e.intensityAfter}` : ''}</div>
       ${e.thought ? `<div class="journal-entry-thought">${escHtml(e.thought)}</div>` : ''}
       ${e.balanced ? `<div class="journal-entry-balanced">${escHtml(e.balanced)}</div>` : ''}
       ${traps ? `<div class="journal-entry-traps">${traps}</div>` : ''}
@@ -3289,7 +3343,7 @@ const defusionExercises = [
       '<strong>Identifie le mot</strong> qui résume la pensée douloureuse - "nul·le", "raté·e", "rejeté·e". Un seul mot suffit.',
       '<strong>Répète ce mot à voix haute</strong>, rapidement, pendant 30 secondes. Laisse-le se vider de son sens au fur et à mesure.',
       '<strong>Observe ce qui se passe</strong> : le mot devient progressivement un simple son, une suite de syllabes sans le poids émotionnel habituel.',
-      '<strong>Reviens au présent</strong>. Ce mot n\'est qu\'une étiquette que ton cerveau a collée sur toi - pas une vérité sur qui tu es.',
+      '<strong>Reviens au présent</strong>. Inutile de te demander si ce mot est vrai : demande-toi plutôt si t\'y accrocher t\'aide à avancer vers ce qui compte pour toi.',
     ]
   },
 ];
@@ -3319,6 +3373,9 @@ const schemas = {
   surgen: { title: '🌐 Surgénéralisation', desc: 'C\'est le processus qui consiste à tirer une conclusion globale et définitive à partir d\'un seul événement ponctuel, transformant une expérience isolée en règle permanente sur soi ou sur la vie.', reform: '💬 "Est-ce que cet événement unique suffit à définir toutes mes capacités, ou existe-t-il des expériences passées qui démontrent le contraire ?"' },
   filtre: { title: '🔍 Filtre mental', desc: 'C\'est une erreur d\'attention qui amène à se concentrer exclusivement sur un détail négatif en ignorant l\'ensemble des informations disponibles - positives ou neutres - comme si un filtre obscurcissait le reste.', reform: '💬 "Si je prends du recul pour regarder l\'ensemble de la situation, quels éléments positifs ou neutres suis-je en train d\'ignorer ?"' },
   personnalisation: { title: '🎯 Personnalisation', desc: 'C\'est le fait de se sentir directement et exclusivement responsable d\'événements fâcheux ou des états émotionnels d\'autrui, sur lesquels on n\'a pourtant qu\'un contrôle partiel ou nul.', reform: '💬 "Existe-t-il d\'autres facteurs extérieurs ou des concours de circonstances qui pourraient expliquer cette situation, en dehors de ma seule responsabilité ?"' },
+  emotionnel: { title: '🌧️ Raisonnement émotionnel', desc: 'C\'est le fait de prendre une émotion pour une preuve : « je me sens en danger, donc je suis en danger », « je me sens nul·le, donc je le suis ».', reform: '💬 "Qu\'est-ce que les faits disent, indépendamment de ce que je ressens en ce moment ?"' },
+  devrais: { title: '📏 « Je dois », « il faut »', desc: 'Ce sont des règles rigides sur soi ou les autres, qui transforment des préférences en obligations et nourrissent la culpabilité ou la colère quand elles ne sont pas respectées.', reform: '💬 "Et si je remplaçais « je dois » par « je préférerais » : qu\'est-ce que ça change ?"' },
+  etiquetage: { title: '🏷️ Étiquetage', desc: 'C\'est le fait de se coller (ou de coller aux autres) une étiquette globale à partir d\'un comportement : « je suis un·e raté·e » au lieu de « j\'ai raté cette fois ».', reform: '💬 "Est-ce que je décris un comportement précis, ou est-ce que je juge toute la personne ?"' },
 };
 // ─── DÉFUSION : « J'ai fait l'exercice » ───
 function defusionDone() {
@@ -3374,13 +3431,19 @@ function toggleLadderSession(id) {
   ladderOpenId = ladderOpenId === id ? null : id;
   renderLadder();
 }
+// Séance d'exposition centrée sur la prédiction : ce que je crains (et à combien j'y crois),
+// puis ce qui s'est réellement passé. C'est la croyance qui est recotée, pas l'anxiété :
+// la baisse de l'anxiété pendant l'exercice ne prédit pas l'apprentissage (Craske et al., 2014).
 function saveLadderSession(id) {
-  const before = +document.getElementById(`ldBefore-${id}`).value;
-  const after = +document.getElementById(`ldAfter-${id}`).value;
+  const fear = document.getElementById(`ldFear-${id}`).value.trim();
+  const outcome = document.getElementById(`ldOutcome-${id}`).value.trim();
+  if (!fear) { document.getElementById(`ldFear-${id}`).focus(); return; }
+  const beliefBefore = +document.getElementById(`ldBefore-${id}`).value;
+  const beliefAfter = +document.getElementById(`ldAfter-${id}`).value;
   const l = loadLadder();
   const s = l.steps.find(x => x.id === id);
   if (!s) return;
-  s.sessions.push({ date: ymd(), before, after });
+  s.sessions.push({ date: ymd(), fear, beliefBefore, outcome, beliefAfter });
   saveLadder(l);
   ladderOpenId = null;
   const total = logPractice('exposition');
@@ -3400,8 +3463,11 @@ function renderLadder() {
   box.innerHTML = l.steps.map((s, i) => {
     const last = s.sessions[s.sessions.length - 1];
     const open = ladderOpenId === s.id;
+    // Anciennes séances (avant la refonte « prédiction ») : anxiété 0-10 au lieu de la croyance
+    const lastTxt = !last ? '' : typeof last.beliefBefore === 'number'
+      ? `croyance ${last.beliefBefore} → ${last.beliefAfter}` : `anxiété ${last.before} → ${last.after}`;
     const status = s.sessions.length
-      ? `${s.sessions.length} séance${s.sessions.length > 1 ? 's' : ''} · dernière : ${last.before} → ${last.after}`
+      ? `${s.sessions.length} séance${s.sessions.length > 1 ? 's' : ''} · dernière : ${lastTxt}`
       : `Anxiété imaginée : ${s.suds}/10`;
     return `<div class="ladder-step${s.sessions.length ? ' done' : ''}">
       <div class="ladder-step-head">
@@ -3410,13 +3476,23 @@ function renderLadder() {
         <button class="btn ladder-go" onclick="toggleLadderSession(${s.id})" aria-expanded="${open}">${open ? 'Fermer' : "J'y vais"}</button>
       </div>
       ${open ? `<div class="ladder-session">
-        <div class="range-group">
-          <label for="ldBefore-${s.id}">Anxiété au début <span class="range-val" id="ldBeforeVal-${s.id}">${s.suds}</span></label>
-          <input type="range" id="ldBefore-${s.id}" min="0" max="10" value="${s.suds}" oninput="document.getElementById('ldBeforeVal-${s.id}').textContent=this.value">
+        <div class="section-title">Avant</div>
+        <div class="form-group">
+          <label class="form-label" for="ldFear-${s.id}">Qu'est-ce que tu crains qu'il arrive ?</label>
+          <input type="text" id="ldFear-${s.id}" placeholder="Ex. : Je vais faire un malaise et devoir sortir.">
         </div>
         <div class="range-group">
-          <label for="ldAfter-${s.id}">Anxiété à la fin <span class="range-val" id="ldAfterVal-${s.id}">${s.suds}</span></label>
-          <input type="range" id="ldAfter-${s.id}" min="0" max="10" value="${s.suds}" oninput="document.getElementById('ldAfterVal-${s.id}').textContent=this.value">
+          <label for="ldBefore-${s.id}">À combien y crois-tu ? <span><span class="range-val" id="ldBeforeVal-${s.id}">70</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="ldBefore-${s.id}" min="0" max="100" step="5" value="70" oninput="document.getElementById('ldBeforeVal-${s.id}').textContent=this.value">
+        </div>
+        <div class="section-title mt-2">Après</div>
+        <div class="form-group">
+          <label class="form-label" for="ldOutcome-${s.id}">Qu'est-ce qui s'est passé ? Qu'est-ce qui t'a surpris ?</label>
+          <textarea id="ldOutcome-${s.id}" rows="2" placeholder="Ex. : J'ai eu peur au début, mais je suis resté jusqu'au bout."></textarea>
+        </div>
+        <div class="range-group">
+          <label for="ldAfter-${s.id}">Et maintenant, à combien y crois-tu ? <span><span class="range-val" id="ldAfterVal-${s.id}">70</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="ldAfter-${s.id}" min="0" max="100" step="5" value="70" oninput="document.getElementById('ldAfterVal-${s.id}').textContent=this.value">
         </div>
         <div class="row">
           <button class="btn btn-ghost" onclick="deleteLadderStep(${s.id})">Supprimer le palier</button>
@@ -3829,10 +3905,28 @@ function microStepRestart() {
   setMicroStepView('step');
   microStepAnother();
 }
+// Observer le lien activité → humeur (monitoring de l'activation comportementale), sans obligation.
+const MICRO_FEEL_REPLY = {
+  mieux: "C'est souvent comme ça : l'action vient avant l'envie.",
+  pareil: "C'est normal, l'effet vient souvent avec la répétition. Le pas compte quand même.",
+  moins: "Merci de l'avoir noté. Ce n'est pas un échec : ça peut se discuter en séance.",
+};
+function microStepFeel(v) {
+  const log = loadPractice();
+  for (let i = log.length - 1; i >= 0; i--) { if (log[i].k === 'petitpas') { log[i].feel = v; break; } }
+  Store.set(PRACTICE_KEY, JSON.stringify(log));
+  const feel = document.getElementById('msFeel');
+  feel.querySelectorAll('.chip').forEach(c => { c.disabled = true; c.classList.toggle('selected', c.getAttribute('onclick').includes(`'${v}'`)); });
+  document.getElementById('msDoneText').textContent = MICRO_FEEL_REPLY[v];
+  Haptics.light();
+}
 function microStepDone() {
   document.getElementById('msDoneText').textContent = MICRO_PRAISE[Math.floor(Math.random() * MICRO_PRAISE.length)];
   setMicroStepView('done');
   renderTileReward('msReward', 'petitpas', logPractice('petitpas'));
+  const feel = document.getElementById('msFeel');
+  feel.hidden = false;
+  feel.querySelectorAll('.chip').forEach(c => { c.classList.remove('selected'); c.disabled = false; });
   Haptics.medium();
 }
 
@@ -4159,7 +4253,7 @@ const copingPresets = {
     cards: [
     "Fuir ou éviter me soulagerait tout de suite, mais me rendrait encore plus prisonnier·ère demain.",
     "J'accepte de prendre cette peur sous le bras pour faire ce qui compte réellement dans ma vie.",
-    "Plus je m'expose à cette situation, plus mon cerveau finira par s'y habituer et ma peur diminuera.",
+    "Chaque fois que j'y vais, j'apprends que je peux le faire, même avec la peur.",
     "Je peux ressentir une peur intense et quand même agir ; l'émotion ne paralyse pas mes muscles.",
     "Cet inconfort très fort que je traverse maintenant est le prix à payer pour regagner ma liberté.",
     "Je fais juste un petit pas en avant : une action concrète et engagée pour reprendre le contrôle de mon quotidien.",
@@ -5052,7 +5146,8 @@ function buildRecapText() {
     r.journals.forEach(e => {
       lines.push(`- ${e.thought || e.situation || ''}`);
       if (e.balanced) lines.push(`  → ${e.balanced}`);
-      if (e.emotion && typeof e.intensityBefore === 'number' && typeof e.intensityAfter === 'number') lines.push(`  ${e.emotion} : ${e.intensityBefore} → ${e.intensityAfter}`);
+      if (typeof e.beliefBefore === 'number' && typeof e.beliefAfter === 'number') lines.push(`  Croyance : ${e.beliefBefore} → ${e.beliefAfter} /100`);
+      if (e.emotion && typeof e.intensityBefore === 'number' && typeof e.intensityAfter === 'number') lines.push(`  ${e.emotion} : ${e.intensityBefore} → ${e.intensityAfter} /10`);
     });
   }
   return lines.join('\n');
@@ -5375,6 +5470,9 @@ const quizData = [
   { thought: "Je ne réussis jamais à m'en sortir dans ces situations.", schema: 'surgen', explain: "«Jamais» généralise un ressenti ponctuel à toute une vie - c'est de la surgénéralisation." },
   { thought: "Mon ami ne m'a pas répondu - il est sûrement fâché contre moi.", schema: 'lecture', explain: "Tu interprètes le silence sans preuve réelle - ton cerveau comble le vide avec ce qu'il craint." },
   { thought: "La journée a été difficile. (Les 3 bons moments ? Pas comptés.)", schema: 'filtre', explain: "Le filtre mental ne laisse passer que les informations négatives et écarte automatiquement le reste." },
+  { thought: "J'ai peur de prendre l'avion, c'est bien la preuve que c'est dangereux.", schema: 'emotionnel', explain: "La peur est une émotion, pas une mesure du danger réel. Les faits peuvent dire autre chose que ce que l'on ressent." },
+  { thought: "Je devrais toujours réussir du premier coup.", schema: 'devrais', explain: "« Je devrais » transforme une préférence en règle rigide : chaque écart devient une faute." },
+  { thought: "J'ai bafouillé pendant la réunion : je suis un·e incapable.", schema: 'etiquetage', explain: "Un moment précis devient une étiquette sur toute la personne. Bafouiller est un comportement, pas une identité." },
   { thought: "L'ambiance tendue au bureau aujourd'hui, c'est à cause de moi.", schema: 'personnalisation', explain: "Tu t'attribues la responsabilité d'une situation qui dépend de nombreux autres facteurs." },
 ];
 const schemaLabels = {
@@ -5384,6 +5482,9 @@ const schemaLabels = {
   surgen: '🌐 Surgénéralisation',
   filtre: '🔍 Filtre mental',
   personnalisation: '🎯 Personnalisation',
+  emotionnel: '🌧️ Raisonnement émotionnel',
+  devrais: '📏 « Je dois », « il faut »',
+  etiquetage: '🏷️ Étiquetage',
 };
 // ─── INIT ───
 document.getElementById('breathCircle').addEventListener('keydown', e => {

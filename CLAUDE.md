@@ -30,6 +30,8 @@ Support entre deux séances et après la thérapie. 4 onglets + SOS :
 
 **Mosaïque** : chaque exercice mené au bout appelle `logPractice(kind)` → un carreau dans `serein_practice`, et avance la 1re tâche du psy du même exercice. Règles non négociables : aucune série, aucun jour « raté », rien ne s'efface (validé avec César : pas de culpabilité, pas de ton « développement personnel »).
 
+**Fondements cliniques (vérifiés le 16/10/2026 contre les fiches du vault `FORMATION TCC/04_Outils cliniques/Protocoles`)** : l'exposition cote la **croyance en la prédiction** avant/après (apprentissage inhibiteur, Craske 2014), jamais l'anxiété comme critère de réussite ; la respiration est présentée comme une compétence, à mettre de côté pendant une exposition ; le journal cote croyance (0-100) ET émotion (0-10) ; le SOS donne 3114 + 15/112 ; aucune allégation d'efficacité sur la respiration 4-7-8 ou l'ancrage 5-4-3-2-1.
+
 Écrans supprimés à la refonte (ne pas les recréer sans en parler) : check-in détaillé, 30 questions « Explore », écran Schémas (→ aide dans l'étape 4 du journal), quiz 12 questions (→ défi du jour), échelle de catastrophe (→ étape 5 du journal), métaphores (3 gardées dans Valeurs & défusion), pensée du jour, compteur 🔥.
 
 ## Architecture

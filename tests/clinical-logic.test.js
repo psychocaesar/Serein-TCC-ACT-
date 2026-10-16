@@ -91,6 +91,8 @@ const SHIM = `
   defiOptions: defiOptions,
   quizData: quizData,
   schemaLabels: schemaLabels,
+  schemas: schemas,
+  schemaExamples: schemaExamples,
   rerateVerdict: rerateVerdict,
   moodInsight: moodInsight,
   screenMap: screenMap,
@@ -218,6 +220,15 @@ test('défi du jour : 3 réponses distinctes dont la bonne, pour chaque pensée'
     assert.ok(opts.includes(q.schema), `bonne réponse absente (question ${i})`);
     opts.forEach(k => assert.ok(C.schemaLabels[k]));
   });
+});
+
+test('pièges de pensée : 9 pièges cohérents partout (journal, exemples, défi)', () => {
+  const keys = Object.keys(C.schemas).sort();
+  assert.strictEqual(keys.length, 9);
+  assert.deepStrictEqual(Object.keys(C.schemaExamples).sort(), keys);
+  assert.deepStrictEqual(Object.keys(C.schemaLabels).sort(), keys);
+  for (const k of ['emotionnel', 'devrais', 'etiquetage']) assert.ok(C.schemas[k], `piège ${k} manquant`);
+  for (const k of keys) assert.ok(C.quizData.some(q => q.schema === k), `aucune pensée du défi pour ${k}`);
 });
 
 test('re-cotation du journal : message non culpabilisant même si l\'émotion monte', () => {

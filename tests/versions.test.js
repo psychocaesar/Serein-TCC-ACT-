@@ -1,7 +1,7 @@
 // Garde-fou : la version marketing doit rester cohérente entre package.json,
 // Android (versionName) et iOS (MARKETING_VERSION, toutes configs).
 // Le build number iOS (CURRENT_PROJECT_VERSION) est volontairement ignoré :
-// il est auto-incrémenté par Codemagic depuis TestFlight.
+// il est attribué par Xcode Cloud à chaque build.
 // À chaque montée de version (1.0 → 1.1), mettre à jour MARKETING ci-dessous + les 3 sources.
 import { test } from 'node:test';
 import assert from 'node:assert';

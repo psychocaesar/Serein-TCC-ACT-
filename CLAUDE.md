@@ -55,7 +55,7 @@ Support entre deux séances et après la thérapie. 4 onglets + SOS :
 ## CI
 
 - **GitHub Actions** (`.github/workflows/tests.yml`) : `npm test` sur chaque push/PR vers `main`, automatique. Nécessite Node 22+ (le glob quoté de `node --test` exige Node 21+).
-- **Codemagic** (`codemagic.yaml`) : build iOS + publication TestFlight. **Ne se déclenche JAMAIS automatiquement sur push** — toujours un clic manuel "Start new build" dans le dashboard Codemagic. Lance `npm test` en premier (échoue vite, avant de consommer des minutes Mac). Le build number iOS (`CURRENT_PROJECT_VERSION`) s'auto-incrémente depuis le dernier TestFlight via `agvtool` — **ne jamais le bumper à la main**. `MARKETING_VERSION`/`versionName` (version affichée) reste à bumper manuellement dans les 3 fichiers vérifiés par `versions.test.js`.
+- **Xcode Cloud** (même circuit que l'app Serein méditation, Codemagic retiré le 16/10/2026 ; historique : `git log -- codemagic.yaml`) : build iOS + TestFlight. `ios/App/ci_scripts/ci_post_clone.sh` est lancé automatiquement après le clone : `npm ci`, **`npm test` (s'il échoue, rien n'arrive sur TestFlight)**, `build:web`, `cap sync ios`. Le script doit rester exécutable (`chmod +x`). Le workflow (déclencheur, archive, TestFlight) se règle dans Xcode ou App Store Connect, pas dans le repo. Le build number est attribué par Xcode Cloud (à régler une fois au-dessus du dernier build TestFlight de l'ère Codemagic) — **ne jamais le bumper à la main**. `MARKETING_VERSION`/`versionName` (version affichée) reste à bumper manuellement dans les 3 fichiers vérifiés par `versions.test.js`. Apple ID de l'app : `6781663800`.
 - **Android** : pas de CI, build manuel via Android Studio. `npm run release:android` incrémente `versionCode` — à lancer UNE fois par release réelle, pas à chaque build debug.
 
 ## Travail multi-machine (PC Windows + MacBook Pro M4)
@@ -64,7 +64,7 @@ Le repo est synchronisé via git/GitHub (`psychocaesar/Serein-TCC-ACT-`), pas vi
 
 Sur le Mac, `npx cap sync ios` régénère `Package.swift` avec des chemins natifs Mac (les chemins commis depuis Windows contiennent parfois des `\` au lieu de `/` — cosmétique, sans impact car regénéré à chaque sync, mais ne pas s'inquiéter si on le voit dans un diff après un sync côté Mac).
 
-**Le vrai gain du Mac** : builds iOS en local (`npx cap sync ios && npx cap open ios`, puis Run dans Xcode) sans dépendre de Codemagic pour chaque itération. Permet enfin de tester en quelques secondes ce qui ne peut PAS se vérifier en preview navigateur : verrou Face ID/Touch ID, swipe-retour, orientation portrait verrouillée, comportements natifs en général.
+**Le vrai gain du Mac** : builds iOS en local (`npx cap sync ios && npx cap open ios`, puis Run dans Xcode) sans attendre Xcode Cloud pour chaque itération. Permet enfin de tester en quelques secondes ce qui ne peut PAS se vérifier en preview navigateur : verrou Face ID/Touch ID, swipe-retour, orientation portrait verrouillée, comportements natifs en général.
 
 ## Docs complémentaires (ne pas dupliquer ici)
 

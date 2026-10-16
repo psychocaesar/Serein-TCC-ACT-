@@ -76,7 +76,7 @@ Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant
 ⚠️ IMPORTANT
 Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
 
-Politique de confidentialité : https://sereinapp.fr/tcc/privacy
+Politique de confidentialité : https://sereinapp.fr/relais/privacy.html
 
 ---
 
@@ -129,7 +129,7 @@ Sous-catégorie : Bien-être mental
 
 ## URL POLITIQUE DE CONFIDENTIALITÉ
 
-https://sereinapp.fr/tcc/privacy
+https://sereinapp.fr/relais/privacy.html
 
 ## EMAIL DE CONTACT
 
@@ -214,7 +214,7 @@ Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant
 
 ⚠️ Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
 
-Politique de confidentialité : https://sereinapp.fr/tcc/privacy
+Politique de confidentialité : https://sereinapp.fr/relais/privacy.html
 
 ---
 
@@ -257,11 +257,11 @@ Mode de vie
 
 ## URL DE POLITIQUE DE CONFIDENTIALITÉ
 
-https://sereinapp.fr/tcc/privacy
+https://sereinapp.fr/relais/privacy.html
 
 ## URL DE SUPPORT
 
-https://sereinapp.fr/tcc/privacy   (ou page contact : https://sereinapp.fr/contact)
+https://sereinapp.fr/contact.html
 
 ## URL MARKETING (optionnel)
 

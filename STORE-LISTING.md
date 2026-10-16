@@ -23,62 +23,58 @@ Exercices TCC entre les séances, et après. Sans pub, sans compte, hors ligne.
 ## DESCRIPTION LONGUE
 (max 4000 caractères)
 
-Serein Relais est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
+Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue formé aux thérapies cognitives et comportementales (TCC) et à la thérapie d'acceptation et d'engagement (ACT).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
-Des outils concrets, fondés sur la TCC et la thérapie d'acceptation et d'engagement (ACT), pour les moments où l'anxiété monte, où les pensées tournent en boucle, ou simplement pour mieux se comprendre au quotidien.
+▶ UNE APP SIMPLE, EN QUATRE ESPACES
 
-▶ CE QUE PROPOSE SEREIN RELAIS
+☀️ AUJOURD'HUI
+- Votre humeur en un geste, de 0 à 10, et ce qui domine si vous le souhaitez (stress, tristesse, rumination…)
+- « Ta pratique du jour » : une seule proposition à la fois, selon ce que votre psy vous a proposé ou selon votre humeur
+- Le défi du jour : une pensée, quel piège ? Trente secondes pour s'entraîner à repérer les pièges de pensée
 
-L'app s'organise par besoin, pas par jargon.
+🎯 EXERCICES : six outils de la TCC et de l'ACT
+- Respirer et s'ancrer : cohérence cardiaque rythmée par des cloches, respiration en boîte, ancrage 5-4-3-2-1
+- Journal de pensées : situation, pensée, émotion, faits pour et contre, pensée équilibrée, puis nouvelle cotation pour voir le chemin parcouru
+- Expériences : mettre une prédiction à l'épreuve du réel, avec rappels
+- Exposition : votre propre échelle, palier par palier, centrée sur ce que vous craignez et ce qui se passe vraiment
+- Un petit pas : une seule action concrète quand tout est lourd
+- Valeurs et défusion : clarifier ce qui compte, prendre du recul sur ses pensées
 
-🌿 APAISER — revenir au calme, maintenant
-- Respiration guidée : cohérence cardiaque rythmée par des cloches, et d'autres rythmes
-- Ancrage 5-4-3-2-1 pour se reconnecter au présent
-- Un petit pas : micro-actions d'activation douce pour les jours à plat
-- Mode SOS : un espace de crise immédiat — respiration, ancrage, vos propres cartes, et appel direct du 3114
+📖 MON CARNET : ce que vous construisez, pour le garder
+- Entre deux séances : notez les exercices que votre psy vous propose ; ils avancent tout seuls quand vous les faites, et un récap est prêt à montrer en séance
+- Plan anti-rechute : vos signaux d'alerte, ce qui vous aide, les personnes à appeler, quand reprendre contact avec votre psy
+- Vos cartes de coping, vos pensées équilibrées, ce qui va bien, vos directions de vie
+- Une fois la thérapie terminée, les tâches deviennent vos engagements de maintien
 
-🧠 COMPRENDRE — travailler sur ses pensées
-- Journal de pensées : restructuration cognitive guidée, étape par étape
-- Cartes de coping : des réponses prêtes pour les moments difficiles
-- Boussole des valeurs (ACT) : clarifier ce qui compte pour orienter ses actions
-- Repérer les pièges de pensée (les distorsions cognitives courantes)
-- Échelle de catastrophe : dédramatiser un scénario redouté
-- Défusion ACT : prendre du recul sur ses pensées plutôt que les combattre
-- Expériences comportementales : tester ses prédictions, avec rappels
+📈 MON SUIVI
+- Une mosaïque qui se remplit : chaque exercice mené au bout ajoute un carreau. Pas de série à casser, pas de jour « raté », rien ne s'efface
+- La courbe de votre humeur, sur 7 jours, 30 jours ou un an
 
-📈 PARCOURS — suivre son évolution
-- Suivi de l'intensité émotionnelle, sous forme de courbe
-- Check-in quotidien : humeur, déclencheurs, ressentis
-- Journal positif pour contrebalancer le filtre négatif
-- Jours de pratique cumulés — pas de « série » à casser, jamais remis à zéro
-- Une pensée du jour TCC/ACT, comme un repère
+🆘 SOS, TOUJOURS EN HAUT DE L'ÉCRAN
+Respiration guidée, ancrage, une de vos cartes, votre plan anti-rechute, et l'appel direct du 3114 ou d'une personne de confiance.
 
 🃏 WIDGET D'ÉCRAN D'ACCUEIL
 Une de vos cartes de coping, visible d'un coup d'œil sans ouvrir l'app.
 
 📴 FONCTIONNE 100 % HORS LIGNE
-
-Tout est embarqué dans l'application. Aucune connexion requise, jamais — dans le métro, en avion, partout. L'app n'effectue aucune requête réseau.
+Tout est embarqué dans l'application. Aucune connexion requise : dans le métro, en avion, partout.
 
 🔒 VOS DONNÉES VOUS APPARTIENNENT
-
-Serein Relais est construit autour d'un principe simple : ce que vous écrivez ne regarde que vous.
-
+Ce que vous écrivez ne regarde que vous.
 - Aucun tracker publicitaire, aucun SDK d'analyse tiers
-- Tout (journal, cartes, suivi, expériences) est stocké sur votre appareil — jamais transmis à nos serveurs ni à des tiers
+- Tout est stocké sur votre appareil, jamais transmis à nos serveurs ni à des tiers
 - Aucun compte requis
-- Verrouillage optionnel de l'app par empreinte ou code de l'appareil
+- Verrouillage optionnel par empreinte ou code de l'appareil
+- Le récap de séance n'est partagé que si vous le décidez, par le moyen de votre choix
 - Un bouton « Tout effacer » pour repartir de zéro à tout moment
 
 🌱 UN PROJET INDÉPENDANT
-
-Fondé par César Broche Aguilar, psychologue du travail, Serein est un projet indépendant — sans investisseurs, sans publicité, sans modèle économique basé sur les données.
+Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant, sans investisseurs, sans publicité, sans modèle économique basé sur les données.
 
 ⚠️ IMPORTANT
-
-Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24.
+Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
 
 Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 
@@ -87,7 +83,7 @@ Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 ## TEXTE PROMOTIONNEL
 (max 80 caractères)
 
-Des outils TCC & ACT, par un psychologue. Hors ligne, sans pub, sans tracking.
+Vos exercices TCC entre les séances, et après. Hors ligne, sans pub ni compte.
 
 ---
 
@@ -169,53 +165,54 @@ Ta TCC entre les séances
 ## DESCRIPTION
 (max 4000 caractères)
 
-Serein Relais est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
+Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue formé aux thérapies cognitives et comportementales (TCC) et à la thérapie d'acceptation et d'engagement (ACT).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
-Des outils concrets, fondés sur la TCC et la thérapie d'acceptation et d'engagement (ACT), pour les moments où l'anxiété monte, où les pensées tournent en boucle, ou simplement pour mieux se comprendre.
+— AUJOURD'HUI —
+• Votre humeur en un geste, de 0 à 10, et ce qui domine si vous le souhaitez
+• « Ta pratique du jour » : une seule proposition à la fois, selon ce que votre psy vous a proposé ou selon votre humeur
+• Le défi du jour : une pensée, quel piège ? Trente secondes d'entraînement
 
-— APAISER : revenir au calme —
-• Respiration guidée : cohérence cardiaque rythmée par des cloches, et d'autres rythmes
-• Ancrage 5-4-3-2-1 pour se reconnecter au présent
-• Un petit pas : micro-actions d'activation douce pour les jours à plat
-• Mode SOS : espace de crise immédiat — respiration, ancrage, vos cartes, appel direct du 3114
+— EXERCICES : six outils de la TCC et de l'ACT —
+• Respirer et s'ancrer : cohérence cardiaque rythmée par des cloches, respiration en boîte, ancrage 5-4-3-2-1
+• Journal de pensées : faits pour et contre, pensée équilibrée, puis nouvelle cotation pour voir le chemin parcouru
+• Expériences : mettre une prédiction à l'épreuve du réel, avec rappels
+• Exposition : votre propre échelle, palier par palier, centrée sur ce que vous craignez et ce qui se passe vraiment
+• Un petit pas : une seule action concrète quand tout est lourd
+• Valeurs et défusion : clarifier ce qui compte, prendre du recul sur ses pensées
 
-— COMPRENDRE : travailler sur ses pensées —
-• Journal de pensées : restructuration cognitive guidée, étape par étape
-• Cartes de coping : des réponses prêtes pour les moments difficiles
-• Boussole des valeurs (ACT) : clarifier ce qui compte pour orienter ses actions
-• Repérer les pièges de pensée (distorsions cognitives)
-• Échelle de catastrophe : dédramatiser un scénario redouté
-• Défusion ACT : prendre du recul sur ses pensées
-• Expériences comportementales : tester ses prédictions, avec rappels
+— MON CARNET : ce que vous construisez, pour le garder —
+• Entre deux séances : notez les exercices proposés par votre psy ; ils avancent tout seuls quand vous les faites, et un récap est prêt pour la séance
+• Plan anti-rechute : signaux d'alerte, ce qui aide, personnes à appeler, quand reprendre contact avec votre psy
+• Cartes de coping, pensées équilibrées, ce qui va bien, directions de vie
+• Après la thérapie, les tâches deviennent vos engagements de maintien
 
-— PARCOURS : suivre son évolution —
-• Suivi de l'intensité émotionnelle, en courbe
-• Check-in quotidien : humeur, déclencheurs, ressentis
-• Journal positif pour contrebalancer le filtre négatif
-• Jours de pratique cumulés — pas de « série » à casser, jamais remis à zéro
+— MON SUIVI —
+• Une mosaïque qui se remplit : chaque exercice mené au bout ajoute un carreau. Pas de série à casser, pas de jour « raté », rien ne s'efface
+• La courbe de votre humeur, sur 7 jours, 30 jours ou un an
+
+— SOS, TOUJOURS EN HAUT DE L'ÉCRAN —
+Respiration guidée, ancrage, une de vos cartes, votre plan anti-rechute, et l'appel direct du 3114 ou d'une personne de confiance.
 
 — WIDGET : écran d'accueil et écran verrouillé —
-Une de vos cartes de coping visible d'un coup d'œil, sans même ouvrir l'app.
+Une de vos cartes de coping visible d'un coup d'œil, sans ouvrir l'app.
 
-— FONCTIONNE 100 % HORS LIGNE —
-
-Tout est embarqué dans l'application. Aucune connexion requise, jamais. L'app n'effectue aucune requête réseau.
+— 100 % HORS LIGNE —
+Tout est embarqué dans l'application. Aucune connexion requise.
 
 — VOS DONNÉES VOUS APPARTIENNENT —
-
 • Aucun tracker publicitaire, aucun SDK d'analyse tiers
-• Tout est stocké sur votre appareil — jamais transmis à nos serveurs ni à des tiers
+• Tout est stocké sur votre appareil, jamais transmis à nos serveurs ni à des tiers
 • Aucun compte requis
 • Verrouillage optionnel par Face ID, Touch ID ou code
+• Le récap de séance n'est partagé que si vous le décidez
 • Un bouton « Tout effacer » pour repartir de zéro
 
 — UN PROJET INDÉPENDANT —
+Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant, financé sans publicité ni revente de données.
 
-Fondé par César Broche Aguilar, psychologue du travail, Serein est un projet indépendant, financé sans publicité ni revente de données.
-
-⚠️ Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24.
+⚠️ Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
 
 Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 
@@ -224,14 +221,14 @@ Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 ## TEXTE PROMOTIONNEL
 (max 170 caractères — modifiable sans nouvelle version)
 
-Des outils TCC & ACT en français, par un psychologue. Respiration, journal de pensées, suivi d'anxiété. Hors ligne, sans pub, sans tracking.
+Le relais entre vos séances de TCC : journal de pensées, exposition, plan anti-rechute, tâches de votre psy. En français, hors ligne, sans pub ni compte.
 
 ---
 
 ## MOTS-CLÉS
 (max 100 caractères au total, séparés par des virgules, sans espace après la virgule)
 
-anxiété,stress,angoisse,TCC,ACT,pensée,émotion,respiration,cohérence,relaxation,mental,calme
+TCC,ACT,psy,séance,anxiété,stress,pensée,émotion,exposition,rechute,respiration,journal,coping
 
 ---
 
@@ -286,11 +283,13 @@ Téléphone : (votre numéro)
 
 Serein Relais est un outil de soutien et d'auto-assistance fondé sur les principes de la TCC et de l'ACT. Ce n'est pas un dispositif médical : l'application ne pose aucun diagnostic, ne propose aucun traitement et ne formule aucune allégation thérapeutique.
 
-L'application fonctionne entièrement en local. Tout ce que l'utilisateur saisit (journal de pensées, cartes de coping, suivi d'intensité, expériences comportementales, check-ins) est stocké uniquement sur l'appareil (localStorage + Capacitor Preferences). Aucune donnée n'est transmise à un serveur : l'app n'effectue aucune requête réseau et n'intègre aucun SDK d'analyse ou de tracking.
+L'application fonctionne entièrement en local. Tout ce que l'utilisateur saisit (humeur, journal de pensées, cartes de coping, expériences, échelle d'exposition, tâches entre les séances, plan anti-rechute) est stocké uniquement sur l'appareil (localStorage + Capacitor Preferences). Aucune donnée n'est transmise à un serveur : l'app n'effectue aucune requête réseau et n'intègre aucun SDK d'analyse ou de tracking.
 
 Aucun compte n'est requis : l'app est immédiatement utilisable, hors ligne, sans identifiants de test.
 
 Par responsabilité, l'application affiche un avertissement (« complément, pas un substitut à un suivi thérapeutique ») et propose en cas de détresse un bouton d'appel direct du 3114 (numéro national de prévention du suicide, gratuit, 24h/24). Ces éléments sont des mesures de sécurité, pas du contenu médical actif.
+
+Partage : le bouton « Préparer mon récap » ouvre la feuille de partage du système (ou copie le texte) uniquement à l'initiative de l'utilisateur, qui choisit lui-même le destinataire. L'app n'envoie rien d'elle-même.
 
 Persistance : les données locales peuvent être incluses dans la sauvegarde iCloud de l'utilisateur (UserDefaults via Capacitor Preferences). Un fichier PrivacyInfo.xcprivacy déclare l'usage de NSUserDefaults (raison CA92.1).
 
@@ -317,7 +316,7 @@ app de santé mentale — l'étiquette vide est rare dans la catégorie.
 
 - [ ] La boîte contact@sereinapp.fr est-elle active ? (utilisée comme contact public + Apple)
 - [ ] Le repo GitHub Serein-TCC-ACT- est-il public ? Si oui, on peut ajouter une ligne « open source » et utiliser .../issues comme URL de support. Sinon, garder l'URL de support actuelle.
-- [ ] Choix du nom : « Serein · Anxiété & TCC » vs « Serein · Soutien émotionnel » (alternative sans le mot anxiété si Google tique sur une allégation santé).
-- [ ] **Captures d'écran datées du 20 juin** (dossier APP SCREENSHOT/) : prises AVANT la refonte de simplification (en-têtes allégés, check-in à curseur + bulle, hub Comprendre en 2 familles, boussole des valeurs, bouton 3114). Vérifier qu'elles reflètent l'UI actuelle, sinon les refaire — et l'iPad est désormais portrait uniquement.
+- [x] Nom : « Serein Relais » (16/10/2026). Sous-titre App Store : « Ta TCC entre les séances ». Vérifier la disponibilité du nom (INPI classes 9 et 44, App Store, Google Play).
+- [ ] **Captures d'écran à refaire entièrement** (dossier APP SCREENSHOT/ datant du 20 juin) : elles montrent l'ancienne structure. À montrer : Aujourd'hui (humeur + pratique du jour), Exercices, fin du journal (nouvelle cotation), Mon carnet, plan anti-rechute, mosaïque, SOS. L'iPad est portrait uniquement.
 - [ ] Google Play : formulaire « Applis de santé » (déclaration obligatoire pour la catégorie Bien-être mental) — cocher « bien-être / gestion du stress », PAS « dispositif médical ».
 - [ ] Play Console exige la validation « Compte requis ? » → répondre NON (accès complet sans compte, rien à fournir aux reviewers).

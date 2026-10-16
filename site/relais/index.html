@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b1814">
-  <title>Serein Relais - Tes exercices TCC entre les séances</title>
-  <meta name="description" content="Serein Relais : tes exercices de TCC et d'ACT entre les séances avec ton psy, puis après la thérapie. Gratuit, sans publicité, sans compte, hors ligne. Conçu par un psychologue.">
+  <title>Serein Relais - Ta thérapie continue entre les séances</title>
+  <meta name="description" content="Serein Relais : les exercices de TCC que ton psy te propose, à portée de main entre les séances et après la thérapie. Gratuit, sans compte, hors ligne.">
   <meta name="author" content="César Broche Aguilar">
-  <meta property="og:title" content="Serein Relais - Tes exercices TCC entre les séances">
-  <meta property="og:description" content="Journal de pensées, exposition, plan anti-rechute, tâches proposées par ton psy. Gratuit, sans publicité, sans compte.">
+  <meta property="og:title" content="Serein Relais - Ta thérapie continue entre les séances">
+  <meta property="og:description" content="Les exercices de TCC que ton psy te propose, à portée de main. Gratuit, sans compte, hors ligne.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="fr_FR">
   <meta property="og:site_name" content="Serein">
@@ -109,45 +109,6 @@
     .phone-screen img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
     .phone-glow{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:180px;height:60px;background:radial-gradient(ellipse,rgba(147,201,172,.25),transparent 70%);filter:blur(16px);pointer-events:none}
 
-    /* APP SECTION */
-    .app-section{padding:7rem 0}
-    .app-layout{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-    @media(max-width:768px){.app-layout{grid-template-columns:1fr;gap:3rem}}
-    .app-text .section-title{margin-bottom:1rem}
-    .app-text .section-lead{margin:1rem 0 2rem}
-    .app-features{display:flex;flex-direction:column;gap:1.1rem;margin-bottom:2.5rem}
-    .app-feature{display:flex;align-items:flex-start;gap:.9rem;padding:1rem 1.1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);transition:border-color .2s}
-    .app-feature:hover{border-color:rgba(147,201,172,.35)}
-    .af-icon{font-size:1.25rem;flex-shrink:0;margin-top:.1rem;line-height:1}
-    .af-title{font-size:.92rem;font-weight:500;color:var(--text);margin-bottom:.2rem}
-    .af-desc{font-size:.83rem;color:var(--text2);line-height:1.55;font-weight:300}
-    .app-badges{display:flex;gap:.85rem;flex-wrap:wrap}
-    .screenshots{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .ss-phone{background:linear-gradient(170deg,#1c3a2e,#0d1f1a);border-radius:1.6rem;padding:.4rem;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05)}
-    .ss-phone:nth-child(2){margin-top:2rem}
-    .ss-screen{background:#0f1f1b;border-radius:1.25rem;aspect-ratio:9/18;overflow:hidden;display:block}
-    .ss-screen img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-
-    /* ABOUT */
-    .about-section{padding:7rem 0;background:var(--bg2);border-top:1px solid var(--border)}
-    .about-layout{display:grid;grid-template-columns:340px 1fr;gap:5rem;align-items:start;padding-top:1rem}
-    @media(max-width:900px){.about-layout{grid-template-columns:1fr;gap:3rem}}
-    .about-photo-wrap{position:relative}
-    .about-img{width:100%;max-height:480px;object-fit:cover;object-position:top;border-radius:var(--r);display:block}
-    .about-img-ph{width:100%;aspect-ratio:3/4;background:linear-gradient(155deg,var(--surface2),var(--surface));border-radius:var(--r);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
-    .about-caption{position:absolute;bottom:1.25rem;left:1.25rem;right:1.25rem;background:rgba(11,24,20,.9);backdrop-filter:blur(12px);border:1px solid var(--border2);border-radius:var(--r2);padding:.85rem 1rem}
-    .about-caption-name{font-size:.92rem;font-weight:500;color:var(--text)}
-    .about-caption-role{font-size:.78rem;color:var(--text2);margin-top:.2rem;line-height:1.45}
-    .about-text .section-title{margin:.5rem 0 1.5rem;max-width:16ch}
-    .about-text p{font-size:.97rem;color:var(--text2);line-height:1.78;font-weight:300;margin-bottom:1.1rem;max-width:52ch}
-    .about-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem}
-    .about-tag{font-size:.78rem;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.3rem .8rem;color:var(--text2)}
-    .about-more{display:inline-block;margin-top:1.5rem;font-size:.9rem;color:var(--primary);text-decoration:none;font-weight:500;transition:opacity .2s}
-    .about-more:hover{opacity:.8}
-    .about-pro{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--text2);line-height:1.6}
-    .about-pro a{color:var(--primary);text-decoration:none;font-weight:500;transition:opacity .2s}
-    .about-pro a:hover{opacity:.8}
-
     /* FOOTER */
     .footer{padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:var(--max);margin:0 auto;border-top:1px solid var(--border)}
     .footer-left{display:flex;align-items:center;gap:.8rem}
@@ -200,43 +161,22 @@
     .app-badge.soon{opacity:.45;cursor:default}
     .app-badge.soon:hover{transform:none;opacity:.45}
     .soon-label{align-self:center;font-size:.85rem;color:var(--text2);border:1px solid var(--border2);border-radius:999px;padding:.35rem .9rem}
-    .af-icon{width:36px;height:36px;border-radius:.6rem;display:flex;align-items:center;justify-content:center;background:var(--c);color:#0d1b15;margin-top:0}
-    .af-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .gallery-section{padding:0 0 7rem}
-    .gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2rem}
-    .gallery figure{display:flex;flex-direction:column;gap:1rem}
-    .gallery .ss-phone:nth-child(2){margin-top:0}
-    .gallery figure:nth-child(2){margin-top:2.5rem}
-    .gallery figcaption{font-size:.88rem;color:var(--text2);line-height:1.55;font-weight:300;text-align:center;padding:0 .5rem}
-    @media(max-width:760px){.gallery{grid-template-columns:1fr;max-width:300px;margin:0 auto;gap:3rem}.gallery figure:nth-child(2){margin-top:0}}
-    .psy-section{padding:7rem 0;background:var(--bg2);border-top:1px solid var(--border)}
-    .psy-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;align-items:start}
-    @media(max-width:900px){.psy-layout{grid-template-columns:1fr;gap:2.5rem}}
-    .psy-text .section-lead{margin:1rem 0 2rem}
-    .psy-steps{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:1rem}
-    .psy-steps li{counter-increment:step;position:relative;padding:1rem 1.1rem 1rem 3.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);font-size:.9rem;color:var(--text2);line-height:1.6;font-weight:300}
-    .psy-steps li::before{content:counter(step);position:absolute;left:1rem;top:1rem;width:1.7rem;height:1.7rem;border-radius:.5rem;background:rgba(216,183,138,.15);color:var(--accent);font-family:var(--serif);font-size:.95rem;display:flex;align-items:center;justify-content:center}
-    .psy-steps strong{color:var(--text);font-weight:500}
-    .psy-side{display:flex;flex-direction:column;gap:1rem}
-    .psy-card{padding:1.3rem 1.4rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
-    .psy-card-title{font-family:var(--serif);font-size:1.25rem;font-weight:300;margin-bottom:.75rem;color:var(--text)}
-    .psy-card p,.psy-card li{font-size:.88rem;color:var(--text2);line-height:1.6;font-weight:300}
-    .psy-card ul{padding-left:1.1rem;display:flex;flex-direction:column;gap:.4rem}
-    .psy-cta{display:inline-flex;margin-top:1rem;background:var(--gradient);color:#0d1b15;font-weight:600;font-size:.9rem;padding:.75rem 1.4rem;border-radius:999px;text-decoration:none;transition:opacity .2s}
-    .psy-cta:hover{opacity:.88}
-    .found-section{padding:7rem 0}
-    .found-section .section-title{margin-bottom:2.5rem}
-    .found-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
-    @media(max-width:900px){.found-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:600px){.found-grid{grid-template-columns:1fr}}
-    .found-item{padding:1.2rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)}
-    .found-title{font-size:.95rem;font-weight:500;color:var(--text);margin-bottom:.4rem}
-    .found-desc{font-size:.85rem;color:var(--text2);line-height:1.6;font-weight:300}
-    .privacy-section{padding:0 0 7rem}
-    .privacy-box{padding:3rem;background:linear-gradient(140deg,rgba(147,201,172,.08),rgba(216,183,138,.06));border:1px solid var(--border2);border-radius:var(--r);max-width:820px}
-    .privacy-box .section-lead{margin:1rem 0 .5rem;max-width:60ch}
+    .steps-section{padding:6.5rem 0 5rem}
+    .steps-section .section-title{text-align:center;margin-bottom:3rem}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem;max-width:900px;margin:0 auto}
+    .steps figure{display:flex;flex-direction:column;gap:1.1rem}
+    .ss-phone{background:linear-gradient(170deg,#1c3a2e,#0d1f1a);border-radius:1.6rem;padding:.4rem;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05)}
+    .ss-screen{background:#0f1f1b;border-radius:1.25rem;aspect-ratio:9/18;overflow:hidden;display:block}
+    .ss-screen img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+    .steps figcaption{display:flex;align-items:baseline;gap:.6rem;justify-content:center;text-align:center;font-size:1rem;color:var(--text);font-weight:400;line-height:1.4}
+    .step-n{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.3rem}
+    .steps-after{text-align:center;color:var(--text2);font-weight:300;margin-top:3rem;font-size:1rem}
+    @media(max-width:760px){.steps{grid-template-columns:1fr;max-width:280px;gap:3rem}}
+    .privacy-section{padding:0 0 6rem}
+    .privacy-box{padding:2.5rem 3rem;background:linear-gradient(140deg,rgba(147,201,172,.08),rgba(216,183,138,.06));border:1px solid var(--border2);border-radius:var(--r);max-width:760px;margin:0 auto;text-align:center}
+    .privacy-box .section-lead{margin:1rem auto 0;max-width:46ch}
+    .privacy-box a{color:var(--primary);text-decoration:none;font-weight:500;white-space:nowrap}
     @media(max-width:600px){.privacy-box{padding:2rem 1.5rem}}
-    @media(prefers-reduced-motion:reduce){.psy-cta{transition:none}}
   </style>
   <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
@@ -249,10 +189,9 @@
   </a>
   <nav aria-label="Navigation principale">
     <ul class="nav-links" id="nav-links">
-      <li><a href="#app">L'application</a></li>
-      <li><a href="#psy">Pour les psys</a></li>
-      <li><a href="#fondements">Fondements</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="#faq">Questions</a></li>
+      <li><a href="../pro/#relais">Pour les psys</a></li>
       <li><a href="../">Serein méditation</a></li>
       <li><a href="#telecharger" class="nav-dl">Télécharger</a></li>
     </ul>
@@ -269,11 +208,10 @@
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero">
     <div class="hero-content">
-      <span class="eyebrow ha1">Serein Relais · TCC &amp; ACT</span>
       <h1 class="ha2">Ta thérapie continue<br><em>entre les séances.</em></h1>
-      <p class="hero-lead ha3">Tes exercices de TCC à portée de main : entre deux rendez-vous avec ton psy, puis une fois la thérapie terminée. Une seule chose à faire chaque jour, rien de plus.</p>
+      <p class="hero-lead ha3">Les exercices de TCC que ton psy te propose, à portée de main. Un par jour, à ton rythme.</p>
       <div class="hero-badges ha4" id="telecharger">
-        <!-- À la sortie : remplacer ces deux blocs par les liens officiels des stores (cf. ../index.html) -->
+        <!-- À la sortie : remplacer ces deux blocs par les liens des stores (voir site/README.md) -->
         <span class="app-badge soon" aria-label="Bientôt sur l'App Store">
           <img src="../assets/badges/app-store-fr.svg" alt="" width="126" height="40">
         </span>
@@ -284,16 +222,14 @@
       </div>
       <div class="hero-trust ha5">
         <span class="trust-pill">Gratuit</span>
-        <span class="trust-pill">Sans publicité</span>
         <span class="trust-pill">Sans compte</span>
-        <span class="trust-pill">100 % hors ligne</span>
+        <span class="trust-pill">Hors ligne</span>
       </div>
     </div>
-
     <div class="hero-visual ha3">
       <div class="phone">
         <div class="phone-screen">
-          <img src="img/relais-aujourdhui.jpg" alt="Écran Aujourd'hui de Serein Relais : humeur du jour, pratique du jour proposée par le psy et défi du jour" width="720" height="1559" fetchpriority="high">
+          <img src="img/relais-aujourdhui.jpg" alt="Écran Aujourd'hui de Serein Relais : humeur du jour et pratique du jour" width="720" height="1559" fetchpriority="high">
         </div>
       </div>
       <div class="phone-glow" aria-hidden="true"></div>
@@ -303,129 +239,34 @@
 
 <div class="s-divider"></div>
 
-<!-- APP -->
-<section class="app-section" id="app">
+<!-- COMMENT ÇA MARCHE -->
+<section class="steps-section" id="comment">
   <div class="wrap">
-    <div class="app-layout">
-      <div class="app-text">
-        <span class="eyebrow reveal">L'application</span>
-        <h2 class="section-title reveal d1">Quatre espaces.<br><em>Une chose à la fois.</em></h2>
-        <p class="section-lead reveal d2">Pas de vertige devant une liste d'outils : chaque jour, l'app te propose un seul exercice, choisi selon ce que ton psy t'a proposé ou selon ton humeur.</p>
-        <div class="app-features">
-          <div class="app-feature reveal d1">
-            <span class="af-icon" style="--c:#93c9ac" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></span>
-            <div><p class="af-title">Aujourd'hui</p><p class="af-desc">Ton humeur en un geste, ta pratique du jour, et un défi de trente secondes pour repérer les pièges de pensée.</p></div>
-          </div>
-          <div class="app-feature reveal d2">
-            <span class="af-icon" style="--c:#d8b78a" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span>
-            <div><p class="af-title">Exercices</p><p class="af-desc">Les six outils de ta thérapie : respirer, journal de pensées, expériences, exposition, un petit pas, valeurs et défusion.</p></div>
-          </div>
-          <div class="app-feature reveal d3">
-            <span class="af-icon" style="--c:#8fb3d9" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-            <div><p class="af-title">Mon carnet</p><p class="af-desc">Ce que tu construis et que tu gardes : les tâches entre deux séances, ton plan anti-rechute, tes cartes, tes pensées équilibrées.</p></div>
-          </div>
-          <div class="app-feature reveal d3">
-            <span class="af-icon" style="--c:#b9a6e0" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-            <div><p class="af-title">Mon suivi</p><p class="af-desc">Une mosaïque qui se remplit à chaque exercice, sans série à casser ni jour « raté », et la courbe de ton humeur.</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="screenshots reveal d2" aria-label="Captures d'écran de Serein Relais">
-        <div class="ss-phone">
-          <div class="ss-screen">
-            <img src="img/relais-journal.jpg" alt="Fin du journal de pensées : la croyance passe de 80 à 30 et l'anxiété de 8 à 4" width="720" height="1559" loading="lazy">
-          </div>
-        </div>
-        <div class="ss-phone">
-          <div class="ss-screen">
-            <img src="img/relais-suivi.jpg" alt="Mon suivi : la mosaïque des exercices réalisés et la courbe d'humeur sur 30 jours" width="720" height="1559" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GALERIE -->
-<section class="gallery-section" aria-label="Autres écrans">
-  <div class="wrap">
-    <div class="gallery">
+    <h2 class="section-title reveal">Comment <em>ça marche</em></h2>
+    <div class="steps">
       <figure class="reveal d1">
-        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-exercices.jpg" alt="Les six exercices, chacun avec son niveau : découverte, pratique, autonomie" width="720" height="1559" loading="lazy"></div></div>
-        <figcaption>Six outils, avec ton niveau pour chacun : découverte, pratique, autonomie.</figcaption>
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-carnet.jpg" alt="Mon carnet : les exercices proposés par le psy" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">1</span>Tu notes ce que ton psy te propose.</figcaption>
       </figure>
       <figure class="reveal d2">
-        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-carnet.jpg" alt="Mon carnet : tâches entre deux séances, plan anti-rechute, cartes de coping" width="720" height="1559" loading="lazy"></div></div>
-        <figcaption>Les exercices proposés par ton psy avancent tout seuls quand tu les fais.</figcaption>
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-journal.jpg" alt="Fin du journal de pensées : la croyance passe de 80 à 30" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">2</span>Tu fais l'exercice, quand tu veux.</figcaption>
       </figure>
       <figure class="reveal d3">
-        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-plan.jpg" alt="Plan anti-rechute : ce que j'ai appris, signaux d'alerte, personnes ressources" width="720" height="1559" loading="lazy"></div></div>
-        <figcaption>Ton plan anti-rechute, à remplir avec ton psy en fin de thérapie.</figcaption>
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-suivi.jpg" alt="Mon suivi : la mosaïque des exercices réalisés" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">3</span>Tu vois le chemin parcouru.</figcaption>
       </figure>
     </div>
-  </div>
-</section>
-
-<div class="s-divider"></div>
-
-<!-- POUR LES PSYS -->
-<section class="psy-section" id="psy">
-  <div class="wrap">
-    <div class="psy-layout">
-      <div class="psy-text">
-        <span class="eyebrow reveal">Pour les psys</span>
-        <h2 class="section-title reveal d1">Un relais entre<br><em>vos séances.</em></h2>
-        <p class="section-lead reveal d2">Conçue par un psychologue formé aux TCC, Serein Relais prolonge le travail fait en séance, sans rien changer à votre façon de travailler.</p>
-        <ol class="psy-steps">
-          <li class="reveal d1"><strong>En fin de séance</strong>, votre patient note les exercices proposés : « trois journaux de pensées », « palier 2 de l'exposition ».</li>
-          <li class="reveal d2"><strong>Entre les séances</strong>, l'app les lui propose en priorité ; ils avancent tout seuls quand il les fait.</li>
-          <li class="reveal d3"><strong>Avant la séance suivante</strong>, il peut vous montrer ou vous envoyer un récap : exercices faits, humeur, pensées travaillées et leurs nouvelles cotations.</li>
-          <li class="reveal d3"><strong>En fin de thérapie</strong>, vous remplissez ensemble son plan anti-rechute ; les tâches deviennent ses engagements de maintien.</li>
-        </ol>
-      </div>
-      <div class="psy-side">
-        <div class="psy-card reveal d1">
-          <p class="psy-card-title">Ce que l'app n'est pas</p>
-          <ul>
-            <li>Pas un dispositif médical, ni un substitut au suivi.</li>
-            <li>Pas de compte thérapeute : rien ne vous remonte, le patient garde la main sur ce qu'il partage.</li>
-            <li>Pas de promesse d'efficacité, pas de série à entretenir.</li>
-          </ul>
-        </div>
-        <div class="psy-card reveal d2">
-          <p class="psy-card-title">Tester avant la sortie</p>
-          <p>Vous êtes psy et vous voulez l'essayer avec quelques patients volontaires ? Écrivez-moi pour rejoindre la version de test.</p>
-          <a class="psy-cta" href="mailto:contact@sereinapp.fr?subject=Serein%20Relais%20-%20version%20de%20test">Rejoindre la version de test</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FONDEMENTS -->
-<section class="found-section" id="fondements">
-  <div class="wrap">
-    <span class="eyebrow reveal">Fondements</span>
-    <h2 class="section-title reveal d1">Les exercices de la TCC,<br><em>tels qu'on les enseigne.</em></h2>
-    <div class="found-grid">
-      <div class="found-item reveal d1"><p class="found-title">Restructuration cognitive</p><p class="found-desc">Le journal suit le tableau de Beck : faits pour et contre, décatastrophisation, pensée alternative, puis nouvelle cotation de la croyance et de l'émotion.</p></div>
-      <div class="found-item reveal d2"><p class="found-title">Exposition</p><p class="found-desc">Une échelle personnelle, centrée sur la prédiction redoutée et ce qui se passe vraiment, plutôt que sur la baisse de l'anxiété (apprentissage inhibiteur).</p></div>
-      <div class="found-item reveal d3"><p class="found-title">Activation comportementale</p><p class="found-desc">« Un petit pas » : l'action vient avant l'envie. Une seule action concrète, et l'occasion de remarquer le lien entre activité et humeur.</p></div>
-      <div class="found-item reveal d1"><p class="found-title">ACT</p><p class="found-desc">Valeurs comme directions de vie, défusion pour prendre du recul sur ses pensées : l'utilité d'une pensée plutôt que sa vérité.</p></div>
-      <div class="found-item reveal d2"><p class="found-title">Prévention de la rechute</p><p class="found-desc">Signaux d'alerte, situations à risque, ce qui aide, personnes ressources, seuil pour reprendre contact. Un écart n'est pas une rechute.</p></div>
-      <div class="found-item reveal d3"><p class="found-title">Sécurité</p><p class="found-desc">Un bouton SOS toujours visible : respiration, ancrage, plan, et appel direct du 3114 ou, en cas de danger immédiat, du 15 et du 112.</p></div>
-    </div>
+    <p class="steps-after reveal">Et après la thérapie, l'app reste avec toi, avec ton plan anti-rechute.</p>
   </div>
 </section>
 
 <!-- CONFIDENTIALITÉ -->
-<section class="app-section privacy-section" aria-label="Confidentialité">
+<section class="privacy-section" aria-label="Confidentialité">
   <div class="wrap">
     <div class="privacy-box reveal">
-      <h2 class="section-title">Ce que tu écris<br><em>ne regarde que toi.</em></h2>
-      <p class="section-lead">Aucun compte, aucun tracker, aucune requête réseau. Tout reste sur ton téléphone, jamais transmis à nos serveurs ni à des tiers. Tu peux verrouiller l'app par Face ID ou code, et tout effacer à tout moment.</p>
-      <a class="about-more" href="privacy.html">Lire la politique de confidentialité →</a>
+      <h2 class="section-title">Ce que tu écris <em>reste chez toi.</em></h2>
+      <p class="section-lead">Pas de compte, pas de pub, aucune donnée envoyée. Tout reste sur ton téléphone. <a href="privacy.html">Confidentialité →</a></p>
     </div>
   </div>
 </section>
@@ -435,29 +276,20 @@
   <div class="wrap">
     <div class="faq-layout">
       <div class="faq-text">
-        <span class="eyebrow reveal">FAQ</span>
-        <h2 class="section-title reveal d1">Ce qu'on me<br><em>demande souvent.</em></h2>
+        <h2 class="section-title reveal">Questions</h2>
       </div>
       <div class="faq-list">
         <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">Faut-il être suivi·e par un psy pour l'utiliser ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-          <p class="faq-answer">Non, mais c'est pour cela qu'elle est conçue : prolonger un travail commencé en thérapie. Sans suivi, les exercices restent utiles, et l'app t'oriente vers un professionnel quand c'est nécessaire.</p>
+          <button class="faq-question" aria-expanded="false">Faut-il être suivi·e par un psy ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <p class="faq-answer">Non, mais l'app est pensée pour accompagner une thérapie.</p>
         </div>
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false">Mon psy voit-il ce que je note ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-          <p class="faq-answer">Non. Rien ne lui remonte. Si tu le souhaites, tu peux préparer un récap et le lui montrer ou le lui envoyer toi-même.</p>
+          <p class="faq-answer">Non. Tu peux lui montrer un récap si tu le souhaites.</p>
         </div>
         <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">Et une fois ma thérapie terminée ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-          <p class="faq-answer">L'app reste avec toi : tes tâches deviennent des engagements de maintien, et ton plan anti-rechute est toujours là, y compris depuis le bouton SOS.</p>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">Quelle différence avec Serein ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-          <p class="faq-answer">Serein propose des méditations guidées. Serein Relais est un carnet d'exercices de TCC et d'ACT, pensé pour accompagner une thérapie. Les deux sont gratuites et suivent les mêmes principes : pas de pub, pas de compte, rien ne quitte ton téléphone.</p>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question" aria-expanded="false">Et si je ne vais vraiment pas bien ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
-          <p class="faq-answer">Serein Relais ne remplace pas un suivi. Si tu as des idées suicidaires, appelle le 3114, gratuit, 24h/24. En cas de danger immédiat, appelle le 15 ou le 112.</p>
+          <button class="faq-question" aria-expanded="false">Et si ça ne va vraiment pas ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <p class="faq-answer">L'app ne remplace pas un suivi. Appelle le 3114, gratuit, 24h/24. En cas de danger immédiat : 15 ou 112.</p>
         </div>
       </div>
     </div>
@@ -473,8 +305,7 @@
   </div>
   <ul class="footer-links">
     <li><a href="../">Serein méditation</a></li>
-    <li><a href="../pro/">Pour les pros</a></li>
-    <li><a href="https://www.instagram.com/sereinapp.fr/" target="_blank" rel="noopener">Instagram</a></li>
+    <li><a href="../pro/#relais">Pour les psys</a></li>
     <li><a href="mailto:contact@sereinapp.fr">Contact</a></li>
     <li><a href="privacy.html">Confidentialité</a></li>
     <li><a href="../mentions-legales.html">Mentions légales</a></li>

@@ -20,6 +20,18 @@ npx cap sync                      # répercute www/ sur android/ + ios/
 
 Toujours dans cet ordre, à chaque modification du fichier source. `npm run sync` fait `build:web` + `cap sync` en une commande.
 
+## Structure de l'app (refonte recentrée, octobre 2026)
+
+Support entre deux séances et après la thérapie. 4 onglets + SOS :
+- **Aujourd'hui** (`home`) : humeur 0-10 (haut = bien) + « ce qui domine » optionnel (jamais déduit du curseur) ; « Ta pratique du jour » = UNE proposition (`pickDailyPractice` : tâche du psy > expérience prévue > humeur) ; défi du jour (1 pensée, quel piège ?).
+- **Exercices** (`exercices`) : 6 outils définis dans `EXERCISES` (respirer, journal, expériences, exposition, petit pas, valeurs & défusion), chacun avec sa couleur et son niveau (`levelFor` : découverte 1 / pratique 5 / autonomie 15).
+- **Mon carnet** (`carnet`) : tâches du psy (`taches`, deviennent « engagements de maintien » si thérapie terminée), plan anti-rechute (`plan`), cartes, pensées équilibrées (`jhistory`), ce qui va bien (`diary`), valeurs.
+- **Mon suivi** (`suivi`) : mosaïque + courbe d'humeur.
+
+**Mosaïque** : chaque exercice mené au bout appelle `logPractice(kind)` → un carreau dans `serein_practice`, et avance la 1re tâche du psy du même exercice. Règles non négociables : aucune série, aucun jour « raté », rien ne s'efface (validé avec César : pas de culpabilité, pas de ton « développement personnel »).
+
+Écrans supprimés à la refonte (ne pas les recréer sans en parler) : check-in détaillé, 30 questions « Explore », écran Schémas (→ aide dans l'étape 4 du journal), quiz 12 questions (→ défi du jour), échelle de catastrophe (→ étape 5 du journal), métaphores (3 gardées dans Valeurs & défusion), pensée du jour, compteur 🔥.
+
 ## Architecture
 
 - **`Store`** (localStorage + Capacitor Preferences pour la persistance native durable) : `STORE_KEYS` = toutes les clés synchronisées avec le natif (survivent à une purge WebView). `DATA_KEYS` = sous-ensemble effacé par "Tout effacer" (données utilisateur réelles, PAS les réglages comme le thème ou le verrou). `EXPORT_KEYS` = ce qui est inclus dans l'export/import JSON.
@@ -32,7 +44,7 @@ Toujours dans cet ordre, à chaque modification du fichier source. `npm run sync
 
 ## Tests
 
-`tests/clinical-logic.test.js` charge le vrai `<script>` de `serein-tcc-act.html` dans un sandbox `node:vm` (DOM stub), coupé juste avant `boot()` (marqueur textuel avant `initTheme()`) pour éviter tout effet de bord. Couvre la logique clinique pure : `getMoodFromValence`, routage `emotionSuggestions`, boussole des valeurs. En ajoutant une nouvelle fonction "métier" pure (mapping, seuils, routage), ajouter un test dans ce fichier plutôt que de faire confiance à la vérification manuelle seule.
+`tests/clinical-logic.test.js` charge le vrai `<script>` de `serein-tcc-act.html` dans un sandbox `node:vm` (DOM stub), coupé juste avant `boot()` (marqueur textuel avant `initTheme()`) pour éviter tout effet de bord. Couvre la logique clinique pure : `pickDailyPractice` (routage de la pratique du jour, dont « détresse forte → jamais le journal »), échelle d'humeur et migration de l'ancien suivi, niveaux, défi du jour, re-cotation du journal, boussole des valeurs. En ajoutant une nouvelle fonction "métier" pure (mapping, seuils, routage), ajouter un test dans ce fichier plutôt que de faire confiance à la vérification manuelle seule.
 
 `tests/versions.test.js` vérifie que `package.json`, `android/app/build.gradle` (versionName) et `project.pbxproj` (MARKETING_VERSION) sont tous alignés sur la constante `MARKETING`.
 
@@ -58,5 +70,6 @@ Sur le Mac, `npx cap sync ios` régénère `Package.swift` avec des chemins nati
 ## Prochaines étapes connues
 
 - **Validation sur device réel** (le Mac le permet enfin) : verrou biométrique (Face ID/Touch ID — le bug de nom de pont natif est corrigé mais jamais testé sur vrai matériel), swipe-retour, orientation portrait, aria-hidden du verrou avec VoiceOver.
-- **Checklist `STORE-LISTING.md`** avant soumission : captures d'écran à refaire (datent d'avant la refonte UX : en-têtes, check-in à curseur, hub Comprendre, boussole des valeurs) ; formulaire "Applis de santé" Google Play (bien-être, PAS dispositif médical) ; déclaration "compte requis : non".
-- **Pistes déjà proposées et mises en attente** (pas rejetées, à ressortir si pertinent) : mesure SUDS avant/après exercice, export du journal lisible par un thérapeute, raccourcis d'icône (appui long → SOS/Respirer/Noter une pensée), refonte des libellés de nav ("Apaiser/Comprendre/Parcours" sont abstraits pour un nouvel utilisateur — mais touche le cadre thérapeutique assumé, à valider avec César avant tout changement).
+- **Checklist `STORE-LISTING.md`** avant soumission : captures d'écran à refaire (datent d'avant la refonte recentrée) ; textes de fiche à aligner sur la nouvelle structure ; formulaire "Applis de santé" Google Play (bien-être, PAS dispositif médical) ; déclaration "compte requis : non".
+- **Suite de la refonte** : mini-bilan mensuel du plan anti-rechute (« as-tu remarqué un de tes signaux ? ») ; icônes dessinées à la place des emojis dans les écrans d'exercices (déjà fait pour la nav, les hubs et l'accueil).
+- **Pistes déjà proposées et mises en attente** : raccourcis d'icône (appui long → SOS/Respirer/Noter une pensée).

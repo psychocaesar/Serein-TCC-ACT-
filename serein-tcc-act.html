@@ -180,8 +180,7 @@ body {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  /* +4.5rem : réserve la zone du FAB SOS pour qu'il ne recouvre jamais le dernier contenu */
-  padding: 0 1.25rem calc(var(--nav-height) + env(safe-area-inset-bottom) + 4.5rem);
+  padding: 0 1.25rem calc(var(--nav-height) + env(safe-area-inset-bottom) + 1.5rem);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
@@ -827,24 +826,17 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .crisis-ground-line span { font-size: 1.2rem; flex-shrink: 0; }
 
 /* ─── SOS FAB ─── */
-.fab-sos {
-  position: fixed;
-  /* À gauche (pas à droite) : les boutons d'action des listes (supprimer, ×) sont presque
-     toujours alignés à droite - un FAB fixe à droite finit par les recouvrir selon la
-     position de scroll (constaté : bouton supprimer d'une carte de coping masqué). */
-  bottom: calc(var(--nav-height) + env(safe-area-inset-bottom) + 0.75rem); left: 1rem;
-  z-index: 90;
-  width: 48px; height: 48px;
-  background: linear-gradient(135deg, #c0504a, #e07060);
-  color: #fff; border: none; border-radius: 50%;
-  font-family: var(--font-body);
-  font-size: 0.72rem; font-weight: 800; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(192,80,74,0.4);
-  display: flex; align-items: center; justify-content: center;
-  transition: transform var(--transition), box-shadow var(--transition);
-  letter-spacing: 0.03em;
+.header-actions { align-items: center; }
+.header-sos {
+  height: 34px; padding: 0 0.85rem; border-radius: 17px; cursor: pointer;
+  background: rgba(192,80,74,0.12); border: 1.5px solid rgba(224,112,96,0.55); color: #e07060;
+  font-family: var(--font-body); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;
+  position: relative;
 }
-.fab-sos:hover, .fab-sos:active { transform: scale(1.07); box-shadow: 0 6px 22px rgba(192,80,74,0.55); }
+/* zone tactile de 44px sans grossir la pastille */
+.header-sos::after { content: ''; position: absolute; inset: -5px -2px; }
+.header-sos:active { background: rgba(192,80,74,0.25); }
+[data-theme="light"] .header-sos { color: #b8473f; border-color: rgba(184,71,63,0.5); background: rgba(184,71,63,0.08); }
 
 /* ─── TOAST ANNULER ─── */
 .undo-toast {
@@ -1524,9 +1516,6 @@ input[type="date"], input[type="tel"] {
   <a class="crisis-3114-btn" href="tel:3114" aria-label="Appeler le 3114, numéro national de prévention du suicide, gratuit, 24 heures sur 24">📞 Appeler le 3114 <span>gratuit · 24h/24</span></a>
 </div>
 
-<!-- ─── SOS FAB ─── -->
-<button class="fab-sos" onclick="showCrisis()" aria-label="Mode crise rapide - SOS, ouvre l'espace de crise">SOS</button>
-
 <!-- ─── VERROUILLAGE BIOMÉTRIQUE (optionnel, Réglages) ─── -->
 <div class="lock-overlay" id="lockOverlay" role="dialog" aria-modal="true" aria-label="Application verrouillée">
   <div class="lock-icon" aria-hidden="true">🔒</div>
@@ -1554,6 +1543,8 @@ input[type="date"], input[type="tel"] {
     </svg>
   </button>
   <div class="header-actions">
+    <!-- SOS : toujours au même endroit, sur tous les écrans, sans recouvrir le contenu -->
+    <button class="header-sos" onclick="showCrisis()" aria-label="SOS, ouvrir l'espace de crise">SOS</button>
     <button class="icon-btn" id="settingsBtn" onclick="navigateTo('reglages')" aria-label="Réglages">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"/>

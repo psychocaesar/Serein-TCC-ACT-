@@ -11,12 +11,12 @@
 ## TITRE
 (max 30 caractères)
 
-Serein · Anxiété & TCC
+Serein Relais
 
 ## DESCRIPTION COURTE
-(max 80 caractères)
+(max 80 caractères — Google Play n'a pas de sous-titre : c'est ce texte qui joue ce rôle)
 
-Des outils TCC & ACT pour tes pensées et émotions. Sans pub ni tracking.
+Exercices TCC entre les séances, et après. Sans pub, sans compte, hors ligne.
 
 ---
 
@@ -157,12 +157,12 @@ contact@sereinapp.fr
 ## NOM DE L'APP
 (max 30 caractères)
 
-Serein · Anxiété & TCC
+Serein Relais
 
 ## SOUS-TITRE
-(max 30 caractères)
+(max 30 caractères — « exercices TCC entre les séances » en fait 31)
 
-Outils TCC, ACT & respiration
+Ta TCC entre les séances
 
 ---
 

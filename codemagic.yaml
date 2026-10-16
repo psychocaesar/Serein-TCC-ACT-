@@ -1,6 +1,6 @@
 workflows:
   ios-release:
-    name: Serein TCC-ACT iOS Release
+    name: Serein Relais iOS Release
     max_build_duration: 60
     instance_type: mac_mini_m2
 
@@ -19,7 +19,7 @@ workflows:
       vars:
         XCODE_PROJECT: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
-        # Apple ID numérique de Serein TCC·ACT (App Store Connect → Infos générales → « Apple ID »)
+        # Apple ID numérique de Serein Relais (App Store Connect → Infos générales → « Apple ID »)
         APP_APPLE_ID: "6781663800"
       node: latest
 

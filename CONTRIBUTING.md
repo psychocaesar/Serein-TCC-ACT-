@@ -1,4 +1,4 @@
-# Contribuer a Serein TCC·ACT
+# Contribuer a Serein Relais
 
 Merci de l'interet pour ce projet. Voici comment contribuer efficacement.
 

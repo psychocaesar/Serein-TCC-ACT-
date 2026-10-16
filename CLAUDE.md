@@ -1,6 +1,8 @@
-# Serein TCC·ACT — contexte pour Claude Code
+# Serein Relais — contexte pour Claude Code
 
-App de soutien émotionnel TCC/ACT en français, packagée en natif iOS/Android via Capacitor 8. Extension de [Serein](https://sereinapp.fr) (méditation), même positionnement : pas d'allégation thérapeutique, "un compagnon, pas un thérapeute". `appId` : `fr.sereinapp.tccact`.
+**Serein Relais** (anciennement « Serein TCC·ACT », renommée le 16/10/2026) : app de soutien entre les séances et après la thérapie, exercices TCC/ACT, en français, packagée en natif iOS/Android via Capacitor 8. Extension de [Serein](https://sereinapp.fr) (méditation), même positionnement : pas d'allégation thérapeutique, "un compagnon, pas un thérapeute". `appId` : `fr.sereinapp.tccact`.
+
+Le renommage n'a touché que les noms **affichés**. Restent volontairement en « tcc » (invisibles pour l'utilisateur, ou à garder pour la compatibilité) : l'`appId`, le nom du fichier source et du repo, le schéma d'URL du widget `serein-tcc://`, et l'identifiant `app: 'serein-tcc'` des sauvegardes JSON (sinon les anciennes sauvegardes ne s'importent plus).
 
 **Le `README.md` de ce repo est obsolète** (décrit une ancienne version : mood chips au lieu du curseur d'humeur, ancien appId, liste d'écrans dépassée). Ne pas s'y fier — ce fichier-ci (`CLAUDE.md`) est la source à jour.
 

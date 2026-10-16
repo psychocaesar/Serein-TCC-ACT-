@@ -1,4 +1,4 @@
-# Textes stores — Serein TCC·ACT
+# Textes stores — Serein Relais
 
 > Langage volontairement **sans allégation thérapeutique** (pas de « traite / guérit / soigne »).
 > Cadre : outil de **soutien et d'auto-assistance** fondé sur les principes de la TCC et de l'ACT.
@@ -23,13 +23,13 @@ Des outils TCC & ACT pour tes pensées et émotions. Sans pub ni tracking.
 ## DESCRIPTION LONGUE
 (max 4000 caractères)
 
-Serein TCC·ACT est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
+Serein Relais est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
 Des outils concrets, fondés sur la TCC et la thérapie d'acceptation et d'engagement (ACT), pour les moments où l'anxiété monte, où les pensées tournent en boucle, ou simplement pour mieux se comprendre au quotidien.
 
-▶ CE QUE PROPOSE SEREIN TCC·ACT
+▶ CE QUE PROPOSE SEREIN RELAIS
 
 L'app s'organise par besoin, pas par jargon.
 
@@ -64,7 +64,7 @@ Tout est embarqué dans l'application. Aucune connexion requise, jamais — dans
 
 🔒 VOS DONNÉES VOUS APPARTIENNENT
 
-Serein TCC·ACT est construit autour d'un principe simple : ce que vous écrivez ne regarde que vous.
+Serein Relais est construit autour d'un principe simple : ce que vous écrivez ne regarde que vous.
 
 - Aucun tracker publicitaire, aucun SDK d'analyse tiers
 - Tout (journal, cartes, suivi, expériences) est stocké sur votre appareil — jamais transmis à nos serveurs ni à des tiers
@@ -78,7 +78,7 @@ Fondé par César Broche Aguilar, psychologue du travail, Serein est un projet i
 
 ⚠️ IMPORTANT
 
-Serein TCC·ACT est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24.
+Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24.
 
 Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 
@@ -169,7 +169,7 @@ Outils TCC, ACT & respiration
 ## DESCRIPTION
 (max 4000 caractères)
 
-Serein TCC·ACT est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
+Serein Relais est une application de soutien émotionnel en français, conçue par un psychologue du travail spécialisé en thérapies cognitives et comportementales (TCC).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
@@ -215,7 +215,7 @@ Tout est embarqué dans l'application. Aucune connexion requise, jamais. L'app n
 
 Fondé par César Broche Aguilar, psychologue du travail, Serein est un projet indépendant, financé sans publicité ni revente de données.
 
-⚠️ Serein TCC·ACT est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24.
+⚠️ Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24.
 
 Politique de confidentialité : https://sereinapp.fr/tcc/privacy
 
@@ -284,7 +284,7 @@ Téléphone : (votre numéro)
 ## NOTES DE RÉVISION POUR APPLE
 (champ « Notes for App Review »)
 
-Serein TCC·ACT est un outil de soutien et d'auto-assistance fondé sur les principes de la TCC et de l'ACT. Ce n'est pas un dispositif médical : l'application ne pose aucun diagnostic, ne propose aucun traitement et ne formule aucune allégation thérapeutique.
+Serein Relais est un outil de soutien et d'auto-assistance fondé sur les principes de la TCC et de l'ACT. Ce n'est pas un dispositif médical : l'application ne pose aucun diagnostic, ne propose aucun traitement et ne formule aucune allégation thérapeutique.
 
 L'application fonctionne entièrement en local. Tout ce que l'utilisateur saisit (journal de pensées, cartes de coping, suivi d'intensité, expériences comportementales, check-ins) est stocké uniquement sur l'appareil (localStorage + Capacitor Preferences). Aucune donnée n'est transmise à un serveur : l'app n'effectue aucune requête réseau et n'intègre aucun SDK d'analyse ou de tracking.
 

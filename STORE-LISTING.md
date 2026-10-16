@@ -317,6 +317,6 @@ app de santé mentale — l'étiquette vide est rare dans la catégorie.
 - [ ] La boîte contact@sereinapp.fr est-elle active ? (utilisée comme contact public + Apple)
 - [ ] Le repo GitHub Serein-TCC-ACT- est-il public ? Si oui, on peut ajouter une ligne « open source » et utiliser .../issues comme URL de support. Sinon, garder l'URL de support actuelle.
 - [x] Nom : « Serein Relais » (16/10/2026). Sous-titre App Store : « Ta TCC entre les séances ». Vérifier la disponibilité du nom (INPI classes 9 et 44, App Store, Google Play).
-- [ ] **Captures d'écran à refaire entièrement** (dossier APP SCREENSHOT/ datant du 20 juin) : elles montrent l'ancienne structure. À montrer : Aujourd'hui (humeur + pratique du jour), Exercices, fin du journal (nouvelle cotation), Mon carnet, plan anti-rechute, mosaïque, SOS. L'iPad est portrait uniquement.
+- [x] **Captures d'écran refaites** le 16/10/2026 : `site/stores/ios-6.9/` (App Store, 1320 × 2868) et `site/stores/google-play/` (1440 × 2868). Voir `site/stores/README.md`.
 - [ ] Google Play : formulaire « Applis de santé » (déclaration obligatoire pour la catégorie Bien-être mental) — cocher « bien-être / gestion du stress », PAS « dispositif médical ».
 - [ ] Play Console exige la validation « Compte requis ? » → répondre NON (accès complet sans compte, rien à fournir aux reviewers).

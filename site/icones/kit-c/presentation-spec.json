@@ -1,0 +1,35 @@
+{
+  "brand": "Serein Relais",
+  "tagline": "Ta TCC entre les séances",
+  "brief": "Compagnon d'exercices TCC et ACT entre les séances et après la thérapie, extension de Serein (méditation). Ludique sans culpabilité, sobre, jamais « développement personnel ». Pas d'allégation thérapeutique.",
+  "adjectives": ["calme", "fiable", "sobre", "chaleureux"],
+  "criteria": "Se reconnaît comme de la famille Serein, lisible à 29 px, tient en une couleur, évite les clichés de la santé mentale (cerveau, lotus, cœur, feuille).",
+  "industry": "health",
+  "mockups": ["app-icon", "website", "favicon-tab", "social", "business-card", "sticker"],
+  "nav": ["L'app", "Pour les psys", "Confidentialité"],
+  "brand_color": "#2a8a68",
+  "tile_color": "#0f241d",
+  "greyscale": false,
+  "final": true,
+  "designer": "Serein",
+  "concepts": [
+    {
+      "name": "Le S en deux temps",
+      "symbol": "symbole-couleur-aplat.svg",
+      "symbol_on_tile": "symbole-couleur-aplat.svg",
+      "symbol_on_dark": "symbole-couleur-aplat.svg",
+      "lockup": "assemblage-horizontal-clair.svg",
+      "lockup_on_dark": "assemblage-horizontal-sombre.svg",
+      "stacked": "assemblage-empile-clair.svg",
+      "stacked_on_dark": "assemblage-empile-sombre.svg",
+      "idea": "Le S de Serein coupé en son milieu : la séance, puis la seconde moitié qui prend le relais.",
+      "rationale": [
+        "Même tracé que l'icône de Serein méditation : la famille se voit tout de suite",
+        "La coupure dit le relais sans rien dessiner de littéral",
+        "Vert = la séance, sable = toi entre les séances (couleurs déjà présentes dans l'app)"
+      ]
+    }
+  ],
+  "recommendation": "Direction retenue, en place dans l'app (iOS, Android) et sur le site.",
+  "next_steps": ["Vérifier l'icône sur un vrai iPhone et un vrai Android"]
+}

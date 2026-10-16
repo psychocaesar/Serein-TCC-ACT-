@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- La boucle dénouée : la pensée tourne une fois sur elle-même, puis devient un chemin -->
+  <path d="M 40 186 C 80 186 118 182 136 150 C 154 118 142 84 116 86 C 90 88 86 124 108 146 C 136 174 186 152 218 70" fill="none" stroke="#000" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

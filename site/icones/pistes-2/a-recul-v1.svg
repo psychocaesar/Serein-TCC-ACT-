@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Le recul : le cercle s'ouvre, la pensée est posée à côté (défusion) ; c'est aussi le relais qu'on passe -->
+  <path d="M 188.9 125.5 A 72 72 0 1 1 142.6 70.3" fill="none" stroke="#000" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="204" cy="66" r="22" fill="#000"/>
+</svg>

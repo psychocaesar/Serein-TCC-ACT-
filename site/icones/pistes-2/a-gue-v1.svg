@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Le gué : trois pierres posées en S, une à la fois -->
+  <ellipse cx="160" cy="72" rx="32" ry="21" transform="rotate(-10 160 72)" fill="#000"/>
+  <ellipse cx="102" cy="128" rx="40" ry="26" transform="rotate(-10 102 128)" fill="#000"/>
+  <ellipse cx="152" cy="190" rx="50" ry="31" transform="rotate(-10 152 190)" fill="#000"/>
+</svg>

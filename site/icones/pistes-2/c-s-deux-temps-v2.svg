@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Le S en deux temps : le tracé de Serein coupé en son milieu, la seconde moitié prend le relais -->
+  <g transform="translate(-24 -24) scale(0.6)" fill="none" stroke="#000" stroke-width="40" stroke-linecap="round">
+    <path d="M 308 158 C 308 158 242 142 210 178 C 186 205 196 228 222 242"/>
+    <path d="M 272 264 C 298 278 312 294 306 322 C 300 358 228 370 196 362"/>
+  </g>
+</svg>

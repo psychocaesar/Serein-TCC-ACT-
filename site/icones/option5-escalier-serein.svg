@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#132e26"/><stop offset="100%" stop-color="#0a1a14"/></radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2f6f5e" stop-opacity="0.38"/><stop offset="100%" stop-color="#2f6f5e" stop-opacity="0"/></radialGradient>
+    <linearGradient id="stroke-grad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#7ee8be"/><stop offset="50%" stop-color="#4db896"/><stop offset="100%" stop-color="#2a8a68"/></linearGradient>
+    <filter id="halo-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <ellipse cx="256" cy="256" rx="190" ry="180" fill="url(#halo)" filter="url(#halo-blur)"/>
+  <!-- Même vert néon que le S de Serein (famille) ; un seul carreau sable = le palier en cours -->
+  <rect x="96" y="300" width="96" height="96" rx="26" fill="url(#stroke-grad)" filter="url(#glow)"/>
+  <rect x="184" y="230" width="96" height="96" rx="26" fill="url(#stroke-grad)" filter="url(#glow)"/>
+  <rect x="272" y="160" width="96" height="96" rx="26" fill="#d8b78a" filter="url(#glow)"/>
+  <rect x="364" y="96" width="74" height="74" rx="20" fill="none" stroke="#7ee8be" stroke-width="11" stroke-dasharray="18 13" stroke-linecap="round" opacity="0.85"/>
+</svg>

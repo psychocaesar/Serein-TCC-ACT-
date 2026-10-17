@@ -1215,6 +1215,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 }
 .ex-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ex-level { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; font-size: 0.74rem; color: var(--color-muted); }
+.ex-psy { display: block; margin-top: 0.35rem; font-size: 0.74rem; color: var(--color-primary); font-weight: 600; }
 .ex-bars { display: flex; gap: 3px; }
 .ex-bars span { width: 16px; height: 4px; border-radius: 2px; }
 
@@ -2262,7 +2263,7 @@ input[type="date"], input[type="tel"] {
     <div class="greeting-block">
       <h1>Exercices</h1>
     </div>
-    <p class="hub-intro">Les six outils de ta thérapie. Chaque séance ajoute un carreau à ta mosaïque.</p>
+    <p class="hub-intro">Six outils, à piocher selon ce que tu travailles avec ton psy. Chaque séance ajoute un carreau à ta mosaïque.</p>
     <div class="hub-list" id="exercisesList"></div>
   </div>
 
@@ -4835,18 +4836,26 @@ function openExercise(kind) {
   if (!ex) return;
   if (ex.screen === 'journal') startNewJournal(); else navigateTo(ex.screen);
 }
+// Une thérapie cible quelques exercices, pas tous : un exercice jamais fait n'affiche
+// ni niveau vide ni « pas encore commencé » (pas de liste à cocher). Ceux que le psy
+// a proposés sont signalés.
 function renderExercisesHub() {
   const list = document.getElementById('exercisesList');
   if (!list) return;
   const counts = practiceCounts();
-  list.innerHTML = EXERCISES.map(ex => {
+  const fromPsy = new Set(loadTasks().filter(t => t.count < t.target).map(t => t.kind));
+  // Les exercices proposés par le psy remontent en tête (tri stable : l'ordre habituel est gardé sinon).
+  const ordered = [...EXERCISES].sort((a, b) => fromPsy.has(b.kind) - fromPsy.has(a.kind));
+  list.innerHTML = ordered.map(ex => {
     const n = counts[ex.kind] || 0;
     const lvl = levelFor(n);
     const bars = [1, 2, 3].map(b => `<span style="background:${b <= lvl.bars ? ex.color : 'var(--color-border-strong)'}"></span>`).join('');
+    const psy = fromPsy.has(ex.kind) ? `<span class="ex-psy">Proposé par ton psy</span>` : '';
+    const level = (n ? `<span class="ex-level"><span class="ex-bars" aria-hidden="true">${bars}</span>${lvl.label} · ${n} séance${n > 1 ? 's' : ''}</span>` : '') + psy;
     return `<button class="hub-card" onclick="openExercise('${ex.kind}')">
       ${exIconHtml(ex)}
       <span class="hub-text"><h3>${escHtml(ex.title)}</h3><p>${escHtml(ex.desc)}</p>
-        <span class="ex-level"><span class="ex-bars" aria-hidden="true">${bars}</span>${lvl.label}${n ? ` · ${n} séance${n > 1 ? 's' : ''}` : ''}</span></span>
+        ${level}</span>
       <span class="hub-chevron" aria-hidden="true">›</span>
     </button>`;
   }).join('');
@@ -4874,7 +4883,8 @@ function renderMosaic() {
   else if (mosaicSel !== null && log[mosaicSel]) caption = `${exerciseByKind(log[mosaicSel].k).title} · ${formatDayShort(log[mosaicSel].d)}`;
   else caption = 'Touche un carreau pour revoir ce que tu as fait. Rien ne s\'efface.';
   document.getElementById('mosaicCaption').textContent = caption;
-  document.getElementById('mosaicLegend').innerHTML = PRACTICE_KINDS.map(ex =>
+  // Légende : seulement les exercices pratiqués (pas de « 0 » qui ferait liste à cocher).
+  document.getElementById('mosaicLegend').innerHTML = PRACTICE_KINDS.filter(ex => counts[ex.kind]).map(ex =>
     `<div class="legend-item"><span class="tile-dot" style="background:${ex.color}"></span><span class="legend-name">${escHtml(ex.title)}</span><strong>${counts[ex.kind] || 0}</strong></div>`
   ).join('');
 }

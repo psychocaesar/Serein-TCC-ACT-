@@ -30,7 +30,7 @@ Support entre deux séances et après la thérapie. 4 onglets + SOS :
 - **Mon carnet** (`carnet`) : tâches du psy (`taches`, deviennent « engagements de maintien » si thérapie terminée), plan anti-rechute (`plan`), cartes, pensées équilibrées (`jhistory`), ce qui va bien (`diary`), valeurs.
 - **Mon suivi** (`suivi`) : mosaïque + courbe d'humeur.
 
-**Mosaïque** : chaque exercice mené au bout appelle `logPractice(kind)` → un carreau dans `serein_practice`, et avance la 1re tâche du psy du même exercice. Règles non négociables : aucune série, aucun jour « raté », rien ne s'efface (validé avec César : pas de culpabilité, pas de ton « développement personnel »).
+**Mosaïque** : chaque exercice mené au bout appelle `logPractice(kind)` → un carreau dans `serein_practice`, et avance la 1re tâche du psy du même exercice. Règles non négociables : aucune série, aucun jour « raté », rien ne s'efface, et rien ne pousse à « tout faire » (une thérapie cible quelques exercices : un exercice jamais fait n'affiche ni niveau vide ni « 0 » ; ceux proposés par le psy remontent en tête du hub) (validé avec César : pas de culpabilité, pas de ton « développement personnel »).
 
 **Fondements cliniques (vérifiés le 16/10/2026 contre les fiches du vault `FORMATION TCC/04_Outils cliniques/Protocoles`)** : l'exposition cote la **croyance en la prédiction** avant/après (apprentissage inhibiteur, Craske 2014), jamais l'anxiété comme critère de réussite ; la respiration est présentée comme une compétence, à mettre de côté pendant une exposition ; le journal cote croyance (0-100) ET émotion (0-10) ; le SOS donne 3114 + 15/112 ; aucune allégation d'efficacité sur la respiration 4-7-8 ou l'ancrage 5-4-3-2-1.
 

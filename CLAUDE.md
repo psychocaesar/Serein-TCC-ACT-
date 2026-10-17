@@ -69,13 +69,14 @@ Sur le Mac, `npx cap sync ios` régénère `Package.swift` avec des chemins nati
 
 ## Docs complémentaires (ne pas dupliquer ici)
 
+- `CLAUDE.local.md` (non versionné, repo public) : feuille de route interne, positionnement, acquisition, pistes cliniques en attente. À recopier à la main sur chaque machine.
+
 - `STORE-LISTING.md` — fiches Google Play / App Store, sécurité des données, checklist avant soumission.
 - `docs/ios-widget-setup.md` — mise en place du widget iOS (target Xcode, App Group).
 
 ## Prochaines étapes connues
 
 - **Validation sur device réel** (le Mac le permet enfin) : verrou biométrique (Face ID/Touch ID — le bug de nom de pont natif est corrigé mais jamais testé sur vrai matériel), swipe-retour, orientation portrait, aria-hidden du verrou avec VoiceOver.
-- **Checklist `STORE-LISTING.md`** avant soumission : captures d'écran à refaire (datent d'avant la refonte recentrée) ; textes de fiche à aligner sur la nouvelle structure ; formulaire "Applis de santé" Google Play (bien-être, PAS dispositif médical) ; déclaration "compte requis : non".
+- **Checklist `STORE-LISTING.md`** avant soumission (captures et textes refaits le 16/10/2026) : formulaire "Applis de santé" Google Play (bien-être, PAS dispositif médical) ; déclaration "compte requis : non".
 - **Suite de la refonte** : mini-bilan mensuel du plan anti-rechute (« as-tu remarqué un de tes signaux ? ») ; icônes dessinées à la place des emojis dans les écrans d'exercices (déjà fait pour la nav, les hubs et l'accueil).
 - **Pistes déjà proposées et mises en attente** : raccourcis d'icône (appui long → SOS/Respirer/Noter une pensée).
-- **Troubles de la personnalité (ex-axe 2), en attente du cours du DU sur la personnalité borderline (2026-2027)** — ne rien coder avant d'avoir vérifié contre ses fiches. Idées discutées le 17/10/2026, par ordre de priorité : (1) cartes mémo de schéma (Young) dans les cartes existantes ; (2) compétences de tolérance à la détresse (TCD : STOP, TIP, action opposée) dans le SOS, 3114 toujours visible ; (3) plan de sécurité (Stanley & Brown) dans le plan anti-rechute ; (4) plus tard : repérage des modes à l'étape 4 du journal, DEAR MAN, diary card TCD (en dernier : suivi des envies d'automutilation). Principes : aucune étiquette diagnostique, outils ouverts par le psy (tâches du psy / réglage), rien qui compte les passages à l'acte, pas de questionnaire de dépistage ni d'onglet « personnalité ».

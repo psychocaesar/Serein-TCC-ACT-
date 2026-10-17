@@ -1,0 +1,37 @@
+--- a/index.html	2026-10-16 16:07:44
++++ b/index.html	2026-10-16 16:07:44
+@@ -432,7 +432,7 @@
+           <span class="about-tag">Open source · AGPL-3.0</span>
+         </div>
+         <a class="about-more reveal d3" href="pourquoi-serein.html">Pourquoi Serein est différent →</a>
+-        <p class="about-pro reveal d3">Vous êtes professionnel de santé ? <a href="pro/">Découvrez comment recommander Serein à vos patients →</a></p>
++        <p class="about-pro reveal d3">Vous êtes professionnel de santé ? <a href="pro/">Découvrez comment recommander Serein à vos patients →</a><br>Vos patients sont suivis en TCC ? <a href="relais/">Découvrez Serein Relais, leurs exercices entre les séances →</a></p>
+       </div>
+     </div>
+   </div>
+@@ -562,6 +562,7 @@
+     <li><a href="comprendre/">Comprendre</a></li>
+     <li><a href="pourquoi-serein.html">Pourquoi Serein</a></li>
+     <li><a href="pro/">Pour les pros</a></li>
++    <li><a href="relais/">Serein Relais</a></li>
+     <li><a href="https://github.com/psychocaesar/Serein" target="_blank" rel="noopener">GitHub</a></li>
+     <li><a href="https://www.instagram.com/sereinapp.fr/" target="_blank" rel="noopener">Instagram</a></li>
+     <li><a href="mailto:contact@sereinapp.fr">Contact</a></li>
+--- a/pro/index.html	2026-10-16 16:07:44
++++ b/pro/index.html	2026-10-16 16:38:53
+@@ -190,6 +190,15 @@
+     <h2>L'intégrer à votre pratique</h2>
+     <p>Serein peut accompagner un travail déjà engagé : entraînement à la cohérence cardiaque entre deux séances, ancrage attentionnel, activation comportementale sur les périodes creuses, exercices de défusion ACT. Les fiches de <a href="../comprendre/" style="color:var(--primary)">psychoéducation</a> peuvent servir de support de reprise avec le patient.</p>
+     <p>Pour faciliter l'orientation, une <strong>fiche patient imprimable</strong> résume en une page ce qu'est Serein, comment l'installer et par où commencer. Vous pouvez l'imprimer et la remettre en fin de consultation.</p>
++
++    <h2 id="relais">Pour vos patients en TCC : Serein Relais</h2>
++    <p>L'application sœur de Serein, pensée pour accompagner une thérapie : un relais entre vos séances, puis après la fin du suivi.</p>
++    <ul class="feature-list">
++      <li><strong>En fin de séance</strong>, votre patient note les exercices proposés (journal de pensées, exposition, expériences…). L'app les lui propose en priorité et ils avancent quand il les fait.</li>
++      <li><strong>Avant la séance suivante</strong>, il peut vous montrer un récap : exercices faits, humeur, pensées travaillées et leurs nouvelles cotations.</li>
++      <li><strong>En fin de thérapie</strong>, vous remplissez ensemble son plan anti-rechute.</li>
++    </ul>
++    <p>Pas de compte thérapeute : rien ne vous remonte, le patient garde la main sur ce qu'il partage. Ce n'est ni un dispositif médical, ni un substitut au suivi. <a href="../relais/" style="color:var(--primary)">Découvrir Serein Relais →</a></p>
+   </article>
+ 
+   <div class="cta-box">

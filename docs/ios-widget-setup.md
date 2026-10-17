@@ -1,5 +1,7 @@
 # Widget iOS « Carte de coping » - mise en place
 
+> **Historique (octobre 2026)** : les builds iOS passent désormais par Xcode Cloud et le Mac local ; Codemagic a été retiré. Les passages sur Codemagic ci-dessous ne s'appliquent plus.
+
 **Mise à jour : la target d'extension Xcode a été injectée par script (2026-06-29),
 sans Xcode ni Mac.** César n'a pas d'accès Mac dans l'immédiat ; la target
 `CopingWidget` a donc été ajoutée à `ios/App/App.xcodeproj/project.pbxproj` par un

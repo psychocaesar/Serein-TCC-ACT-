@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <title>Serein Relais</title>
+  <!-- Coupe petites tailles (≤ 32 px) : plus gras, coupure plus large -->
+  <defs>
+    <linearGradient id="vert" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7ee8be"/><stop offset="55%" stop-color="#4db896"/><stop offset="100%" stop-color="#2a8a68"/></linearGradient>
+    <linearGradient id="sable" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f0d9b5"/><stop offset="100%" stop-color="#c9a370"/></linearGradient>
+  </defs>
+  <g transform="translate(-48.4 -54.2) scale(0.7)" fill="none" stroke-width="54" stroke-linecap="round">
+    <path d="M 308 158 C 308.0 158.0 242.0 142.0 210.0 178.0 C 189.5 201.0 193.6 220.0 209.2 233.8" stroke="url(#vert)"/>
+    <path d="M 280.6 268.5 C 298.9 280.7 309.8 297.7 306.0 322.0 C 300.0 358.0 228.0 370.0 196.0 362.0" stroke="url(#sable)"/>
+  </g>
+</svg>

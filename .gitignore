@@ -28,3 +28,6 @@ ios/App/output/
 ios/App/App/public/
 DerivedData/
 xcuserdata/
+
+# Contexte Claude Code local (feuille de route / stratégie — repo public, pas de sync)
+CLAUDE.local.md

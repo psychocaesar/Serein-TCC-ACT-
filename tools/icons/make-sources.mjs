@@ -1,5 +1,5 @@
 // Genere les sources d'icones/splash (assets/) pour @capacitor/assets a partir
-// du master vectoriel logo-serein.svg (S neon sur fond vert-noir arrondi).
+// du master vectoriel logo-serein-tcc.svg (S en deux temps sur fond vert-noir arrondi).
 //
 // Produit, en plein cadre (sans coins arrondis : l'OS applique le masque) :
 //   assets/icon-only.png        1024  -> iOS + Android legacy

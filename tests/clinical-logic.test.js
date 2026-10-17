@@ -2,9 +2,9 @@
 // on charge le <script> de serein-tcc-act.html dans un sandbox vm (DOM stub, cf.
 // pattern de l'app sœur), coupé juste avant boot() pour éviter tout effet de bord
 // (Store.hydrate, plugins Capacitor...) puisque seules les déclarations pures nous
-// intéressent ici. Couvre le mapping humeur→état (getMoodFromValence) et le routage
-// des suggestions par émotion (emotionSuggestions), les deux points où une régression
-// silencieuse enverrait quelqu'un vers le mauvais exercice en pleine détresse.
+// intéressent ici. Couvre la « pratique du jour » (pickDailyPractice), le point où une
+// régression silencieuse enverrait quelqu'un vers le mauvais exercice en pleine détresse,
+// plus l'échelle d'humeur, les niveaux de la mosaïque et la boussole des valeurs.
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
@@ -80,11 +80,29 @@ sandbox.globalThis = sandbox;
 
 const SHIM = `
 ;globalThis.__clinical = {
-  getMoodFromValence: getMoodFromValence,
-  MOOD_STATES: MOOD_STATES,
-  emotionSuggestions: emotionSuggestions,
-  POSITIVE_MOODS: POSITIVE_MOODS,
+  moodLabel: moodLabel,
+  moodColor: moodColor,
+  moodFromLegacyIntensity: moodFromLegacyIntensity,
+  pickDailyPractice: pickDailyPractice,
+  planCheckinDue: planCheckinDue,
+  microStepReply: microStepReply,
+  rankSmallSteps: rankSmallSteps,
+  worryTimeAdvice: worryTimeAdvice,
+  worrySessionSummary: worrySessionSummary,
+  planCheckinMessage: planCheckinMessage,
+  EXERCISES: EXERCISES,
+  PRACTICE_KINDS: PRACTICE_KINDS,
+  levelFor: levelFor,
+  nextLevelGap: nextLevelGap,
+  defiOptions: defiOptions,
+  quizData: quizData,
+  schemaLabels: schemaLabels,
+  schemas: schemas,
+  schemaExamples: schemaExamples,
+  rerateVerdict: rerateVerdict,
+  moodInsight: moodInsight,
   screenMap: screenMap,
+  navMap: navMap,
   VALUES_DOMAINS: VALUES_DOMAINS,
   VALUES_FEEDBACK: VALUES_FEEDBACK,
   getValuesProfile: getValuesProfile,
@@ -97,68 +115,140 @@ vm.runInContext(src + '\n' + SHIM, sandbox, { filename: 'serein-tcc-act.html' })
 
 const C = sandbox.__clinical;
 
-test('getMoodFromValence couvre tout 0-100 avec un état connu', () => {
-  for (let v = 0; v <= 100; v++) {
-    const key = C.getMoodFromValence(v);
-    assert.ok(C.MOOD_STATES[key], `valence ${v} -> état inconnu "${key}"`);
+// ── Humeur du jour (0-10, haut = bien) ──
+
+test('moodLabel couvre 0-10 et ne déduit jamais une émotion (que des niveaux)', () => {
+  const allowed = ['Très difficile', 'Difficile', 'Plutôt bas', 'Mitigé', 'Plutôt bien', 'Bien'];
+  for (let v = 0; v <= 10; v++) assert.ok(allowed.includes(C.moodLabel(v)), `${v} -> "${C.moodLabel(v)}"`);
+  assert.strictEqual(C.moodLabel(5), 'Mitigé');
+  for (let v = 0; v <= 10; v++) assert.match(C.moodColor(v), /^#[0-9a-f]{6}$/i);
+});
+
+test('migration de l\'ancien suivi : intensité (haut = mal) → humeur (haut = bien)', () => {
+  assert.strictEqual(C.moodFromLegacyIntensity(2), 10);  // curseur à fond « bien »
+  assert.strictEqual(C.moodFromLegacyIntensity(10), 0);  // curseur à fond « difficile »
+  assert.strictEqual(C.moodFromLegacyIntensity(6), 5);   // centre
+  assert.strictEqual(C.moodFromLegacyIntensity(0), 10);  // intensité d'émotion nulle (ancien check-in) : bornée
+});
+
+// ── Ta pratique du jour ──
+
+const P = args => C.pickDailyPractice(args);
+
+test('pratique du jour : une tâche du psy en cours passe avant tout', () => {
+  const r = P({ mood: 2, tags: ['Stress'], tasks: [{ kind: 'journal', count: 1, target: 3 }] });
+  assert.strictEqual(r.source, 'psy');
+  assert.strictEqual(r.screen, 'journal');
+  assert.match(r.meta, /1\/3/);
+});
+
+test('pratique du jour : la tâche à l\'échéance la plus proche d\'abord, les tâches finies ignorées', () => {
+  const r = P({ tasks: [
+    { kind: 'journal', count: 3, target: 3, due: '2020-01-01' },
+    { kind: 'petitpas', count: 0, target: 1 },
+    { kind: 'exposition', count: 0, target: 1, due: '2030-05-02' },
+  ] });
+  assert.strictEqual(r.screen, 'ladder');
+});
+
+test('pratique du jour : une tâche « Autre » renvoie vers la liste des tâches', () => {
+  assert.strictEqual(P({ tasks: [{ kind: 'autre', detail: 'Appeler ma sœur', count: 0, target: 1 }] }).screen, 'taches');
+});
+
+test('pratique du jour : expérience prévue, puis humeur', () => {
+  assert.strictEqual(P({ mood: 5, dueExperiment: { belief: 'x' } }).screen, 'experiments');
+});
+
+test('pratique du jour : détresse forte → d\'abord apaiser le corps (jamais le journal)', () => {
+  for (let m = 0; m <= 3; m++) {
+    for (const tags of [[], ['Stress'], ['Rumination'], ['Colère'], ['Stress', 'Tristesse']]) {
+      const r = P({ mood: m, tags });
+      assert.ok(['respirer', 'petitpas'].includes(r.kind), `humeur ${m} ${tags} -> ${r.kind}`);
+    }
+  }
+  assert.strictEqual(P({ mood: 1, tags: ['Tristesse'] }).kind, 'petitpas');
+  assert.strictEqual(P({ mood: 1, tags: ['Tristesse', 'Stress'] }).kind, 'respirer');
+});
+
+test('pratique du jour : routage par ce qui domine (humeur moyenne)', () => {
+  assert.strictEqual(P({ mood: 5, tags: ['Rumination'] }).kind, 'valeurs');
+  assert.strictEqual(P({ mood: 5, tags: ['Stress'] }).kind, 'respirer');
+  assert.strictEqual(P({ mood: 5, tags: ['Fatigue'] }).kind, 'petitpas');
+  assert.strictEqual(P({ mood: 5, tags: [] }).kind, 'journal');
+});
+
+test('pratique du jour : humeur haute → « Ce qui va bien », sans humeur → respirer', () => {
+  const r = P({ mood: 9 });
+  assert.strictEqual(r.screen, 'diary');
+  assert.ok(r.positive);
+  assert.strictEqual(P({}).kind, 'respirer');
+});
+
+test('pratique du jour : chaque proposition pointe vers un écran réel', () => {
+  for (let m = 0; m <= 10; m++) {
+    for (const tags of [[], ['Stress'], ['Tristesse'], ['Rumination'], ['Fatigue'], ['Colère']]) {
+      const r = P({ mood: m, tags });
+      assert.ok(C.screenMap[r.screen], `écran "${r.screen}" inconnu`);
+      assert.ok(r.title && r.meta, 'titre / meta manquant');
+    }
   }
 });
 
-test('getMoodFromValence : bornes exactes documentées', () => {
-  const cases = [
-    [0, 'panique'], [14, 'panique'],
-    [15, 'stress'], [28, 'stress'],
-    [29, 'triste'], [42, 'triste'],
-    [43, 'rumination'], [49, 'rumination'],
-    [50, 'bien'], [63, 'bien'],
-    [64, 'serein'], [82, 'serein'],
-    [83, 'forme'], [100, 'forme'],
-  ];
-  for (const [v, expected] of cases) {
-    assert.strictEqual(C.getMoodFromValence(v), expected, `valence ${v} devrait donner "${expected}"`);
+// ── Exercices, mosaïque, niveaux ──
+
+test('EXERCISES : 7 outils, clés uniques, écrans réels rattachés à l\'onglet Exercices', () => {
+  assert.strictEqual(C.EXERCISES.length, 7);
+  const colors = new Set(C.PRACTICE_KINDS.map(e => e.color.toLowerCase()));
+  assert.strictEqual(colors.size, C.PRACTICE_KINDS.length, 'chaque exercice a sa couleur de carreau');
+  const kinds = new Set(C.PRACTICE_KINDS.map(e => e.kind));
+  assert.strictEqual(kinds.size, C.PRACTICE_KINDS.length);
+  for (const ex of C.EXERCISES) {
+    assert.ok(C.screenMap[ex.screen], `${ex.kind} : écran ${ex.screen} inconnu`);
+    assert.strictEqual(C.navMap[ex.screen], 'nav-exercices', `${ex.screen} doit dépendre de l'onglet Exercices`);
+    assert.match(ex.color, /^#[0-9a-f]{6}$/i);
   }
 });
 
-test('getMoodFromValence est monotone par palier (pas de zone qui repasse en arrière)', () => {
-  const order = ['panique', 'stress', 'triste', 'rumination', 'bien', 'serein', 'forme'];
-  let lastRank = -1;
-  for (let v = 0; v <= 100; v++) {
-    const rank = order.indexOf(C.getMoodFromValence(v));
-    assert.ok(rank >= lastRank, `valence ${v} régresse de l'état rang ${lastRank} à ${rank}`);
-    lastRank = rank;
-  }
+test('niveaux : découverte dès 1, pratique à 5, autonomie à 15 ; écart au niveau suivant', () => {
+  assert.strictEqual(C.levelFor(0).bars, 0);
+  assert.strictEqual(C.levelFor(1).label, 'Découverte');
+  assert.strictEqual(C.levelFor(4).label, 'Découverte');
+  assert.strictEqual(C.levelFor(5).label, 'Pratique');
+  assert.strictEqual(C.levelFor(15).label, 'Autonomie');
+  assert.strictEqual(C.levelFor(400).label, 'Autonomie');
+  assert.deepStrictEqual({ ...C.nextLevelGap(10) }, { label: 'Autonomie', left: 5 });
+  assert.strictEqual(C.nextLevelGap(15), null);
 });
 
-test('le centre 50/50 tombe sur "bien" (neutre, pas de détresse présumée)', () => {
-  assert.strictEqual(C.getMoodFromValence(50), 'bien');
+test('défi du jour : 3 réponses distinctes dont la bonne, pour chaque pensée', () => {
+  C.quizData.forEach((q, i) => {
+    const opts = C.defiOptions(q, i);
+    assert.strictEqual(opts.length, 3);
+    assert.strictEqual(new Set(opts).size, 3, `doublon pour la question ${i}`);
+    assert.ok(opts.includes(q.schema), `bonne réponse absente (question ${i})`);
+    opts.forEach(k => assert.ok(C.schemaLabels[k]));
+  });
 });
 
-test('chaque MOOD_STATES a les champs requis pour l\'affichage', () => {
-  for (const [key, s] of Object.entries(C.MOOD_STATES)) {
-    assert.ok(s.emoji, `${key} : emoji manquant`);
-    assert.ok(s.label, `${key} : label manquant`);
-    assert.ok(s.desc, `${key} : desc manquant`);
-    assert.match(s.bg, /^#[0-9a-fA-F]{6}$/, `${key} : bg invalide (${s.bg})`);
-    assert.match(s.light, /^#[0-9a-fA-F]{6}$/, `${key} : light invalide (${s.light})`);
-  }
+test('pièges de pensée : 9 pièges cohérents partout (journal, exemples, défi)', () => {
+  const keys = Object.keys(C.schemas).sort();
+  assert.strictEqual(keys.length, 9);
+  assert.deepStrictEqual(Object.keys(C.schemaExamples).sort(), keys);
+  assert.deepStrictEqual(Object.keys(C.schemaLabels).sort(), keys);
+  for (const k of ['emotionnel', 'devrais', 'etiquetage']) assert.ok(C.schemas[k], `piège ${k} manquant`);
+  for (const k of keys) assert.ok(C.quizData.some(q => q.schema === k), `aucune pensée du défi pour ${k}`);
 });
 
-test('POSITIVE_MOODS ne recoupe jamais emotionSuggestions (routage détresse vs positif exclusifs)', () => {
-  for (const mood of C.POSITIVE_MOODS) {
-    assert.ok(!(mood in C.emotionSuggestions), `"${mood}" est à la fois positif et dans emotionSuggestions`);
-  }
+test('re-cotation du journal : message non culpabilisant même si l\'émotion monte', () => {
+  assert.match(C.rerateVerdict(8, 4), /baissé de 4/);
+  assert.match(C.rerateVerdict(5, 5), /information utile/);
+  assert.doesNotMatch(C.rerateVerdict(3, 6), /échec|raté|mauvais/i);
 });
 
-test('chaque émotion négative/neutre a une suggestion complète et pointe vers un écran réel', () => {
-  const negativeStates = Object.keys(C.MOOD_STATES).filter(k => !C.POSITIVE_MOODS.includes(k));
-  for (const key of negativeStates) {
-    const sugg = C.emotionSuggestions[key];
-    assert.ok(sugg, `emotionSuggestions["${key}"] manquant`);
-    assert.ok(sugg.title && sugg.text, `suggestion incomplète pour "${key}"`);
-    assert.ok(Array.isArray(sugg.tags) && sugg.tags.length, `tags manquants pour "${key}"`);
-    assert.ok(sugg.ctaScreen, `ctaScreen manquant pour "${key}"`);
-    assert.ok(C.screenMap[sugg.ctaScreen], `ctaScreen "${sugg.ctaScreen}" (${key}) n'existe pas dans screenMap`);
-  }
+test('synthèse du suivi : pas de tendance avant 3 jours notés', () => {
+  assert.match(C.moodInsight([5, 6], []), /quelques jours/);
+  assert.match(C.moodInsight([5, 6, 7], []), /Moyenne 6,0\/10/);
+  assert.match(C.moodInsight([7, 7, 7], [4, 4, 4]), /plus haut/);
 });
 
 // ── Boussole des valeurs (ACT) ──
@@ -214,3 +304,79 @@ test('pickFocusDomain : plus grand écart parmi les importants, sinon le plus im
   assert.strictEqual(r2.rating.key, 'loisirs');
   assert.strictEqual(r2.mode, 'entretien');
 });
+
+test('pratique du jour : thérapie terminée → « Ton engagement », jamais « Proposé par ton psy »', () => {
+  const tasks = [{ kind: 'exposition', count: 0, target: 2 }];
+  assert.match(C.pickDailyPractice({ tasks }).meta, /^Proposé par ton psy/);
+  const after = C.pickDailyPractice({ tasks, therapyDone: true });
+  assert.match(after.meta, /^Ton engagement/);
+  assert.ok(!/psy/.test(after.meta));
+});
+
+test('point du mois : seulement après la thérapie, avec des signaux, tous les 30 jours, hors report', () => {
+  const plan = { signals: 'Je dors mal\nJ\'évite mes amis', createdAt: '2026-06-01' };
+  const after = { therapyDone: true, therapyDoneAt: '2026-08-01' };
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17' }), false, 'pendant la thérapie : jamais sur l\'accueil');
+  assert.strictEqual(C.planCheckinDue({ plan: { createdAt: '2026-01-01' }, today: '2026-10-17', ...after }), false, 'pas de signal : jamais');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: '  \n ', createdAt: '2026-01-01' }, today: '2026-10-17', ...after }), false, 'signaux vides');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-08-20', ...after }), false, 'thérapie finie depuis moins de 30 jours (même si le plan est ancien)');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-08-31', ...after }), true, '30 jours après la fin de la thérapie');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-10-10', seen: [] }], today: '2026-10-17', ...after }), false, 'point récent');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-09-10', seen: [] }], today: '2026-10-17', ...after }), true, 'dernier point il y a plus de 30 jours');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17', snoozeUntil: '2026-10-20', ...after }), false, 'reporté');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-21', snoozeUntil: '2026-10-20', ...after }), true, 'report passé');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', createdAt: '2026-10-01' }, today: '2026-10-17', ...after }), false, 'plan rempli après la fin : 30 jours après le plan');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', updatedAt: '2026-01-01' }, today: '2026-10-17', therapyDone: true }), true, 'ancien plan, date de fin inconnue : updatedAt');
+});
+
+test('point du mois : message jamais alarmant, renvoi vers la séance seulement pendant la thérapie', () => {
+  const none = C.planCheckinMessage(0, false);
+  assert.ok(!/rechute|séance/.test(none));
+  const one = C.planCheckinMessage(1, false);
+  assert.match(one, /^Un signal/);
+  assert.match(one, /n'est pas une rechute/);
+  assert.match(one, /prochaine séance/);
+  assert.match(C.planCheckinMessage(3, false), /^3 signaux/);
+  assert.ok(!/séance/.test(C.planCheckinMessage(2, true)), 'thérapie terminée : pas de « prochaine séance »');
+});
+
+test('petit pas : plaisir et maîtrise, retour jamais culpabilisant', () => {
+  assert.strictEqual(C.microStepReply(null, null), '');
+  const low = C.microStepReply(1, 0);
+  assert.match(low, /pas un échec/);
+  assert.ok(!/devrais|dois|faut/.test(low));
+  assert.match(C.microStepReply(null, 7), /^Noté/, 'une seule des deux cotations suffit');
+  assert.match(C.microStepReply(2, 6), /^Noté/, 'la maîtrise compte autant que le plaisir');
+});
+
+test('petit pas : « ce qui te fait du bien » seulement à partir de 3 cotations, actions répétées, triées', () => {
+  const e = (a, p, m) => ({ k: 'petitpas', a, p, m });
+  assert.strictEqual(C.rankSmallSteps([e('Marcher', 8, 6), e('Marcher', 6, 6)]).length, 0, 'moins de 3 cotations');
+  const log = [
+    e('Marcher', 8, 6), e('Marcher', 6, 8),
+    e('Ranger', 2, 9), e('Ranger', 2, 7),
+    e('Musique', 9, 1),
+    { k: 'petitpas', a: 'Eau' },            // non coté : ignoré
+    { k: 'journal', a: 'x', p: 10, m: 10 }, // autre exercice : ignoré
+  ];
+  const r = C.rankSmallSteps(log);
+  assert.strictEqual(JSON.stringify(r.map(x => x.action)), JSON.stringify(['Marcher', 'Ranger']), 'Musique une seule fois : pas encore classée');
+  assert.strictEqual(r[0].n, 2);
+  assert.strictEqual(r[0].p, 7);
+  assert.strictEqual(r[1].m, 8, 'une action peu agréable mais accomplie reste visible');
+});
+
+test('inquiétudes : moment fixe, pas au coucher', () => {
+  assert.match(C.worryTimeAdvice('18:00'), /même heure/);
+  assert.match(C.worryTimeAdvice('22:30'), /avant de dormir/);
+  assert.match(C.worryTimeAdvice('00:15'), /avant de dormir/);
+  assert.strictEqual(C.worryTimeAdvice(''), '');
+});
+
+test('inquiétudes : bilan du moment, accords et ton non culpabilisant', () => {
+  assert.match(C.worrySessionSummary(['actuel']), /^1 plan d'action\./);
+  assert.match(C.worrySessionSummary(['actuel', 'actuel', 'hypo', 'gone', 'gone']), /^2 plans d'action, 1 «\u00a0et si…\u00a0» laissé de côté, 2 qui ne t'inquiètent plus\./);
+  assert.match(C.worrySessionSummary([]), /ce n'est pas grave/);
+  assert.match(C.worrySessionSummary(['hypo']), /attendra le prochain/);
+});
+

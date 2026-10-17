@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#132e26"/><stop offset="100%" stop-color="#0a1a14"/></radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2f6f5e" stop-opacity="0.38"/><stop offset="100%" stop-color="#2f6f5e" stop-opacity="0"/></radialGradient>
+    <filter id="halo-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a8e2c4"/><stop offset="100%" stop-color="#6fb894"/></linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ead0a6"/><stop offset="100%" stop-color="#c9a370"/></linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#cbbcf0"/><stop offset="100%" stop-color="#9c89cf"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <ellipse cx="256" cy="256" rx="190" ry="180" fill="url(#halo)" filter="url(#halo-blur)"/>
+  <!-- Mosaïque 2×2 : trois carreaux faits, le quatrième à venir (le relais) -->
+  <rect x="122" y="122" width="122" height="122" rx="30" fill="url(#g1)" filter="url(#glow)"/>
+  <rect x="268" y="122" width="122" height="122" rx="30" fill="url(#g2)" filter="url(#glow)"/>
+  <rect x="122" y="268" width="122" height="122" rx="30" fill="url(#g3)" filter="url(#glow)"/>
+  <rect x="277" y="277" width="104" height="104" rx="24" fill="none" stroke="#93c9ac" stroke-width="12" stroke-dasharray="22 16" stroke-linecap="round" opacity="0.9"/>
+</svg>

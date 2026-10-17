@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#132e26"/>
+      <stop offset="100%" stop-color="#0a1a14"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="42%" r="50%">
+      <stop offset="0%" stop-color="#2f6f5e" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#2f6f5e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stroke-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7ee8be"/>
+      <stop offset="50%" stop-color="#4db896"/>
+      <stop offset="100%" stop-color="#2a8a68"/>
+    </linearGradient>
+    <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="halo-blur"><feGaussianBlur stdDeviation="40"/></filter>
+    <filter id="glow-dot" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fond arrondi -->
+  <rect class="bg" width="512" height="512" rx="108" fill="url(#bg)"/>
+
+  <!-- Halo de profondeur -->
+  <ellipse class="halo" cx="256" cy="210" rx="180" ry="160" fill="url(#halo)" filter="url(#halo-blur)"/>
+
+  <!-- Bulle de pensee - trait epais neon -->
+  <ellipse class="fg" cx="256" cy="216" rx="96" ry="78" fill="none" stroke="url(#stroke-grad)" stroke-width="30" filter="url(#glow-soft)"/>
+
+  <!-- Filet lumineux par-dessus -->
+  <ellipse class="fg" cx="256" cy="216" rx="96" ry="78" fill="none" stroke="#d4f5e2" stroke-width="3" opacity="0.5"/>
+
+  <!-- Queue de la bulle : deux points (la pensee) -->
+  <circle class="fg" cx="210" cy="332" r="16" fill="url(#stroke-grad)" filter="url(#glow-dot)"/>
+  <circle class="fg" cx="182" cy="368" r="9" fill="url(#stroke-grad)" filter="url(#glow-dot)"/>
+</svg>

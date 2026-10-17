@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1814">
+  <title>Serein Relais - Tes exercices de TCC entre les séances</title>
+  <meta name="description" content="Serein Relais : les exercices de TCC que ton psy te propose (journal de pensées, exposition, plan anti-rechute), entre les séances et après la thérapie. Conçue par un psychologue. Gratuit, sans compte, hors ligne.">
+  <meta name="author" content="César Broche Aguilar">
+  <meta property="og:title" content="Serein Relais - Tes exercices de TCC entre les séances">
+  <meta property="og:description" content="Les exercices de TCC que ton psy te propose, à portée de main. Gratuit, sans compte, hors ligne.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Serein">
+  <meta property="og:url" content="https://sereinapp.fr/relais/">
+  <meta property="og:image" content="https://sereinapp.fr/relais/img/og-relais.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Serein Relais - Tes exercices de TCC entre les séances">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://sereinapp.fr/relais/img/og-relais.png">
+  <link rel="canonical" href="https://sereinapp.fr/relais/">
+  <link rel="icon" type="image/svg+xml" href="img/logo-relais.svg">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon-relais.png">
+  <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    /* Polices auto-hébergées (pas de requête vers Google Fonts) */
+    @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-italic-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('../assets/fonts/hanken-grotesk-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('../assets/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d1b15;--bg2:#0e1f18;--surface:#1c3127;--surface2:#1a2e24;
+      --primary:#93c9ac;--primary-h:#a8d9bd;--accent:#d8b78a;
+      --gradient:linear-gradient(120deg,#93c9ac,#d8b78a);
+      --primary-light:rgba(147,201,172,0.12);
+      --text:#f0f4f0;--text2:#93a89b;--text3:#52756d;
+      --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+      --serif:'Fraunces',Georgia,serif;--sans:'Hanken Grotesk',system-ui,sans-serif;
+      --r:1.25rem;--r2:.75rem;--max:1080px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(11,24,20,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+    .nav-logo img{width:26px;height:26px;border-radius:7px}
+    .nav-logo-name{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--text);font-variation-settings:"opsz" 60;letter-spacing:-.01em}
+    .nav-links{display:flex;align-items:center;gap:1.35rem;list-style:none}
+    .nav-links a{font-size:.88rem;color:var(--text2);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links .nav-dl{background:var(--gradient);color:#0d1b15;padding:.45rem 1.1rem;border-radius:999px;font-size:.85rem;font-weight:600;transition:opacity .2s}
+    .nav-links .nav-dl:hover{opacity:.88}
+    /* Bouton burger (masqué en desktop, affiché en mobile) */
+    .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:.4rem;width:42px;height:42px;flex-direction:column;justify-content:center;align-items:center;gap:5px}
+    .nav-toggle span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:transform .25s,opacity .25s}
+    .nav.open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav.open .nav-toggle span:nth-child(2){opacity:0}
+    .nav.open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    /* Mobile/tablette : nav repliée dans un menu déroulant piloté par le burger */
+    @media(max-width:1024px){
+      .nav-toggle{display:flex}
+      .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:rgba(11,24,20,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:.5rem 0;display:none}
+      .nav.open .nav-links{display:flex}
+      .nav-links li{display:block;width:100%}
+      .nav-links a{display:block;padding:.85rem 2rem}
+      .nav-links .nav-dl{margin:.6rem 2rem .35rem;text-align:center;padding:.7rem 1.1rem}
+    }
+
+    /* UTILS */
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 2rem}
+    .eyebrow{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--primary);margin-bottom:.9rem;display:block}
+    .section-title{font-family:var(--serif);font-size:clamp(2rem,4.5vw,3rem);font-weight:300;line-height:1.08;letter-spacing:-.025em;font-variation-settings:"opsz" 100;color:var(--text)}
+    .section-title em{font-style:italic;color:var(--accent)}
+    .section-lead{font-size:1rem;color:var(--text2);line-height:1.72;font-weight:300;max-width:48ch}
+    .s-divider{width:100%;height:1px;background:var(--border)}
+
+    /* HERO */
+    .hero-bg{position:absolute;inset:0;pointer-events:none;z-index:0;
+      background:radial-gradient(ellipse 70% 55% at 30% 30%,rgba(147,201,172,.13) 0%,transparent 65%),
+                radial-gradient(ellipse 40% 35% at 80% 70%,rgba(216,183,138,.06) 0%,transparent 60%)}
+    .hero{min-height:100svh;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;padding:9rem 2rem 5rem;max-width:var(--max);margin:0 auto;position:relative}
+    @media(max-width:760px){.hero{grid-template-columns:1fr;text-align:center;padding:6.5rem 1.5rem 3rem;gap:2.75rem;min-height:auto}.hero-visual{justify-self:center}.phone{width:220px}.hero h1{margin-bottom:1.1rem}.hero-lead{margin-bottom:2rem}.hero-badges{margin-bottom:1.75rem}.hero-badges,.hero-trust{justify-content:center}.hero-trust{justify-content:center}.section-lead{margin:0 auto}}
+    .hero-content{position:relative;z-index:1}
+    .hero h1{font-family:var(--serif);font-size:clamp(2.6rem,7vw,4.8rem);font-weight:300;line-height:1.04;letter-spacing:-.03em;font-variation-settings:"opsz" 144;margin-bottom:1.5rem}
+    .hero h1 em{font-style:italic;color:var(--accent)}
+    .hero-lead{font-size:1.05rem;color:var(--text2);line-height:1.72;font-weight:300;max-width:42ch;margin-bottom:2.5rem}
+    .hero-badges{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:2.25rem}
+    .hero-trust{display:flex;flex-wrap:wrap;gap:.6rem}
+    .trust-pill{display:flex;align-items:center;gap:.35rem;font-size:.78rem;color:var(--text2)}
+    .trust-pill::before{content:'✓';color:var(--primary);font-size:.7rem}
+
+    /* APP BADGE — badges officiels des stores (exigés par les guidelines Apple/Google) */
+    .app-badge{display:block;text-decoration:none;transition:transform .22s,opacity .22s}
+    .app-badge:hover{transform:translateY(-2px);opacity:.92}
+    .app-badge img{height:48px;width:auto;display:block}
+
+    /* PHONE MOCKUP */
+    .hero-visual{position:relative;z-index:1;flex-shrink:0}
+    .phone{width:240px;background:linear-gradient(170deg,#1c3a2e,#0d1f1a);border-radius:2.4rem;padding:.55rem;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 40px 100px rgba(0,0,0,.65),0 20px 50px rgba(0,0,0,.35);position:relative}
+    .phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:72px;height:20px;background:#060e0b;border-radius:999px;z-index:5}
+    .phone-screen{background:#0f1f1b;border-radius:1.9rem;overflow:hidden;aspect-ratio:9/19.5;position:relative}
+    .phone-screen img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+    .phone-glow{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:180px;height:60px;background:radial-gradient(ellipse,rgba(147,201,172,.25),transparent 70%);filter:blur(16px);pointer-events:none}
+
+    /* FOOTER */
+    .footer{padding:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:var(--max);margin:0 auto;border-top:1px solid var(--border)}
+    .footer-left{display:flex;align-items:center;gap:.8rem}
+    .footer-logo{font-family:var(--serif);font-size:.95rem;color:var(--text2);font-variation-settings:"opsz" 60}
+    .footer-copy{font-size:.78rem;color:var(--text3)}
+    .footer-links{display:flex;flex-wrap:wrap;gap:1.25rem;list-style:none}
+    .footer-links a{font-size:.8rem;color:var(--text3);text-decoration:none;transition:color .2s}
+    .footer-links a:hover{color:var(--text2)}
+    @media(max-width:640px){.footer{flex-direction:column;text-align:center;gap:1.25rem;padding:2.5rem 1.5rem}.footer-left{flex-direction:column;gap:.35rem}.footer-links{justify-content:center;gap:.6rem 1rem}}
+
+    /* FAQ */
+    .faq-section{padding:6rem 0;background:var(--bg2);border-top:1px solid var(--border)}
+    .faq-layout{display:grid;grid-template-columns:340px 1fr;gap:5rem;align-items:start}
+    @media(max-width:900px){.faq-layout{grid-template-columns:1fr;gap:2.5rem}}
+    .faq-text .section-title{margin-bottom:1rem}
+    .faq-text .section-lead{margin-bottom:0}
+    .faq-list{display:flex;flex-direction:column}
+    .faq-item{border-bottom:1px solid var(--border)}
+    .faq-item:first-child{border-top:1px solid var(--border)}
+    .faq-question{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 0;cursor:pointer;font-size:.95rem;font-weight:500;color:var(--text);gap:1rem;background:none;border:none;width:100%;text-align:left;font-family:var(--sans);transition:color .2s}
+    .faq-question:hover{color:var(--primary)}
+    .faq-chevron{width:18px;height:18px;stroke:var(--text3);fill:none;stroke-width:2;flex-shrink:0;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s,stroke .2s}
+    .faq-item.open .faq-chevron{transform:rotate(180deg);stroke:var(--primary)}
+    .faq-answer{display:none;padding:0 1.5rem 1.1rem 0;font-size:.9rem;color:var(--text2);line-height:1.7;font-weight:300}
+    .faq-item.open .faq-answer{display:block}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity .75s ease,transform .75s ease}
+    .reveal.in{opacity:1;transform:none}
+    .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+    /* HERO ANIM */
+    @keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    .ha1{opacity:0;animation:fu .65s ease .1s forwards}
+    .ha2{opacity:0;animation:fu .65s ease .25s forwards}
+    .ha3{opacity:0;animation:fu .65s ease .4s forwards}
+    .ha4{opacity:0;animation:fu .65s ease .55s forwards}
+    .ha5{opacity:0;animation:fu .65s ease .7s forwards}
+
+    /* ACCESSIBILITÉ — réduire les animations si demandé */
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      .ha1,.ha2,.ha3,.ha4,.ha5{animation:none;opacity:1}
+      .reveal{opacity:1;transform:none;transition:none}
+      .app-badge,.contact-link,.don-btn{transition:none}
+    }
+  
+    /* ── Spécifique Serein Relais ── */
+    .nav-logo-name em{font-style:italic;color:var(--accent)}
+    .app-badge.soon{opacity:.45;cursor:default}
+    .app-badge.soon:hover{transform:none;opacity:.45}
+    .soon-label{align-self:center;font-size:.85rem;color:var(--text2);border:1px solid var(--border2);border-radius:999px;padding:.35rem .9rem}
+    .steps-section{padding:6.5rem 0 5rem}
+    .steps-section .section-title{text-align:center;margin-bottom:3rem}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.5rem;max-width:900px;margin:0 auto}
+    .steps figure{display:flex;flex-direction:column;gap:1.1rem}
+    .ss-phone{background:linear-gradient(170deg,#1c3a2e,#0d1f1a);border-radius:1.6rem;padding:.4rem;box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05)}
+    .ss-screen{background:#0f1f1b;border-radius:1.25rem;aspect-ratio:9/18;overflow:hidden;display:block}
+    .ss-screen img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+    .steps figcaption{display:flex;align-items:baseline;gap:.6rem;justify-content:center;text-align:center;font-size:1rem;color:var(--text);font-weight:400;line-height:1.4}
+    .step-n{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.3rem}
+    .steps-after{text-align:center;color:var(--text2);font-weight:300;margin-top:3rem;font-size:1rem}
+    @media(max-width:760px){.steps{grid-template-columns:1fr;max-width:280px;gap:3rem}}
+    .inside-section{padding:0 0 5.5rem}
+    .inside-section .section-title{text-align:center;margin-bottom:2.5rem}
+    .inside{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem 3rem;max-width:860px;margin:0 auto;padding:0}
+    .inside li{color:var(--text2);font-weight:300;line-height:1.6;font-size:.98rem;padding-left:1.1rem;position:relative}
+    .inside li::before{content:"";position:absolute;left:0;top:.62em;width:.42rem;height:.42rem;border-radius:.12rem;background:var(--accent)}
+    .inside strong{color:var(--text);font-weight:500}
+    .inside-after{text-align:center;color:var(--text);margin-top:2.5rem;font-size:1rem}
+    @media(max-width:760px){.inside{grid-template-columns:1fr;max-width:420px}}
+    .privacy-section{padding:0 0 6rem}
+    .privacy-box{padding:2.5rem 3rem;background:linear-gradient(140deg,rgba(147,201,172,.08),rgba(216,183,138,.06));border:1px solid var(--border2);border-radius:var(--r);max-width:760px;margin:0 auto;text-align:center}
+    .privacy-box .section-lead{margin:1rem auto 0;max-width:46ch}
+    .privacy-box a{color:var(--primary);text-decoration:none;font-weight:500;white-space:nowrap}
+    @media(max-width:600px){.privacy-box{padding:2rem 1.5rem}}
+  </style>
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+  <!-- Données structurées (même modèle que la page d'accueil de Serein). Les liens des stores sont actifs à la sortie. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MobileApplication",
+        "@id": "https://sereinapp.fr/relais/#app",
+        "name": "Serein Relais",
+        "alternateName": "Serein Relais - Ta TCC entre les séances",
+        "url": "https://sereinapp.fr/relais/",
+        "description": "Application d'exercices de TCC et d'ACT en français, pour pratiquer entre les séances de psy et après la thérapie : journal de pensées, expériences comportementales, exposition progressive, plan anti-rechute. Conçue par un psychologue. Gratuite, sans publicité, sans compte, hors ligne.",
+        "operatingSystem": "iOS, Android",
+        "applicationCategory": "HealthApplication",
+        "inLanguage": "fr-FR",
+        "image": "https://sereinapp.fr/relais/img/og-relais.png",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "featureList": [
+          "Journal de pensées en 7 étapes (pensées automatiques, pièges de pensée, pensée alternative)",
+          "Expériences comportementales et exposition progressive, avec cotation de la croyance avant et après",
+          "Activation comportementale avec cotation du plaisir et de la maîtrise, respiration guidée, valeurs et défusion (ACT)",
+          "Report et tri des inquiétudes, résolution de problèmes",
+          "Exercices proposés par le psy mis en priorité",
+          "Récap à montrer à la prochaine séance",
+          "Plan de prévention de la rechute pour après la thérapie",
+          "Gratuit, sans publicité, sans compte, hors ligne, aucune donnée envoyée"
+        ],
+        "downloadUrl": [
+          "https://apps.apple.com/fr/app/id6781663800",
+          "https://play.google.com/store/apps/details?id=fr.sereinapp.tccact"
+        ],
+        "isPartOf": { "@id": "https://sereinapp.fr/#website" },
+        "author": { "@type": "Person", "@id": "https://sereinapp.fr/#cesar", "name": "César Broche Aguilar", "jobTitle": "Psychologue du travail formé aux thérapies cognitives et comportementales" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://sereinapp.fr/relais/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "Faut-il être suivi·e par un psy pour utiliser Serein Relais ?", "acceptedAnswer": { "@type": "Answer", "text": "Non, mais l'app est pensée pour accompagner une thérapie TCC : elle aide à faire entre les séances les exercices proposés par le psy." } },
+          { "@type": "Question", "name": "Mon psy voit-il ce que je note ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Tout reste sur ton téléphone. Tu peux lui montrer un récap si tu le souhaites." } },
+          { "@type": "Question", "name": "Et si ça ne va vraiment pas ?", "acceptedAnswer": { "@type": "Answer", "text": "L'app ne remplace pas un suivi. Appelle le 3114, gratuit, 24h/24. En cas de danger immédiat : 15 ou 112." } }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<header class="nav" role="banner">
+  <a class="nav-logo" href="./">
+    <img src="img/logo-relais.svg" alt="Logo Serein Relais">
+    <span class="nav-logo-name">Serein <em>Relais</em></span>
+  </a>
+  <nav aria-label="Navigation principale">
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#comment">Comment ça marche</a></li>
+      <li><a href="#faq">Questions</a></li>
+      <li><a href="../pro/#relais">Pour les psys</a></li>
+      <li><a href="../">Serein méditation</a></li>
+      <li><a href="#telecharger" class="nav-dl">Télécharger</a></li>
+    </ul>
+  </nav>
+  <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section aria-label="Présentation">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero">
+    <div class="hero-content">
+      <h1 class="ha2">Tes exercices de TCC<br><em>entre les séances.</em></h1>
+      <p class="hero-lead ha3">Ceux que ton psy te propose, à portée de main. Un par jour, à ton rythme.</p>
+      <div class="hero-badges ha4" id="telecharger">
+        <!-- À la sortie : remplacer ces deux blocs par les liens des stores (voir site/README.md) -->
+        <span class="app-badge soon" aria-label="Bientôt sur l'App Store">
+          <img src="../assets/badges/app-store-fr.svg" alt="" width="126" height="40">
+        </span>
+        <span class="app-badge soon" aria-label="Bientôt sur Google Play">
+          <img src="../assets/badges/google-play-fr.png" alt="" width="124" height="48">
+        </span>
+        <span class="soon-label">Bientôt disponible</span>
+      </div>
+      <div class="hero-trust ha5">
+        <span class="trust-pill">Gratuit</span>
+        <span class="trust-pill">Sans compte</span>
+        <span class="trust-pill">Hors ligne</span>
+      </div>
+    </div>
+    <div class="hero-visual ha3">
+      <div class="phone">
+        <div class="phone-screen">
+          <img src="img/relais-aujourdhui.jpg" alt="Écran Aujourd'hui de Serein Relais : humeur du jour et pratique du jour" width="720" height="1559" fetchpriority="high">
+        </div>
+      </div>
+      <div class="phone-glow" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<div class="s-divider"></div>
+
+<!-- COMMENT ÇA MARCHE -->
+<section class="steps-section" id="comment">
+  <div class="wrap">
+    <h2 class="section-title reveal">Comment <em>ça marche</em></h2>
+    <div class="steps">
+      <figure class="reveal d1">
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-carnet.jpg" alt="Mon carnet : les exercices proposés par le psy" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">1</span>Tu notes ce que ton psy te propose.</figcaption>
+      </figure>
+      <figure class="reveal d2">
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-journal.jpg" alt="Fin du journal de pensées : la croyance passe de 80 à 30" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">2</span>Tu fais l'exercice, quand tu veux.</figcaption>
+      </figure>
+      <figure class="reveal d3">
+        <div class="ss-phone"><div class="ss-screen"><img src="img/relais-suivi.jpg" alt="Mon suivi : la mosaïque des exercices réalisés" width="720" height="1559" loading="lazy"></div></div>
+        <figcaption><span class="step-n">3</span>Tu vois le chemin parcouru.</figcaption>
+      </figure>
+    </div>
+    <p class="steps-after reveal">Et après la thérapie, l'app reste avec toi, avec ton plan anti-rechute.</p>
+  </div>
+</section>
+
+<!-- DANS L'APP : faits concrets (c'est ce que reprennent les moteurs et les assistants IA) -->
+<section class="inside-section" aria-label="Ce qu'il y a dans l'app">
+  <div class="wrap">
+    <h2 class="section-title reveal">Dans <em>l'app</em></h2>
+    <ul class="inside reveal">
+      <li><strong>Journal de pensées</strong> : 7 étapes pour repérer une pensée automatique, son piège et une pensée plus juste.</li>
+      <li><strong>Expériences et exposition</strong> : tu testes tes prédictions pas à pas, en notant ce que tu y crois avant et après.</li>
+      <li><strong>Petit pas, respiration, valeurs</strong> : activation comportementale (plaisir et accomplissement notés), respiration guidée, défusion (ACT).</li>
+      <li><strong>Mes inquiétudes</strong> : les noter, les reporter à ton moment, puis trier ce qui se résout et ce qui se laisse.</li>
+      <li><strong>Les exercices de ton psy</strong> : ceux proposés en séance passent en premier.</li>
+      <li><strong>Un récap pour ta prochaine séance</strong> : ce que tu as fait, à montrer si tu veux.</li>
+      <li><strong>Un plan anti-rechute</strong> : tes signaux et quoi faire, pour après la thérapie.</li>
+    </ul>
+    <p class="inside-after reveal">Conçue par un psychologue. Gratuite, sans pub, sans compte, hors ligne.</p>
+  </div>
+</section>
+
+<!-- CONFIDENTIALITÉ -->
+<section class="privacy-section" aria-label="Confidentialité">
+  <div class="wrap">
+    <div class="privacy-box reveal">
+      <h2 class="section-title">Ce que tu écris <em>reste chez toi.</em></h2>
+      <p class="section-lead">Pas de compte, pas de pub, aucune donnée envoyée. Tout reste sur ton téléphone. <a href="privacy.html">Confidentialité →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="wrap">
+    <div class="faq-layout">
+      <div class="faq-text">
+        <h2 class="section-title reveal">Questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Faut-il être suivi·e par un psy ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <p class="faq-answer">Non, mais l'app est pensée pour accompagner une thérapie.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Mon psy voit-il ce que je note ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <p class="faq-answer">Non. Tu peux lui montrer un récap si tu le souhaites.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Et si ça ne va vraiment pas ?<svg class="faq-chevron" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <p class="faq-answer">L'app ne remplace pas un suivi. Appelle le 3114, gratuit, 24h/24. En cas de danger immédiat : 15 ou 112.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="footer-left">
+    <span class="footer-logo">Serein Relais</span>
+    <span class="footer-copy">Serein est un projet de l'association Sereinapp Méditation (loi 1901, RNA W302023362) — 43 rue Émile Jamais, 30900 Nîmes</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="../">Serein méditation</a></li>
+    <li><a href="../pro/#relais">Pour les psys</a></li>
+    <li><a href="mailto:contact@sereinapp.fr">Contact</a></li>
+    <li><a href="privacy.html">Confidentialité</a></li>
+    <li><a href="../mentions-legales.html">Mentions légales</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Menu mobile (burger) — repris de la landing Serein
+  const navEl = document.querySelector('.nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  navToggle.addEventListener('click', () => {
+    const open = navEl.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+    navToggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  });
+  navEl.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    navEl.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Ouvrir le menu');
+  }));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  let revealed = 0;
+  const io = new IntersectionObserver(e => {
+    e.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('in');
+        io.unobserve(el.target);
+        if (++revealed === revealEls.length) io.disconnect();
+      }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => io.observe(el));
+
+  document.querySelector('.faq-list').addEventListener('click', e => {
+    const btn = e.target.closest('.faq-question');
+    if (!btn) return;
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+  });
+</script>
+</body>
+</html>

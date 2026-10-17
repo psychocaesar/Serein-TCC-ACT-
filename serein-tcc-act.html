@@ -224,7 +224,7 @@ body {
   min-width: 52px; flex: 1;
 }
 .nav-btn svg { width: 20px; height: 20px; transition: transform var(--transition); }
-.nav-btn span { font-size: 0.6rem; font-family: var(--font-body); font-weight: 500; }
+.nav-btn span { font-size: 0.69rem; font-family: var(--font-body); font-weight: 500; }
 .nav-btn.active { color: var(--color-primary); }
 .nav-btn.active svg { transform: scale(1.12); }
 .nav-btn.active span { font-weight: 700; }
@@ -606,7 +606,7 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
 /* ─── TRACKING ─── */
 .track-period-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .track-period-btn {
-  padding: 0.35rem 0.9rem; border-radius: 2rem; border: 1px solid var(--color-border);
+  min-height: 40px; padding: 0.35rem 0.9rem; border-radius: 2rem; border: 1px solid var(--color-border);
   background: none; color: var(--color-muted); font-family: var(--font-body);
   font-size: 0.8rem; cursor: pointer; transition: all var(--transition);
 }
@@ -1072,7 +1072,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 /* ─── BREATHING ─── */
 .breath-tech-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
 .breath-tab {
-  padding: 0.4rem 0.9rem; border-radius: 2rem;
+  min-height: 40px; padding: 0.4rem 0.9rem; border-radius: 2rem;
   border: 1.5px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-muted); font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
@@ -1081,6 +1081,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .breath-tab.active { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
 .breath-dur-label { font-size: 0.72rem; color: var(--color-muted); text-align: center; margin-bottom: 0.4rem; }
 .breath-dur-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; margin-bottom: 0.5rem; }
+.breath-dur { min-height: 40px; }
 .breath-dur {
   padding: 0.3rem 0.75rem; border-radius: 2rem;
   border: 1.5px solid var(--color-border); background: var(--color-surface);
@@ -1228,6 +1229,11 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .hub-intro { color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin: -0.25rem 0 1rem; }
 .optional, .range-unit { font-weight: 400; color: var(--color-muted); font-size: 0.8rem; }
 .onboarding-tip summary { font-weight: 600; cursor: pointer; list-style: none; }
+/* Explications repliables : un lien discret, pas un bouton qui concurrence l'action principale. */
+.onboarding-tip:not([open]) { background: none; border-color: transparent; padding: 0.4rem 0; }
+.onboarding-tip summary { display: flex; align-items: center; gap: 0.35rem; min-height: 32px; color: var(--color-primary); }
+.onboarding-tip summary::after { content: '›'; font-size: 1.1rem; line-height: 1; transition: transform var(--transition); }
+.onboarding-tip[open] summary::after { transform: rotate(90deg); }
 .onboarding-tip summary::-webkit-details-marker { display: none; }
 .onboarding-tip .tip-body p { margin: 0.6rem 0 0; font-size: 0.83rem; }
 .tip-list { margin: 0.6rem 0 0; padding-left: 1.1rem; font-size: 0.83rem; display: flex; flex-direction: column; gap: 0.35rem; }
@@ -1356,13 +1362,17 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .carnet-tile svg { width: 22px; height: 22px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .carnet-tile-n { font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; line-height: 1; }
 .carnet-tile-label { font-size: 0.8rem; color: var(--color-muted); }
+.carnet-tile-label.strong { color: var(--color-text); font-weight: 600; font-size: 0.88rem; }
+.carnet-tile-empty { font-size: 0.76rem; color: var(--color-primary); }
 
 /* ─── Mon suivi ─── */
 .mosaic-card, .mood-chart-card { margin-bottom: 0.9rem; display: flex; flex-direction: column; gap: 0.8rem; }
 .mosaic { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
-.mosaic-tile { aspect-ratio: 1; width: 100%; padding: 0; border: 0; border-radius: 6px; cursor: pointer; }
+.mosaic-tile { aspect-ratio: 1; width: 100%; padding: 0; border: 0; border-radius: 6px; cursor: pointer; position: relative; }
+/* carreaux de ~26 px : zone tactile portée à ~40 px sans changer la grille */
+.mosaic-tile::after { content: ''; position: absolute; inset: -7px; }
 .mosaic-tile.sel { outline: 2px solid var(--color-text); outline-offset: 1px; }
-.mosaic-tile.next { background: transparent; border: 1.5px dashed color-mix(in srgb, var(--color-primary) 70%, transparent); animation: nextPulse 2.4s ease-in-out infinite; }
+.mosaic-tile.next { position: relative; background: transparent; border: 1.5px dashed color-mix(in srgb, var(--color-primary) 70%, transparent); animation: nextPulse 2.4s ease-in-out infinite; }
 @keyframes nextPulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
 .mosaic-caption { font-size: 0.82rem; line-height: 1.4; min-height: 1.2em; }
 .mosaic-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem 0.75rem; }
@@ -1525,7 +1535,7 @@ input[type="date"], input[type="tel"] {
 <div class="crisis-overlay" id="crisisOverlay" role="dialog" aria-modal="true" aria-label="Mode crise - respiration et ancrage">
   <button class="crisis-close" onclick="hideCrisis()" aria-label="Fermer le mode crise">Fermer ×</button>
   <div class="crisis-label">Mode crise rapide</div>
-  <div class="crisis-safe" id="crisisSafe">Tu es en sécurité.</div>
+  <div class="crisis-safe" id="crisisSafe">Tu n'es pas seul·e.</div>
   <div class="crisis-breath-wrap" id="crisisCircle">
     <div class="crisis-breath-text" id="crisisBreathText">Inspire...</div>
   </div>
@@ -1645,7 +1655,7 @@ input[type="date"], input[type="tel"] {
   <div class="screen" id="screen-journal" role="main" aria-label="Journal de pensées">
     <div class="greeting-block">
       <div class="time-label">Journal de pensées</div>
-      <h1>Restructure ta <span>pensée</span></h1>
+      <h1>Regarde ta pensée <span>de plus près</span></h1>
     </div>
 
     <div id="journalFlow">
@@ -1681,8 +1691,8 @@ input[type="date"], input[type="tel"] {
           <textarea id="autoThoughtField" rows="4" placeholder="Ex. : Il m'en veut, j'ai dû dire quelque chose de travers." oninput="saveJournalDraft()"></textarea>
         </div>
         <div class="range-group">
-          <label for="beliefBefore">À combien y crois-tu ? <span><span class="range-val" id="beliefBeforeVal">70</span><span class="range-unit">/100</span></span></label>
-          <input type="range" id="beliefBefore" min="0" max="100" step="5" value="70" oninput="document.getElementById('beliefBeforeVal').textContent=this.value; saveJournalDraft()" aria-label="Croyance en la pensée, de 0 à 100">
+          <label for="beliefBefore">À combien y crois-tu ? <span><span class="range-val" id="beliefBeforeVal">–</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="beliefBefore" min="0" max="100" step="5" value="50" oninput="beliefSet.before = true; document.getElementById('beliefBeforeVal').textContent=this.value; saveJournalDraft()" aria-label="Croyance en la pensée, de 0 à 100">
         </div>
         <div class="row mt-2">
           <button class="btn btn-ghost" onclick="journalStep(1)">← Retour</button>
@@ -1787,11 +1797,11 @@ input[type="date"], input[type="tel"] {
         <div class="rerate-card">
           <div class="rerate-title">Ta pensée de départ, à combien y crois-tu ?</div>
           <div class="rerate-pair">
-            <div><div class="rerate-cap">Au début</div><div class="rerate-num before" id="beliefBeforeNum">70</div></div>
+            <div><div class="rerate-cap">Au début</div><div class="rerate-num before" id="beliefBeforeNum">–</div></div>
             <svg class="rerate-arrow" viewBox="0 0 34 20" aria-hidden="true"><path d="M2 10h28M22 3l8 7-8 7"/></svg>
-            <div><div class="rerate-cap">Maintenant</div><div class="rerate-num" id="beliefAfterNum">70</div></div>
+            <div><div class="rerate-cap">Maintenant</div><div class="rerate-num" id="beliefAfterNum">–</div></div>
           </div>
-          <input type="range" id="beliefAfter" class="rerate-range" min="0" max="100" step="5" value="70" oninput="updateRerate()" aria-label="Croyance en la pensée de départ maintenant, de 0 à 100">
+          <input type="range" id="beliefAfter" class="rerate-range" min="0" max="100" step="5" value="50" oninput="beliefSet.after = true; updateRerate()" aria-label="Croyance en la pensée de départ maintenant, de 0 à 100">
           <div class="slider-ends"><span>0 · pas du tout</span><span>100 · totalement</span></div>
         </div>
         <div class="rerate-card">
@@ -2089,7 +2099,7 @@ input[type="date"], input[type="tel"] {
   <!-- ═══ SCREEN : EXPÉRIENCES COMPORTEMENTALES ═══ -->
   <div class="screen" id="screen-experiments" role="main" aria-label="Expériences comportementales">
     <div class="greeting-block">
-      <div class="time-label">TCC</div>
+      <div class="time-label">Expériences</div>
       <h1>Expériences <span>comportementales</span></h1>
     </div>
     <p>Une croyance anxieuse est une hypothèse, pas un fait. Conçois une petite expérience pour la mettre à l'épreuve du réel.</p>
@@ -2120,8 +2130,8 @@ input[type="date"], input[type="tel"] {
         <input type="text" id="expBelief" placeholder="Ex. : Si je demande de l'aide, on me jugera incompétent·e." aria-label="Croyance à tester">
       </div>
       <div class="range-group">
-        <label for="expBeliefStart">À quel point y crois-tu maintenant ? <span class="range-val" id="expBeliefStartVal">70</span></label>
-        <input type="range" id="expBeliefStart" min="0" max="100" value="70" oninput="document.getElementById('expBeliefStartVal').textContent=this.value" aria-label="Degré de croyance initial de 0 à 100">
+        <label for="expBeliefStart">À quel point y crois-tu maintenant ? <span class="range-val" id="expBeliefStartVal">50</span></label>
+        <input type="range" id="expBeliefStart" min="0" max="100" value="50" oninput="document.getElementById('expBeliefStartVal').textContent=this.value" aria-label="Degré de croyance initial de 0 à 100">
       </div>
       <div class="form-group">
         <label class="form-label" for="expPrediction">Ta prédiction (qu'est-ce que tu crains qu'il se passe ?)</label>
@@ -2604,7 +2614,7 @@ input[type="date"], input[type="tel"] {
       <div class="setting-row">
         <div class="setting-info">
           <strong>Rappel quotidien</strong>
-          <span>Une invitation à faire ton check-in</span>
+          <span>Une invitation à noter ton humeur</span>
         </div>
         <div class="setting-control">
           <button id="reminderTimeBtn" class="setting-time" onclick="openReminderTimePicker()" style="display:none;" aria-label="Changer l'heure du rappel"></button>
@@ -2643,7 +2653,7 @@ input[type="date"], input[type="tel"] {
         <button class="btn btn-secondary" onclick="importData()" aria-label="Importer une sauvegarde">⬆️ Importer une sauvegarde</button>
       </div>
       <button class="btn-wipe" onclick="wipeAllData()" aria-label="Effacer toutes mes données">🗑️ Tout effacer et repartir de zéro</button>
-      <p style="margin-top:0.85rem;"><a href="privacy.html" style="color:var(--color-primary);font-size:0.85rem;">Politique de confidentialité</a></p>
+      <p style="margin-top:0.85rem;"><a href="privacy.html" style="color:var(--color-primary);font-size:0.85rem;display:inline-flex;align-items:center;min-height:44px;">Politique de confidentialité</a></p>
       <input type="file" id="importFileInput" accept="application/json,.json" onchange="handleImportFile(this)" style="display:none;" aria-hidden="true" tabindex="-1">
     </div>
 
@@ -3204,13 +3214,15 @@ const JOURNAL_FIELDS = {
   balanced: 'balancedThoughtField',
 };
 const jField = id => document.getElementById(id);
+const beliefSet = { before: false, after: false };
 function readJournalFields() {
   const o = {};
   for (const [k, id] of Object.entries(JOURNAL_FIELDS)) o[k] = jField(id).value;
   o.intensityBefore = +jField('emotionIntensity').value;
   o.intensityAfter = +jField('emotionAfter').value;
-  o.beliefBefore = +jField('beliefBefore').value;
-  o.beliefAfter = +jField('beliefAfter').value;
+  // Croyance : null tant que le curseur n'a pas été touché (pas de valeur imposée, pas d'ancrage).
+  o.beliefBefore = beliefSet.before ? +jField('beliefBefore').value : null;
+  o.beliefAfter = beliefSet.after ? +jField('beliefAfter').value : null;
   return o;
 }
 function fillJournalFields(e) {
@@ -3219,10 +3231,13 @@ function fillJournalFields(e) {
   jField('emotionIntensity').value = b;
   jField('emotionIntensityVal').textContent = b;
   jField('emotionAfter').value = typeof e.intensityAfter === 'number' ? e.intensityAfter : b;
-  const cb = typeof e.beliefBefore === 'number' ? e.beliefBefore : 70;
+  // Croyance : curseur au milieu et « – » tant qu'elle n'a pas été cotée.
+  beliefSet.before = typeof e.beliefBefore === 'number';
+  beliefSet.after = typeof e.beliefAfter === 'number';
+  const cb = beliefSet.before ? e.beliefBefore : 50;
   jField('beliefBefore').value = cb;
-  jField('beliefBeforeVal').textContent = cb;
-  jField('beliefAfter').value = typeof e.beliefAfter === 'number' ? e.beliefAfter : cb;
+  jField('beliefBeforeVal').textContent = beliefSet.before ? cb : '–';
+  jField('beliefAfter').value = beliefSet.after ? e.beliefAfter : cb;
 }
 
 // Exemples déséquilibré -> équilibré par piège (guident la restructuration)
@@ -3298,7 +3313,9 @@ function prepareRerate() {
   const emo = jField('emotionField').value.trim();
   jField('rerateEmotionName').textContent = emo ? emo.toLowerCase() : 'émotion';
   jField('rerateBefore').textContent = jField('emotionIntensity').value;
-  jField('beliefBeforeNum').textContent = jField('beliefBefore').value;
+  jField('beliefBeforeNum').textContent = beliefSet.before ? jField('beliefBefore').value : '–';
+  // « Maintenant » part de la cotation de départ, mais ne compte qu'une fois touché.
+  if (!beliefSet.after) jField('beliefAfter').value = beliefSet.before ? jField('beliefBefore').value : 50;
   updateRerate();
 }
 function rerateVerdict(before, after) {
@@ -3317,8 +3334,8 @@ function updateRerate() {
   jField('rerateVerdict').textContent = rerateVerdict(before, after);
   const bAfter = +jField('beliefAfter').value;
   const bNum = jField('beliefAfterNum');
-  bNum.textContent = bAfter;
-  bNum.className = 'rerate-num ' + (bAfter <= 30 ? 'low' : bAfter <= 60 ? 'mid' : 'high');
+  bNum.textContent = beliefSet.after ? bAfter : '–';
+  bNum.className = 'rerate-num ' + (!beliefSet.after ? '' : bAfter <= 30 ? 'low' : bAfter <= 60 ? 'mid' : 'high');
   saveJournalDraft();
 }
 function loadJournalEntries() { return safeParse('serein_journal', []); }
@@ -3626,8 +3643,8 @@ function renderLadder() {
           <input type="text" id="ldFear-${s.id}" placeholder="Ex. : Je vais faire un malaise et devoir sortir.">
         </div>
         <div class="range-group">
-          <label for="ldBefore-${s.id}">À combien y crois-tu ? <span><span class="range-val" id="ldBeforeVal-${s.id}">70</span><span class="range-unit">/100</span></span></label>
-          <input type="range" id="ldBefore-${s.id}" min="0" max="100" step="5" value="70" oninput="document.getElementById('ldBeforeVal-${s.id}').textContent=this.value">
+          <label for="ldBefore-${s.id}">À combien y crois-tu ? <span><span class="range-val" id="ldBeforeVal-${s.id}">50</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="ldBefore-${s.id}" min="0" max="100" step="5" value="50" oninput="document.getElementById('ldBeforeVal-${s.id}').textContent=this.value">
         </div>
         <div class="section-title mt-2">Après</div>
         <div class="form-group">
@@ -3635,8 +3652,8 @@ function renderLadder() {
           <textarea id="ldOutcome-${s.id}" rows="2" placeholder="Ex. : J'ai eu peur au début, mais je suis resté jusqu'au bout."></textarea>
         </div>
         <div class="range-group">
-          <label for="ldAfter-${s.id}">Et maintenant, à combien y crois-tu ? <span><span class="range-val" id="ldAfterVal-${s.id}">70</span><span class="range-unit">/100</span></span></label>
-          <input type="range" id="ldAfter-${s.id}" min="0" max="100" step="5" value="70" oninput="document.getElementById('ldAfterVal-${s.id}').textContent=this.value">
+          <label for="ldAfter-${s.id}">Et maintenant, à combien y crois-tu ? <span><span class="range-val" id="ldAfterVal-${s.id}">50</span><span class="range-unit">/100</span></span></label>
+          <input type="range" id="ldAfter-${s.id}" min="0" max="100" step="5" value="50" oninput="document.getElementById('ldAfterVal-${s.id}').textContent=this.value">
         </div>
         <div class="row">
           <button class="btn btn-ghost" onclick="deleteLadderStep(${s.id})">Supprimer le palier</button>
@@ -3924,7 +3941,7 @@ function resetGrounding() {
 
 // ─── CRISIS MODE ───
 const anchorPhrases = [
-  "L'anxiété est un simple système d'alarme du corps, pas une prédiction de l'avenir.",
+  "L'anxiété est un système d'alarme du corps, pas une prédiction de l'avenir.",
   "Cette tension intense peut être observée sans qu'il soit nécessaire d'y réagir dans l'immédiat.",
   "L'agitation de l'esprit est un événement physiologique passager - il a un début et une fin.",
   "L'inconfort émotionnel a le droit de faire partie de cet instant. Pas d'urgence à l'effacer.",
@@ -5410,24 +5427,25 @@ function renderCarnet() {
     return `<div class="task-row${complete ? ' complete' : ''}"><span class="task-check" style="--c:${color}" aria-hidden="true"></span><span class="task-row-title">${escHtml(taskTitle(t))}</span>${right}</div>`;
   }).join('');
   box.innerHTML = `<button class="carnet-tasks-btn" onclick="navigateTo('taches')">
-    <span class="card-head"><span class="carnet-tasks-title">${title}</span><span class="card-head-meta">${meta}</span></span>
-    ${rows || `<span class="carnet-tasks-empty">${done ? 'Note ce que tu veux continuer à pratiquer.' : 'Note ici ce que ton psy te propose pour la semaine.'}</span>`}
+    <span class="card-head"><span class="carnet-tasks-title">${title}</span><span class="card-head-meta">${meta}<span class="hub-chevron" aria-hidden="true">›</span></span></span>
+    ${rows || `<span class="carnet-tasks-empty">${done ? 'Ajoute ce que tu veux continuer à pratiquer.' : 'Ajoute ce que ton psy te propose pour la semaine.'}</span>`}
   </button>`;
   const plan = loadPlan();
   const filled = PLAN_FIELDS.filter(k => planHas(plan, k)).length;
   document.getElementById('carnetPlanSub').textContent = filled ? `${filled} rubrique${filled > 1 ? 's' : ''} sur 6 remplie${filled > 1 ? 's' : ''}` : 'Mes signaux, ce qui m\'aide, qui appeler';
   const values = loadValues();
   const tiles = [
-    { screen: 'cards', n: loadCards().length, label: 'Cartes de coping', color: '#93c9ac', icon: 'M5 6h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2ZM7 3h12a2 2 0 0 1 2 2v12' },
-    { screen: 'jhistory', n: loadJournalEntries().filter(e => e.balanced).length, label: 'Pensées équilibrées', color: '#d8b78a', icon: 'M3 12h4l3 8 4-16 3 8h4' },
-    { screen: 'diary', n: loadDiaryEntries().length, label: 'Ce qui va bien', color: '#c9d68a', icon: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v2M12 20v2M2 12h2M20 12h2' },
-    { screen: 'valeurs', n: values && values.ratings ? values.ratings.length : 0, label: 'Directions de vie', color: '#b9a6e0', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
+    { screen: 'cards', n: loadCards().length, label: 'Cartes de coping', empty: 'Créer ma première carte', color: '#93c9ac', icon: 'M5 6h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2ZM7 3h12a2 2 0 0 1 2 2v12' },
+    { screen: 'jhistory', n: loadJournalEntries().filter(e => e.balanced).length, label: 'Pensées équilibrées', empty: 'Elles arriveront avec le journal', color: '#d8b78a', icon: 'M3 12h4l3 8 4-16 3 8h4' },
+    { screen: 'diary', n: loadDiaryEntries().length, label: 'Ce qui va bien', empty: 'Noter un bon moment', color: '#c9d68a', icon: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v2M12 20v2M2 12h2M20 12h2' },
+    { screen: 'valeurs', n: values && values.ratings ? values.ratings.length : 0, label: 'Directions de vie', empty: 'Trouver ce qui compte', color: '#b9a6e0', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
   ];
   document.getElementById('carnetGrid').innerHTML = tiles.map(t => `
     <button class="carnet-tile" onclick="navigateTo('${t.screen}')">
       <svg viewBox="0 0 24 24" style="stroke:${t.color}" aria-hidden="true"><path d="${t.icon}"/></svg>
-      <span class="carnet-tile-n">${t.n}</span>
-      <span class="carnet-tile-label">${t.label}</span>
+      ${t.n ? `<span class="carnet-tile-n">${t.n}</span>` : ''}
+      <span class="carnet-tile-label${t.n ? '' : ' strong'}">${t.label}</span>
+      ${t.n ? '' : `<span class="carnet-tile-empty">${t.empty}</span>`}
     </button>`).join('');
 }
 
@@ -5904,8 +5922,8 @@ function saveExperiment() {
   document.getElementById('expPrediction').value = '';
   document.getElementById('expAction').value = '';
   document.getElementById('expDate').value = '';
-  document.getElementById('expBeliefStart').value = 70;
-  document.getElementById('expBeliefStartVal').textContent = '70';
+  document.getElementById('expBeliefStart').value = 50;
+  document.getElementById('expBeliefStartVal').textContent = '50';
   selectedExpArea = null;
   document.getElementById('expAreaHint').textContent = '';
   document.getElementById('expAddForm').classList.remove('visible');

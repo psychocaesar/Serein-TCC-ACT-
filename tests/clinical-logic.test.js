@@ -85,6 +85,10 @@ const SHIM = `
   moodFromLegacyIntensity: moodFromLegacyIntensity,
   pickDailyPractice: pickDailyPractice,
   planCheckinDue: planCheckinDue,
+  microStepReply: microStepReply,
+  rankSmallSteps: rankSmallSteps,
+  worryTimeAdvice: worryTimeAdvice,
+  worrySessionSummary: worrySessionSummary,
   planCheckinMessage: planCheckinMessage,
   EXERCISES: EXERCISES,
   PRACTICE_KINDS: PRACTICE_KINDS,
@@ -192,8 +196,10 @@ test('pratique du jour : chaque proposition pointe vers un écran réel', () => 
 
 // ── Exercices, mosaïque, niveaux ──
 
-test('EXERCISES : 6 outils, clés uniques, écrans réels rattachés à l\'onglet Exercices', () => {
-  assert.strictEqual(C.EXERCISES.length, 6);
+test('EXERCISES : 7 outils, clés uniques, écrans réels rattachés à l\'onglet Exercices', () => {
+  assert.strictEqual(C.EXERCISES.length, 7);
+  const colors = new Set(C.PRACTICE_KINDS.map(e => e.color.toLowerCase()));
+  assert.strictEqual(colors.size, C.PRACTICE_KINDS.length, 'chaque exercice a sa couleur de carreau');
   const kinds = new Set(C.PRACTICE_KINDS.map(e => e.kind));
   assert.strictEqual(kinds.size, C.PRACTICE_KINDS.length);
   for (const ex of C.EXERCISES) {
@@ -332,5 +338,45 @@ test('point du mois : message jamais alarmant, renvoi vers la séance seulement 
   assert.match(one, /prochaine séance/);
   assert.match(C.planCheckinMessage(3, false), /^3 signaux/);
   assert.ok(!/séance/.test(C.planCheckinMessage(2, true)), 'thérapie terminée : pas de « prochaine séance »');
+});
+
+test('petit pas : plaisir et maîtrise, retour jamais culpabilisant', () => {
+  assert.strictEqual(C.microStepReply(null, null), '');
+  const low = C.microStepReply(1, 0);
+  assert.match(low, /pas un échec/);
+  assert.ok(!/devrais|dois|faut/.test(low));
+  assert.match(C.microStepReply(null, 7), /^Noté/, 'une seule des deux cotations suffit');
+  assert.match(C.microStepReply(2, 6), /^Noté/, 'la maîtrise compte autant que le plaisir');
+});
+
+test('petit pas : « ce qui te fait du bien » seulement à partir de 3 cotations, actions répétées, triées', () => {
+  const e = (a, p, m) => ({ k: 'petitpas', a, p, m });
+  assert.strictEqual(C.rankSmallSteps([e('Marcher', 8, 6), e('Marcher', 6, 6)]).length, 0, 'moins de 3 cotations');
+  const log = [
+    e('Marcher', 8, 6), e('Marcher', 6, 8),
+    e('Ranger', 2, 9), e('Ranger', 2, 7),
+    e('Musique', 9, 1),
+    { k: 'petitpas', a: 'Eau' },            // non coté : ignoré
+    { k: 'journal', a: 'x', p: 10, m: 10 }, // autre exercice : ignoré
+  ];
+  const r = C.rankSmallSteps(log);
+  assert.strictEqual(JSON.stringify(r.map(x => x.action)), JSON.stringify(['Marcher', 'Ranger']), 'Musique une seule fois : pas encore classée');
+  assert.strictEqual(r[0].n, 2);
+  assert.strictEqual(r[0].p, 7);
+  assert.strictEqual(r[1].m, 8, 'une action peu agréable mais accomplie reste visible');
+});
+
+test('inquiétudes : moment fixe, pas au coucher', () => {
+  assert.match(C.worryTimeAdvice('18:00'), /même heure/);
+  assert.match(C.worryTimeAdvice('22:30'), /avant de dormir/);
+  assert.match(C.worryTimeAdvice('00:15'), /avant de dormir/);
+  assert.strictEqual(C.worryTimeAdvice(''), '');
+});
+
+test('inquiétudes : bilan du moment, accords et ton non culpabilisant', () => {
+  assert.match(C.worrySessionSummary(['actuel']), /^1 plan d'action\./);
+  assert.match(C.worrySessionSummary(['actuel', 'actuel', 'hypo', 'gone', 'gone']), /^2 plans d'action, 1 «\u00a0et si…\u00a0» laissé de côté, 2 qui ne t'inquiètent plus\./);
+  assert.match(C.worrySessionSummary([]), /ce n'est pas grave/);
+  assert.match(C.worrySessionSummary(['hypo']), /attendra le prochain/);
 });
 

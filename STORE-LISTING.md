@@ -34,13 +34,14 @@ Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée null
 - « Ta pratique du jour » : une seule proposition à la fois, selon ce que votre psy vous a proposé ou selon votre humeur
 - Le défi du jour : une pensée, quel piège ? Trente secondes pour s'entraîner à repérer les pièges de pensée
 
-🎯 EXERCICES : six outils de la TCC et de l'ACT
+🎯 EXERCICES : sept outils de la TCC et de l'ACT
 - Respirer et s'ancrer : cohérence cardiaque rythmée par des cloches, respiration en boîte, ancrage 5-4-3-2-1
 - Journal de pensées : situation, pensée, émotion, faits pour et contre, pensée équilibrée, puis nouvelle cotation pour voir le chemin parcouru
 - Expériences : mettre une prédiction à l'épreuve du réel, avec rappels
 - Exposition : votre propre échelle, palier par palier, centrée sur ce que vous craignez et ce qui se passe vraiment
-- Un petit pas : une seule action concrète quand tout est lourd
+- Un petit pas : une seule action concrète quand tout est lourd, puis le plaisir et le sentiment d'avoir accompli quelque chose, pour repérer ce qui vous fait du bien
 - Valeurs et défusion : clarifier ce qui compte, prendre du recul sur ses pensées
+- Mes inquiétudes : noter une inquiétude, la reporter à un moment fixe, puis la trier (problème actuel à résoudre étape par étape, ou « et si… » à laisser de côté)
 
 📖 MON CARNET : ce que vous construisez, pour le garder
 - Entre deux séances : notez les exercices que votre psy vous propose ; ils avancent tout seuls quand vous les faites, et un récap est prêt à montrer en séance
@@ -174,13 +175,14 @@ Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée null
 • « Ta pratique du jour » : une seule proposition à la fois, selon ce que votre psy vous a proposé ou selon votre humeur
 • Le défi du jour : une pensée, quel piège ? Trente secondes d'entraînement
 
-— EXERCICES : six outils de la TCC et de l'ACT —
+— EXERCICES : sept outils de la TCC et de l'ACT —
 • Respirer et s'ancrer : cohérence cardiaque rythmée par des cloches, respiration en boîte, ancrage 5-4-3-2-1
 • Journal de pensées : faits pour et contre, pensée équilibrée, puis nouvelle cotation pour voir le chemin parcouru
 • Expériences : mettre une prédiction à l'épreuve du réel, avec rappels
 • Exposition : votre propre échelle, palier par palier, centrée sur ce que vous craignez et ce qui se passe vraiment
-• Un petit pas : une seule action concrète quand tout est lourd
+• Un petit pas : une seule action concrète quand tout est lourd, puis plaisir et sentiment d'accomplissement, pour repérer ce qui vous fait du bien
 • Valeurs et défusion : clarifier ce qui compte, prendre du recul sur ses pensées
+• Mes inquiétudes : noter, reporter à un moment fixe, puis trier (problème actuel à résoudre, ou « et si… » à laisser de côté)
 
 — MON CARNET : ce que vous construisez, pour le garder —
 • Entre deux séances : notez les exercices proposés par votre psy ; ils avancent tout seuls quand vous les faites, et un récap est prêt pour la séance

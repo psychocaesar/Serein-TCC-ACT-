@@ -298,6 +298,31 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .ms-action { font-family: var(--font-title); font-size: 1.3rem; font-weight: 700; color: var(--color-text); line-height: 1.35; }
 .ms-main-actions, .ms-done-actions { display: flex; flex-direction: column; gap: 0.6rem; }
 .ms-done { text-align: center; padding: 1.5rem 1rem; }
+.ms-own-label { margin-top: 1.25rem; text-align: left; }
+.worry-card { display: flex; flex-direction: column; gap: 0.35rem; }
+#worryHome .onboarding-tip { margin-bottom: 0.9rem; }
+.ms-done .pm-note { font-size: 0.78rem; color: var(--color-muted); margin: 0.6rem 0; }
+.worry-moment-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.worry-moment-head .form-label { margin: 0; }
+.worry-time, .worry-date { background: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.5rem 0.7rem; color: var(--color-text); font-family: var(--font-body); font-size: 0.95rem; }
+.worry-date { width: 100%; }
+.worry-switch { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--color-text); }
+.worry-pending { font-size: 0.9rem; color: var(--color-text); margin: 0.4rem 0 0.2rem; }
+.worry-progress { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+.worry-quote { margin: 0 0 1.25rem; padding: 1rem 1.1rem; border-left: 3px solid #e3a0b4; background: var(--color-surface); border-radius: var(--radius-sm); font-style: italic; line-height: 1.45; color: var(--color-text); }
+.worry-sort-btns { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.9rem; }
+.worry-msg { font-size: 0.95rem; line-height: 1.5; color: var(--color-text); }
+.worry-plan { display: flex; flex-direction: column; gap: 0.3rem; }
+.worry-plan span { font-size: 0.82rem; color: var(--color-muted); }
+.worry-eval { margin-top: 0.4rem; }
+.pm-row { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-text); text-align: left; }
+.pm-row strong { color: var(--color-primary); font-variant-numeric: tabular-nums; }
+.pm-range { width: 100%; accent-color: var(--color-primary); margin: 0.35rem 0 0; }
+.pm-note { font-size: 0.78rem; color: var(--color-muted); margin: 0.6rem 0; line-height: 1.4; }
+.ms-insight { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1rem 1.1rem; margin-top: 1.25rem; }
+.ms-insight-list { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.ms-insight-list li { display: flex; flex-direction: column; gap: 0.1rem; font-size: 0.88rem; }
+.ms-insight-list span { font-size: 0.76rem; color: var(--color-muted); }
 .ms-done-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
 .ms-done p { color: var(--color-text); font-size: 1.05rem; line-height: 1.45; margin-bottom: 1.25rem; }
 
@@ -2130,27 +2155,129 @@ input[type="date"], input[type="tel"] {
     <div class="ms-card" id="msCard">
       <div class="ms-emoji" id="msEmoji" aria-hidden="true">💧</div>
       <div class="ms-action" id="msAction" aria-live="polite">Bois un grand verre d'eau, lentement.</div>
+      <label class="form-label ms-own-label" for="msOwn">Ou ton propre petit pas</label>
+      <input type="text" id="msOwn" maxlength="80" placeholder="Ex. : Envoyer un message à Léa" aria-label="Ton propre petit pas">
     </div>
 
     <div class="ms-main-actions" id="msMainActions">
       <button class="btn btn-primary" onclick="microStepDone()" aria-label="C'est fait">C'est fait ✓</button>
       <button class="btn btn-ghost" onclick="microStepAnother()" aria-label="Proposer une autre idée">Une autre idée ↻</button>
     </div>
+    <div class="ms-insight" id="msInsight" hidden></div>
 
     <div class="ms-done" id="msDone" role="status" hidden>
       <div class="ms-done-emoji" aria-hidden="true">🌱</div>
       <p id="msDoneText">Bravo. C'est un vrai pas, même s'il paraît petit.</p>
+      <!-- Monitoring de l'activation comportementale : plaisir ET maîtrise, de 0 à 10 (fiche AC) -->
       <div class="ms-feel" id="msFeel">
-        <div class="ms-feel-q">Et ton humeur, maintenant ? <span>(optionnel)</span></div>
-        <div class="chip-row ms-feel-row">
-          <button type="button" class="chip" onclick="microStepFeel('mieux')">Un peu mieux</button>
-          <button type="button" class="chip" onclick="microStepFeel('pareil')">Pareil</button>
-          <button type="button" class="chip" onclick="microStepFeel('moins')">Moins bien</button>
-        </div>
+        <div class="ms-feel-q">Comment c'était ? <span>(optionnel)</span></div>
+        <div class="pm-row"><label for="msPleasure">Plaisir</label><strong id="msPleasureVal">–</strong></div>
+        <input type="range" id="msPleasure" class="pm-range" min="0" max="10" step="1" value="5" oninput="microStepRate('p', this.value)" aria-label="Plaisir, de 0 à 10">
+        <div class="pm-row"><label for="msMastery">Sentiment d'avoir accompli quelque chose</label><strong id="msMasteryVal">–</strong></div>
+        <input type="range" id="msMastery" class="pm-range" min="0" max="10" step="1" value="5" oninput="microStepRate('m', this.value)" aria-label="Sentiment d'avoir accompli quelque chose, de 0 à 10">
+        <p class="pm-note">Les deux comptent : une action peut compter sans être agréable.</p>
+        <button class="btn btn-secondary" id="msRateBtn" onclick="microStepSaveRating()" disabled>Noter</button>
       </div>
       <div class="tile-reward" id="msReward"></div>
       <div class="ms-done-actions">
         <button class="btn btn-primary" onclick="microStepRestart()" aria-label="Un autre petit pas">Un autre petit pas</button>
+        <button class="btn btn-ghost" onclick="navigateTo('exercices')">Revenir aux exercices</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ EXERCICE : MES INQUIÉTUDES (TAG / rumination) ═══
+       Fiche TAG du DU : auto-observation, report des inquiétudes (créneau dédié), tri problème
+       actuel → résolution de problèmes / situation hypothétique → tolérer l'incertitude, sans
+       réassurance. L'exposition en imagination reste avec le psy. -->
+  <div class="screen" id="screen-worry" role="main" aria-label="Mes inquiétudes">
+    <div class="greeting-block">
+      <div class="time-label">Mes inquiétudes</div>
+      <h1>Noter, <span>reporter</span>, trier</h1>
+    </div>
+
+    <div id="worryHome">
+      <p class="ms-intro">Une inquiétude arrive ? Note-la, puis laisse-la attendre ton moment d'inquiétude. À ce moment-là, tu la tries.</p>
+      <details class="onboarding-tip">
+        <summary>Pourquoi ça fonctionne</summary>
+        <ul class="tip-list">
+          <li>S'inquiéter donne l'impression de se préparer, mais ne règle pas le problème. Chercher à se rassurer (vérifier, demander, chercher sur internet) soulage sur le moment, puis relance le cycle.</li>
+          <li>Reporter à un moment fixe, c'est ne plus suivre chaque inquiétude dès qu'elle arrive. Souvent, quand le moment vient, elle a perdu de sa force.</li>
+          <li>Au moment venu, on trie. Un problème actuel se résout, étape par étape. Un « et si… » ne se résout pas par la réflexion : il s'agit d'apprendre à vivre avec une part d'incertitude.</li>
+        </ul>
+      </details>
+
+      <div class="card worry-card">
+        <label class="form-label" for="worryText">Ce qui t'inquiète</label>
+        <textarea id="worryText" rows="2" maxlength="300" placeholder="Ex. : Et si je rate ma présentation de jeudi ?"></textarea>
+        <button class="btn btn-primary mt-1" onclick="addWorry()">La garder pour mon moment</button>
+        <p class="pm-note" id="worryAdded" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="card worry-card">
+        <div class="worry-moment-head">
+          <label class="form-label" for="worryTime">Mon moment d'inquiétude</label>
+          <input type="time" id="worryTime" class="worry-time" onchange="setWorryTime(this.value)" aria-label="Heure de ton moment d'inquiétude">
+        </div>
+        <p class="pm-note" id="worryTimeNote">Environ 15 minutes, chaque jour à la même heure et au même endroit.</p>
+        <div class="worry-reminder" id="worryReminderRow"></div>
+        <p class="worry-pending" id="worryPending"></p>
+        <button class="btn btn-secondary" id="worryStartBtn" onclick="startWorrySession()">Commencer mon moment</button>
+      </div>
+
+      <div id="worryPlans"></div>
+    </div>
+
+    <div id="worrySession" hidden>
+      <div class="worry-progress" id="worryProgress"></div>
+      <blockquote class="worry-quote" id="worryQuote"></blockquote>
+
+      <div id="worrySort">
+        <p class="checkin-q">Est-ce un problème actuel, sur lequel tu peux agir ? Ou un « et si… », une situation qui pourrait arriver ?</p>
+        <p class="pm-note">Problème actuel : quelque chose qui se passe ou va se passer, et sur quoi tu as prise (préparer, appeler, payer). « Et si… » : un scénario possible, sur lequel tu n'as pas prise maintenant.</p>
+        <div class="worry-sort-btns">
+          <button class="btn btn-secondary" onclick="sortWorry('actuel')">Un problème actuel</button>
+          <button class="btn btn-secondary" onclick="sortWorry('hypo')">Un « et si… »</button>
+          <button class="btn btn-ghost" onclick="sortWorry('gone')">Elle ne m'inquiète plus</button>
+        </div>
+      </div>
+
+      <div id="worrySolve" hidden>
+        <p class="ms-intro">Résolution de problème, par écrit. Pas besoin de la solution parfaite : une solution qui avance.</p>
+        <label class="form-label" for="wsProblem">1 · Le problème, en faits (qui, quoi, où, quand)</label>
+        <textarea id="wsProblem" rows="2" maxlength="300"></textarea>
+        <label class="form-label mt-1" for="wsIdeas">2 · Toutes les solutions possibles, sans trier (une par ligne)</label>
+        <textarea id="wsIdeas" rows="3" maxlength="500" placeholder="Même celles qui paraissent farfelues"></textarea>
+        <label class="form-label mt-1" for="wsChoice">3 · Celle que tu choisis, après le pour et le contre</label>
+        <input type="text" id="wsChoice" maxlength="150">
+        <label class="form-label mt-1" for="wsStep">4 · Ta première petite étape</label>
+        <input type="text" id="wsStep" maxlength="150" placeholder="Ex. : Relire mes notes 20 min mardi soir">
+        <label class="form-label mt-1" for="wsWhen">5 · Quand</label>
+        <input type="date" id="wsWhen" class="worry-date">
+        <div class="row mt-2">
+          <button class="btn btn-ghost" onclick="backToSort()">← Retour</button>
+          <button class="btn btn-primary" onclick="saveWorryPlan()">Enregistrer mon plan</button>
+        </div>
+      </div>
+
+      <div id="worryHypo" hidden>
+        <p class="worry-msg">Tu ne pourras pas avoir la certitude, et chercher à te rassurer (vérifier, demander, chercher sur internet) relancerait le cycle. Essaie de laisser ce « et si… » là, sans le résoudre, et de revenir à ce que tu fais.</p>
+        <p class="pm-note">Si ces « et si… » reviennent souvent, parles-en à ton psy : ça se travaille en séance.</p>
+        <div class="worry-sort-btns">
+          <button class="btn btn-secondary" onclick="worryToDefusion()">Prendre du recul sur cette pensée</button>
+          <button class="btn btn-primary" onclick="nextWorry()">Suivante</button>
+        </div>
+      </div>
+
+      <button class="btn btn-ghost mt-2" id="worryStopBtn" onclick="endWorrySession()">Arrêter pour aujourd'hui</button>
+    </div>
+
+    <div id="worryEnd" class="ms-done" hidden>
+      <div class="ms-done-emoji" aria-hidden="true">🕰️</div>
+      <p id="worryEndText"></p>
+      <div class="tile-reward" id="worryReward"></div>
+      <div class="ms-done-actions">
+        <button class="btn btn-primary" onclick="showWorryHome()">Revenir à mes inquiétudes</button>
         <button class="btn btn-ghost" onclick="navigateTo('exercices')">Revenir aux exercices</button>
       </div>
     </div>
@@ -2272,7 +2399,7 @@ input[type="date"], input[type="tel"] {
     <div class="greeting-block">
       <h1>Exercices</h1>
     </div>
-    <p class="hub-intro">Six outils, à piocher selon ce que tu travailles avec ton psy. Chaque séance ajoute un carreau à ta mosaïque.</p>
+    <p class="hub-intro">Sept outils, à piocher selon ce que tu travailles avec ton psy. Chaque séance ajoute un carreau à ta mosaïque.</p>
     <div class="hub-list" id="exercisesList"></div>
   </div>
 
@@ -2572,7 +2699,7 @@ const state = {
   journalTraps: [],
 };
 
-// ─── EXERCICES : les 6 outils (couleur = celle de leurs carreaux dans la mosaïque) ───
+// ─── EXERCICES : les 7 outils (couleur = celle de leurs carreaux dans la mosaïque) ───
 // `kind` sert de clé dans le journal de pratique ; `defi` n'est pas un exercice du hub
 // (c'est le défi du jour de l'accueil) mais a ses propres carreaux.
 const EXERCISES = [
@@ -2588,6 +2715,8 @@ const EXERCISES = [
     icon: 'M12 21v-9M12 12C12 8 9 5 4 5c0 4 3 7 8 7ZM12 14c0-3 2.5-6 8-6 0 4-3 6-8 6Z' },
   { kind: 'valeurs', screen: 'valeurs', title: 'Valeurs & défusion', desc: 'Ce qui compte, et prendre du recul sur ses pensées', color: '#b9a6e0',
     icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
+  { kind: 'inquietudes', screen: 'worry', title: 'Mes inquiétudes', desc: 'Noter, reporter à ton moment, puis trier', color: '#e3a0b4',
+    icon: 'M12 7v5l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z' },
 ];
 const DEFI_KIND = { kind: 'defi', title: 'Défis du jour', color: '#f0d9b5' };
 const PRACTICE_KINDS = [...EXERCISES, DEFI_KIND];
@@ -2699,14 +2828,14 @@ const screenMap = {
   home: 'screen-home', exercices: 'screen-exercices', carnet: 'screen-carnet', suivi: 'screen-suivi',
   reglages: 'screen-reglages',
   calm: 'screen-calm', journal: 'screen-journal', experiments: 'screen-experiments', ladder: 'screen-ladder',
-  microstep: 'screen-microstep', valeurs: 'screen-valeurs',
+  microstep: 'screen-microstep', valeurs: 'screen-valeurs', worry: 'screen-worry',
   taches: 'screen-taches', plan: 'screen-plan', cards: 'screen-cards', jhistory: 'screen-jhistory', diary: 'screen-diary',
 };
 // Chaque écran pointe vers son onglet parent
 const navMap = {
   home: 'nav-home',
   exercices: 'nav-exercices', calm: 'nav-exercices', journal: 'nav-exercices', experiments: 'nav-exercices',
-  ladder: 'nav-exercices', microstep: 'nav-exercices', valeurs: 'nav-exercices',
+  ladder: 'nav-exercices', microstep: 'nav-exercices', valeurs: 'nav-exercices', worry: 'nav-exercices',
   carnet: 'nav-carnet', taches: 'nav-carnet', plan: 'nav-carnet', cards: 'nav-carnet', jhistory: 'nav-carnet', diary: 'nav-carnet',
   suivi: 'nav-suivi',
 };
@@ -2733,6 +2862,7 @@ const screenInitFns = {
   jhistory: renderJournalHistory,
   reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); loadAppLockPrefs(); },
   microstep: initMicroStep,
+  worry: initWorry,
 };
 
 function navigateTo(screen) {
@@ -3908,6 +4038,7 @@ function setMicroStepView(view) {
   document.getElementById('msCard').hidden = view !== 'step';
   document.getElementById('msMainActions').hidden = view !== 'step';
   document.getElementById('msDone').hidden = view !== 'done';
+  if (view === 'step') renderMicroInsight(); else document.getElementById('msInsight').hidden = true;
 }
 function initMicroStep() {
   microStepIdx = Math.floor(Math.random() * MICRO_STEPS.length); // variété entre les visites
@@ -3919,28 +4050,296 @@ function microStepRestart() {
   setMicroStepView('step');
   microStepAnother();
 }
-// Observer le lien activité → humeur (monitoring de l'activation comportementale), sans obligation.
-const MICRO_FEEL_REPLY = {
-  mieux: "C'est souvent comme ça : l'action vient avant l'envie.",
-  pareil: "C'est normal, l'effet vient souvent avec la répétition. Le pas compte quand même.",
-  moins: "Merci de l'avoir noté. Ce n'est pas un échec : ça peut se discuter en séance.",
-};
-function microStepFeel(v) {
+// ─── Monitoring de l'activation comportementale (fiche AC) : après l'action, plaisir ET
+// maîtrise de 0 à 10, optionnels. Stockés sur le carreau (p, m) avec l'action (a). But : repérer
+// avec le temps ce qui fait du bien, sans viser le plaisir à tout prix (une action liée aux
+// valeurs peut compter sans être agréable : d'où la maîtrise).
+let msRating = { p: null, m: null };
+function microStepRate(which, v) {
+  msRating[which] = Number(v);
+  document.getElementById(which === 'p' ? 'msPleasureVal' : 'msMasteryVal').textContent = `${v}/10`;
+  document.getElementById('msRateBtn').disabled = false;
+}
+// Pure (testée) : retour après la cotation, jamais culpabilisant.
+function microStepReply(p, m) {
+  const vals = [p, m].filter(v => v !== null && v !== undefined);
+  if (!vals.length) return '';
+  if (Math.max(...vals) <= 2) return "Merci de l'avoir noté. Ce n'est pas un échec : quand l'élan manque, l'effet vient souvent avec la répétition. Ça peut se discuter en séance.";
+  return "Noté. L'action vient avant l'envie : avec le temps, tu verras ce qui te fait du bien.";
+}
+function microStepSaveRating() {
   const log = loadPractice();
-  for (let i = log.length - 1; i >= 0; i--) { if (log[i].k === 'petitpas') { log[i].feel = v; break; } }
+  for (let i = log.length - 1; i >= 0; i--) {
+    if (log[i].k === 'petitpas') {
+      if (msRating.p !== null) log[i].p = msRating.p;
+      if (msRating.m !== null) log[i].m = msRating.m;
+      break;
+    }
+  }
   Store.set(PRACTICE_KEY, JSON.stringify(log));
-  const feel = document.getElementById('msFeel');
-  feel.querySelectorAll('.chip').forEach(c => { c.disabled = true; c.classList.toggle('selected', c.getAttribute('onclick').includes(`'${v}'`)); });
-  document.getElementById('msDoneText').textContent = MICRO_FEEL_REPLY[v];
+  document.getElementById('msRateBtn').disabled = true;
+  document.querySelectorAll('#msFeel .pm-range').forEach(r => { r.disabled = true; });
+  document.getElementById('msDoneText').textContent = microStepReply(msRating.p, msRating.m);
   Haptics.light();
 }
+// Pure (testée) : les petits pas cotés au moins 2 fois, du plus au moins « bénéfique »
+// (moyenne de plaisir et de maîtrise), pour en parler en séance. Rien avant 3 cotations au total.
+function rankSmallSteps(log) {
+  const rated = log.filter(e => e.k === 'petitpas' && e.a && (typeof e.p === 'number' || typeof e.m === 'number'));
+  if (rated.length < 3) return [];
+  const by = {};
+  rated.forEach(e => {
+    const g = by[e.a] || (by[e.a] = { action: e.a, n: 0, ps: [], ms: [] });
+    g.n++;
+    if (typeof e.p === 'number') g.ps.push(e.p);
+    if (typeof e.m === 'number') g.ms.push(e.m);
+  });
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+  return Object.values(by).filter(g => g.n >= 2).map(g => {
+    const p = avg(g.ps), m = avg(g.ms);
+    const both = [p, m].filter(v => v !== null);
+    return { action: g.action, n: g.n, p, m, score: both.reduce((x, y) => x + y, 0) / both.length };
+  }).sort((a, b) => b.score - a.score).slice(0, 3);
+}
+function renderMicroInsight() {
+  const box = document.getElementById('msInsight');
+  if (!box) return;
+  const top = rankSmallSteps(loadPractice());
+  box.hidden = !top.length;
+  if (!top.length) return;
+  const fmt = v => v === null ? '–' : (Math.round(v * 10) / 10).toString().replace('.', ',');
+  box.innerHTML = `<div class="checkin-sub">Ce qui te fait du bien</div>
+    <ul class="ms-insight-list">${top.map(t => `<li><strong>${escHtml(t.action)}</strong><span>Plaisir ${fmt(t.p)} · Accompli ${fmt(t.m)} · ${t.n} fois</span></li>`).join('')}</ul>
+    <p class="pm-note">Utile à montrer à ton psy.</p>`;
+}
 function microStepDone() {
+  const own = (document.getElementById('msOwn').value || '').trim();
+  const action = own || MICRO_STEPS[microStepIdx % MICRO_STEPS.length].text;
   document.getElementById('msDoneText').textContent = MICRO_PRAISE[Math.floor(Math.random() * MICRO_PRAISE.length)];
   setMicroStepView('done');
   renderTileReward('msReward', 'petitpas', logPractice('petitpas'));
-  const feel = document.getElementById('msFeel');
-  feel.hidden = false;
-  feel.querySelectorAll('.chip').forEach(c => { c.classList.remove('selected'); c.disabled = false; });
+  const log = loadPractice();
+  for (let i = log.length - 1; i >= 0; i--) { if (log[i].k === 'petitpas') { log[i].a = action; break; } }
+  Store.set(PRACTICE_KEY, JSON.stringify(log));
+  msRating = { p: null, m: null };
+  document.getElementById('msFeel').hidden = false;
+  document.querySelectorAll('#msFeel .pm-range').forEach(r => { r.disabled = false; r.value = 5; });
+  document.getElementById('msPleasureVal').textContent = '–';
+  document.getElementById('msMasteryVal').textContent = '–';
+  document.getElementById('msRateBtn').disabled = true;
+  document.getElementById('msOwn').value = '';
+  Haptics.medium();
+}
+
+// ─── MES INQUIÉTUDES (fiche TAG du DU) ───
+// Noter → reporter à un créneau fixe → trier. Problème actuel : résolution de problèmes écrite
+// (définir, générer, choisir, planifier ; l'évaluation vient quand l'étape est faite). « Et si… » :
+// tolérer l'incertitude, sans réassurance, renvoi possible vers la défusion. Rien ne compte les
+// inquiétudes comme un symptôme : on ne montre que ce qui attend et les plans en cours.
+const WORRY_KEY = 'serein_worries';      // [{ id, t, d, s: 'wait'|'actuel'|'hypo'|'gone', plan?, done?, eval? }]
+const WORRY_TIME_KEY = 'serein_worry_time';
+const WORRY_REMINDER_KEY = 'serein_worry_reminder';
+const WORRY_REMINDER_ID = 424243;
+const WORRY_DEFAULT_TIME = '18:00';
+function loadWorries() { return safeParse(WORRY_KEY, []); }
+function saveWorries(list) { Store.set(WORRY_KEY, JSON.stringify(list)); }
+function worryTime() { return localStorage.getItem(WORRY_TIME_KEY) || WORRY_DEFAULT_TIME; }
+// Pure (testée) : conseil sur l'heure choisie (créneau fixe, pas au coucher).
+function worryTimeAdvice(hhmm) {
+  const h = parseInt((hhmm || '').split(':')[0], 10);
+  if (isNaN(h)) return '';
+  if (h >= 21 || h < 6) return "Évite de le placer juste avant de dormir : le soir, les inquiétudes ont tendance à tourner en boucle. Une heure de fin d'après-midi marche souvent mieux.";
+  return 'Environ 15 minutes, chaque jour à la même heure et au même endroit.';
+}
+// Pure (testée) : bilan de fin de moment, jamais culpabilisant.
+function worrySessionSummary(sorted) {
+  const c = { actuel: 0, hypo: 0, gone: 0 };
+  sorted.forEach(s => { if (s in c) c[s]++; });
+  const parts = [];
+  if (c.actuel) parts.push(`${c.actuel} plan${c.actuel > 1 ? 's' : ''} d'action`);
+  if (c.hypo) parts.push(`${c.hypo} « et si… » laissé${c.hypo > 1 ? 's' : ''} de côté`);
+  if (c.gone) parts.push(`${c.gone} qui ne t'inquiète${c.gone > 1 ? 'nt' : ''} plus`);
+  const head = parts.length ? parts.join(', ') + '.' : "Rien de trié aujourd'hui, et ce n'est pas grave.";
+  return `${head} Ton moment est fini : ce qui reste attendra le prochain.`;
+}
+let worryQueue = [];
+let worrySorted = [];
+let worryCurrent = null;
+function setWorryView(v) {
+  document.getElementById('worryHome').hidden = v !== 'home';
+  document.getElementById('worrySession').hidden = v !== 'session';
+  document.getElementById('worryEnd').hidden = v !== 'end';
+}
+function initWorry() { showWorryHome(); }
+function formatWorryTime(hhmm) { const [h, m] = hhmm.split(':'); return `${parseInt(h, 10)} h${m === '00' ? '' : ' ' + m}`; }
+function showWorryHome() {
+  setWorryView('home');
+  document.getElementById('worryAdded').hidden = true;
+  document.getElementById('worryTime').value = worryTime();
+  document.getElementById('worryTimeNote').textContent = worryTimeAdvice(worryTime());
+  const n = loadWorries().filter(w => w.s === 'wait').length;
+  document.getElementById('worryPending').textContent = n ? `${n} inquiétude${n > 1 ? 's' : ''} t'attend${n > 1 ? 'ent' : ''}.` : "Rien n'attend pour l'instant.";
+  document.getElementById('worryStartBtn').hidden = !n;
+  renderWorryReminder();
+  renderWorryPlans();
+}
+function addWorry() {
+  const el = document.getElementById('worryText');
+  const t = (el.value || '').trim();
+  if (!t) { el.focus(); return; }
+  const list = loadWorries();
+  list.push({ id: Date.now(), t, d: ymd(), s: 'wait' });
+  saveWorries(list);
+  el.value = '';
+  const note = document.getElementById('worryAdded');
+  note.textContent = `Noté. Elle t'attend à ${formatWorryTime(worryTime())}. Tu peux revenir à ce que tu faisais.`;
+  Haptics.light();
+  showWorryHome();
+  note.hidden = false;
+}
+function setWorryTime(v) {
+  if (!v) return;
+  Store.set(WORRY_TIME_KEY, v);
+  document.getElementById('worryTimeNote').textContent = worryTimeAdvice(v);
+  if (localStorage.getItem(WORRY_REMINDER_KEY) === '1') scheduleWorryReminder();
+}
+function renderWorryReminder() {
+  const row = document.getElementById('worryReminderRow');
+  if (!Notify.isCap()) { row.innerHTML = ''; return; }
+  const on = localStorage.getItem(WORRY_REMINDER_KEY) === '1';
+  row.innerHTML = `<label class="worry-switch"><input type="checkbox" ${on ? 'checked' : ''} onchange="toggleWorryReminder(this.checked)"> Me le rappeler chaque jour</label>`;
+}
+async function toggleWorryReminder(on) {
+  Store.set(WORRY_REMINDER_KEY, on ? '1' : '0');
+  if (on) { if (!await scheduleWorryReminder()) { Store.set(WORRY_REMINDER_KEY, '0'); renderWorryReminder(); } }
+  else { try { await Notify.cap().cancel({ notifications: [{ id: WORRY_REMINDER_ID }] }); } catch (e) {} }
+}
+async function scheduleWorryReminder() {
+  if (!Notify.isCap()) return false;
+  try {
+    const LC = Notify.cap();
+    if ((await LC.requestPermissions()).display !== 'granted') return false;
+    await LC.cancel({ notifications: [{ id: WORRY_REMINDER_ID }] }).catch(() => {});
+    const [hour, minute] = worryTime().split(':').map(Number);
+    await LC.schedule({ notifications: [{
+      id: WORRY_REMINDER_ID, title: 'Serein Relais', body: "C'est ton moment d'inquiétude : environ 15 minutes pour trier ce que tu as noté.",
+      smallIcon: 'ic_stat_serein', iconColor: '#2f6b50',
+      schedule: { on: { hour, minute }, repeats: true },
+    }] });
+    return true;
+  } catch (e) { return false; }
+}
+function renderWorryPlans() {
+  const box = document.getElementById('worryPlans');
+  const plans = loadWorries().filter(w => w.s === 'actuel' && w.plan && !w.done);
+  if (!plans.length) { box.innerHTML = ''; return; }
+  box.innerHTML = `<h2 class="mb-1">Mes plans d'action</h2>` + plans.map(w => `
+    <div class="card worry-plan">
+      <strong>${escHtml(w.plan.problem || w.t)}</strong>
+      ${w.plan.step ? `<span>Première étape : ${escHtml(w.plan.step)}${w.plan.when ? ` · ${formatDayShort(w.plan.when)}` : ''}</span>` : ''}
+      <div class="worry-eval" id="weval-${w.id}">
+        <button class="btn btn-secondary" onclick="askWorryEval(${w.id})">C'est fait</button>
+      </div>
+    </div>`).join('');
+}
+function askWorryEval(id) {
+  document.getElementById('weval-' + id).innerHTML = `<p class="pm-note">Est-ce que ça a réglé le problème ?</p>
+    <div class="chip-row">${[['oui', 'Oui'], ['partie', 'En partie'], ['non', 'Pas encore']].map(([k, l]) =>
+      `<button type="button" class="chip" onclick="evalWorryPlan(${id}, '${k}')">${l}</button>`).join('')}</div>`;
+}
+function evalWorryPlan(id, v) {
+  const list = loadWorries();
+  const w = list.find(x => x.id === id);
+  if (!w) return;
+  w.done = ymd(); w.eval = v;
+  saveWorries(list);
+  Haptics.light();
+  const msg = v === 'oui' ? 'Bien joué : tu as agi sur un problème réel.'
+    : v === 'partie' ? "C'est déjà un pas. Si besoin, note-le à nouveau : il repassera au tri avec une autre solution."
+    : "Ce n'est pas un échec : note-le à nouveau, il repassera au tri et tu pourras choisir une autre solution.";
+  document.getElementById('weval-' + id).innerHTML = `<p class="pm-note">${msg}</p>`;
+}
+function startWorrySession() {
+  worryQueue = loadWorries().filter(w => w.s === 'wait').map(w => w.id);
+  worrySorted = [];
+  if (!worryQueue.length) return;
+  setWorryView('session');
+  showCurrentWorry();
+}
+function showCurrentWorry() {
+  if (!worryQueue.length) { endWorrySession(); return; }
+  const w = loadWorries().find(x => x.id === worryQueue[0]);
+  if (!w) { worryQueue.shift(); showCurrentWorry(); return; }
+  worryCurrent = w;
+  const total = worrySorted.length + worryQueue.length;
+  document.getElementById('worryProgress').textContent = `Inquiétude ${worrySorted.length + 1} sur ${total}`;
+  document.getElementById('worryQuote').textContent = w.t;
+  document.getElementById('worrySort').hidden = false;
+  document.getElementById('worrySolve').hidden = true;
+  document.getElementById('worryHypo').hidden = true;
+  document.getElementById('worryStopBtn').hidden = false;
+}
+function setWorryStatus(s, plan) {
+  const list = loadWorries();
+  const w = list.find(x => x.id === worryCurrent.id);
+  if (!w) return;
+  w.s = s;
+  if (plan) w.plan = plan;
+  saveWorries(list);
+}
+function sortWorry(kind) {
+  Haptics.light();
+  if (kind === 'actuel') {
+    document.getElementById('worrySort').hidden = true;
+    document.getElementById('worrySolve').hidden = false;
+    document.getElementById('wsProblem').value = worryCurrent.t;
+    ['wsIdeas', 'wsChoice', 'wsStep', 'wsWhen'].forEach(k => { document.getElementById(k).value = ''; });
+  } else if (kind === 'hypo') {
+    setWorryStatus('hypo');
+    worrySorted.push('hypo');
+    document.getElementById('worrySort').hidden = true;
+    document.getElementById('worryHypo').hidden = false;
+  } else {
+    setWorryStatus('gone');
+    worrySorted.push('gone');
+    worryQueue.shift();
+    showCurrentWorry();
+  }
+}
+function backToSort() {
+  document.getElementById('worrySolve').hidden = true;
+  document.getElementById('worrySort').hidden = false;
+}
+function saveWorryPlan() {
+  const v = k => (document.getElementById(k).value || '').trim();
+  const step = v('wsStep');
+  if (!step) { document.getElementById('wsStep').focus(); return; }
+  setWorryStatus('actuel', { problem: v('wsProblem'), ideas: v('wsIdeas'), choice: v('wsChoice'), step, when: v('wsWhen') || null });
+  worrySorted.push('actuel');
+  worryQueue.shift();
+  showCurrentWorry();
+}
+function nextWorry() { worryQueue.shift(); showCurrentWorry(); }
+function worryToDefusion() {
+  worryQueue.shift();
+  finishWorrySession();
+  navigateTo('valeurs');
+  setTimeout(() => { const el = document.getElementById('defusionSteps'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
+}
+// Un carreau par moment d'inquiétude où au moins une inquiétude a été triée.
+function finishWorrySession() {
+  const sorted = worrySorted.slice();
+  worrySorted = []; worryQueue = []; worryCurrent = null;
+  return sorted.length ? logPractice('inquietudes') : 0;
+}
+function endWorrySession() {
+  const sorted = worrySorted.slice();
+  const total = finishWorrySession();
+  setWorryView('end');
+  document.getElementById('worryEndText').textContent = worrySessionSummary(sorted);
+  const reward = document.getElementById('worryReward');
+  reward.classList.remove('visible');
+  if (total) renderTileReward('worryReward', 'inquietudes', total);
   Haptics.medium();
 }
 
@@ -4447,11 +4846,12 @@ const STORE_KEYS = [
   'serein_cards', 'serein_diary', 'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
   'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at', 'serein_worries',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_widget_tip_dismissed', 'serein_journal_draft',
   'serein_app_lock_enabled', 'serein_values', 'serein_swipe_hint_seen',
+  'serein_worry_time', 'serein_worry_reminder',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -4511,7 +4911,7 @@ const DATA_KEYS = [
   'serein_cards', 'serein_diary', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_journal_draft', 'serein_values',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at', 'serein_worries',
   // anciennes clés (avant la refonte) : effacées aussi par « Tout effacer »
   'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
 ];
@@ -4714,7 +5114,7 @@ async function cancelDailyReminder() {
 }
 
 // ─── EXPORT / IMPORT (sauvegarde JSON) ───
-const EXPORT_KEYS = [...DATA_KEYS, 'serein_theme', 'serein_reminder_enabled', 'serein_reminder_time'];
+const EXPORT_KEYS = [...DATA_KEYS, 'serein_theme', 'serein_reminder_enabled', 'serein_reminder_time', 'serein_worry_time', 'serein_worry_reminder'];
 function exportData() {
   const payload = { app: 'serein-tcc', version: 1, exportedAt: new Date().toISOString(), data: {} };
   EXPORT_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v !== null) payload.data[k] = v; });

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b1814">
   <title>Serein Relais - Ta thérapie continue entre les séances</title>
-  <meta name="description" content="Serein Relais : les exercices de TCC que ton psy te propose, à portée de main entre les séances et après la thérapie. Gratuit, sans compte, hors ligne.">
+  <meta name="description" content="Serein Relais : les exercices de TCC que ton psy te propose (journal de pensées, exposition, plan anti-rechute), entre les séances et après la thérapie. Conçue par un psychologue. Gratuit, sans compte, hors ligne.">
   <meta name="author" content="César Broche Aguilar">
   <meta property="og:title" content="Serein Relais - Ta thérapie continue entre les séances">
   <meta property="og:description" content="Les exercices de TCC que ton psy te propose, à portée de main. Gratuit, sans compte, hors ligne.">
@@ -172,6 +172,14 @@
     .step-n{font-family:var(--serif);font-style:italic;color:var(--accent);font-size:1.3rem}
     .steps-after{text-align:center;color:var(--text2);font-weight:300;margin-top:3rem;font-size:1rem}
     @media(max-width:760px){.steps{grid-template-columns:1fr;max-width:280px;gap:3rem}}
+    .inside-section{padding:0 0 5.5rem}
+    .inside-section .section-title{text-align:center;margin-bottom:2.5rem}
+    .inside{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.4rem 3rem;max-width:860px;margin:0 auto;padding:0}
+    .inside li{color:var(--text2);font-weight:300;line-height:1.6;font-size:.98rem;padding-left:1.1rem;position:relative}
+    .inside li::before{content:"";position:absolute;left:0;top:.62em;width:.42rem;height:.42rem;border-radius:.12rem;background:var(--accent)}
+    .inside strong{color:var(--text);font-weight:500}
+    .inside-after{text-align:center;color:var(--text);margin-top:2.5rem;font-size:1rem}
+    @media(max-width:760px){.inside{grid-template-columns:1fr;max-width:420px}}
     .privacy-section{padding:0 0 6rem}
     .privacy-box{padding:2.5rem 3rem;background:linear-gradient(140deg,rgba(147,201,172,.08),rgba(216,183,138,.06));border:1px solid var(--border2);border-radius:var(--r);max-width:760px;margin:0 auto;text-align:center}
     .privacy-box .section-lead{margin:1rem auto 0;max-width:46ch}
@@ -179,6 +187,51 @@
     @media(max-width:600px){.privacy-box{padding:2rem 1.5rem}}
   </style>
   <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+  <!-- Données structurées (même modèle que la page d'accueil de Serein). Les liens des stores sont actifs à la sortie. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MobileApplication",
+        "@id": "https://sereinapp.fr/relais/#app",
+        "name": "Serein Relais",
+        "alternateName": "Serein Relais - Ta TCC entre les séances",
+        "url": "https://sereinapp.fr/relais/",
+        "description": "Application d'exercices de TCC et d'ACT en français, pour pratiquer entre les séances de psy et après la thérapie : journal de pensées, expériences comportementales, exposition progressive, plan anti-rechute. Conçue par un psychologue. Gratuite, sans publicité, sans compte, hors ligne.",
+        "operatingSystem": "iOS, Android",
+        "applicationCategory": "HealthApplication",
+        "inLanguage": "fr-FR",
+        "image": "https://sereinapp.fr/relais/img/og-relais.png",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "featureList": [
+          "Journal de pensées en 7 étapes (pensées automatiques, pièges de pensée, pensée alternative)",
+          "Expériences comportementales et exposition progressive, avec cotation de la croyance avant et après",
+          "Activation comportementale, respiration guidée, valeurs et défusion (ACT)",
+          "Exercices proposés par le psy mis en priorité",
+          "Récap à montrer à la prochaine séance",
+          "Plan de prévention de la rechute pour après la thérapie",
+          "Gratuit, sans publicité, sans compte, hors ligne, aucune donnée envoyée"
+        ],
+        "downloadUrl": [
+          "https://apps.apple.com/fr/app/id6781663800",
+          "https://play.google.com/store/apps/details?id=fr.sereinapp.tccact"
+        ],
+        "isPartOf": { "@id": "https://sereinapp.fr/#website" },
+        "author": { "@type": "Person", "@id": "https://sereinapp.fr/#cesar", "name": "César Broche Aguilar", "jobTitle": "Psychologue du travail" }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://sereinapp.fr/relais/#faq",
+        "mainEntity": [
+          { "@type": "Question", "name": "Faut-il être suivi·e par un psy pour utiliser Serein Relais ?", "acceptedAnswer": { "@type": "Answer", "text": "Non, mais l'app est pensée pour accompagner une thérapie TCC : elle aide à faire entre les séances les exercices proposés par le psy." } },
+          { "@type": "Question", "name": "Mon psy voit-il ce que je note ?", "acceptedAnswer": { "@type": "Answer", "text": "Non. Tout reste sur ton téléphone. Tu peux lui montrer un récap si tu le souhaites." } },
+          { "@type": "Question", "name": "Et si ça ne va vraiment pas ?", "acceptedAnswer": { "@type": "Answer", "text": "L'app ne remplace pas un suivi. Appelle le 3114, gratuit, 24h/24. En cas de danger immédiat : 15 ou 112." } }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -258,6 +311,22 @@
       </figure>
     </div>
     <p class="steps-after reveal">Et après la thérapie, l'app reste avec toi, avec ton plan anti-rechute.</p>
+  </div>
+</section>
+
+<!-- DANS L'APP : faits concrets (c'est ce que reprennent les moteurs et les assistants IA) -->
+<section class="inside-section" aria-label="Ce qu'il y a dans l'app">
+  <div class="wrap">
+    <h2 class="section-title reveal">Dans <em>l'app</em></h2>
+    <ul class="inside reveal">
+      <li><strong>Journal de pensées</strong> : 7 étapes pour repérer une pensée automatique, son piège et une pensée plus juste.</li>
+      <li><strong>Expériences et exposition</strong> : tu testes tes prédictions pas à pas, en notant ce que tu y crois avant et après.</li>
+      <li><strong>Petit pas, respiration, valeurs</strong> : activation comportementale, respiration guidée, défusion (ACT).</li>
+      <li><strong>Les exercices de ton psy</strong> : ceux proposés en séance passent en premier.</li>
+      <li><strong>Un récap pour ta prochaine séance</strong> : ce que tu as fait, à montrer si tu veux.</li>
+      <li><strong>Un plan anti-rechute</strong> : tes signaux et quoi faire, pour après la thérapie.</li>
+    </ul>
+    <p class="inside-after reveal">Conçue par un psychologue. Gratuite, sans pub, sans compte, hors ligne.</p>
   </div>
 </section>
 

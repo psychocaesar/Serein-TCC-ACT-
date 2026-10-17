@@ -30,6 +30,8 @@ Support entre deux séances et après la thérapie. 4 onglets + SOS :
 - **Mon carnet** (`carnet`) : tâches du psy (`taches`, deviennent « engagements de maintien » si thérapie terminée), plan anti-rechute (`plan`), cartes, pensées équilibrées (`jhistory`), ce qui va bien (`diary`), valeurs.
 - **Mon suivi** (`suivi`) : mosaïque + courbe d'humeur.
 
+**Après la thérapie** : l'interrupteur « Ma thérapie est terminée » (`serein_therapy_done`) transforme les tâches du psy en « engagements de maintien » (titres du carnet, « Ton engagement » au lieu de « Proposé par ton psy » sur l'accueil et le hub). **Point du mois** sur les signaux d'alerte du plan anti-rechute (`planCheckinDue`, testé) : carte sur l'accueil tous les 30 jours si le plan a au moins un signal (« Plus tard » = 7 jours, `serein_plan_checkin_snooze`), faisable à tout moment depuis le plan ; historique dans `serein_plan_checkins`. Aucun score ni alerte : un signal remarqué renvoie vers « ce qui m'aide », le seuil pour recontacter le psy, et le 3114.
+
 **Mosaïque** : chaque exercice mené au bout appelle `logPractice(kind)` → un carreau dans `serein_practice`, et avance la 1re tâche du psy du même exercice. Règles non négociables : aucune série, aucun jour « raté », rien ne s'efface, et rien ne pousse à « tout faire » (une thérapie cible quelques exercices : un exercice jamais fait n'affiche ni niveau vide ni « 0 » ; ceux proposés par le psy remontent en tête du hub) (validé avec César : pas de culpabilité, pas de ton « développement personnel »).
 
 **Fondements cliniques (vérifiés le 16/10/2026 contre les fiches du vault `FORMATION TCC/04_Outils cliniques/Protocoles`)** : l'exposition cote la **croyance en la prédiction** avant/après (apprentissage inhibiteur, Craske 2014), jamais l'anxiété comme critère de réussite ; la respiration est présentée comme une compétence, à mettre de côté pendant une exposition ; le journal cote croyance (0-100) ET émotion (0-10) ; le SOS donne 3114 + 15/112 ; aucune allégation d'efficacité sur la respiration 4-7-8 ou l'ancrage 5-4-3-2-1.
@@ -78,5 +80,5 @@ Sur le Mac, `npx cap sync ios` régénère `Package.swift` avec des chemins nati
 
 - **Validation sur device réel** (le Mac le permet enfin) : verrou biométrique (Face ID/Touch ID — le bug de nom de pont natif est corrigé mais jamais testé sur vrai matériel), swipe-retour, orientation portrait, aria-hidden du verrou avec VoiceOver.
 - **Checklist `STORE-LISTING.md`** avant soumission (captures et textes refaits le 16/10/2026) : formulaire "Applis de santé" Google Play (bien-être, PAS dispositif médical) ; déclaration "compte requis : non".
-- **Suite de la refonte** : mini-bilan mensuel du plan anti-rechute (« as-tu remarqué un de tes signaux ? ») ; icônes dessinées à la place des emojis dans les écrans d'exercices (déjà fait pour la nav, les hubs et l'accueil).
+- **Suite de la refonte** : icônes dessinées à la place des emojis dans les écrans d'exercices (déjà fait pour la nav, les hubs et l'accueil).
 - **Pistes déjà proposées et mises en attente** : raccourcis d'icône (appui long → SOS/Respirer/Noter une pensée).

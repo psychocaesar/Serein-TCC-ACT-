@@ -1279,6 +1279,13 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .practice-text strong { font-family: var(--font-title); font-size: 1rem; font-weight: 600; }
 .practice-text span { font-size: 0.82rem; color: var(--color-muted); line-height: 1.35; }
 .btn.practice-go { flex-shrink: 0; min-height: 44px; padding: 0 1rem; background: var(--color-primary); color: var(--on-primary); font-size: 0.88rem; }
+.checkin-q { font-family: var(--font-title); font-size: 1rem; font-weight: 600; line-height: 1.35; }
+.checkin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.checkin-actions .btn { flex: 1; min-height: 44px; }
+.checkin-msg { font-size: 0.92rem; line-height: 1.45; color: var(--color-text); margin: 0; }
+.checkin-sub { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); }
+.checkin-note { font-size: 0.82rem; line-height: 1.45; color: var(--color-muted); margin: 0; }
+.plan-checkin { margin: 0 0 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
 .defi-thought { font-size: 0.95rem; line-height: 1.4; font-style: italic; color: var(--color-text); }
 .defi-q { font-size: 0.82rem; }
 .defi-feedback { font-size: 0.84rem; line-height: 1.45; color: var(--color-text); }
@@ -1603,6 +1610,8 @@ input[type="date"], input[type="tel"] {
     </div>
 
     <div class="practice-card" id="practiceCard"></div>
+
+    <div class="defi-card" id="planCheckinCard" hidden aria-live="polite"></div>
 
     <div class="defi-card" id="defiCard" aria-live="polite"></div>
   </div>
@@ -2385,6 +2394,7 @@ input[type="date"], input[type="tel"] {
     </div>
     <p class="hub-intro" id="planUpdated">À remplir de préférence avec ton psy, en fin de thérapie.</p>
     <div class="plan-callout"><strong>Un écart n'est pas une rechute.</strong> C'est un signal pour ressortir ce plan, pas un retour à zéro.</div>
+    <div class="plan-checkin" id="planCheckinBox" aria-live="polite"></div>
 
     <details class="plan-section">
       <summary><span class="plan-num">1</span><span class="plan-sum"><span class="plan-title">Ce que j'ai appris</span><span class="plan-preview" id="planPrev-learned"></span></span></summary>
@@ -2708,7 +2718,7 @@ function parentOf(screen) {
   return { 'nav-home': 'home', 'nav-exercices': 'exercices', 'nav-carnet': 'carnet', 'nav-suivi': 'suivi' }[navMap[screen]] || 'home';
 }
 const screenInitFns = {
-  home: () => { renderCheckinState(); renderPractice(); renderDefi(); },
+  home: () => { checkinResult = null; renderCheckinState(); renderPractice(); renderPlanCheckinCard(); renderDefi(); },
   exercices: renderExercisesHub,
   carnet: renderCarnet,
   suivi: () => { renderMosaic(); renderTracking(); },
@@ -2949,7 +2959,7 @@ const positiveEmotionSuggestions = {
 // ─── TA PRATIQUE DU JOUR : UNE seule proposition ───
 // Priorité : 1) ce que le psy a proposé, 2) une expérience prévue aujourd'hui (ou en retard),
 // 3) l'humeur du jour. Fonction pure (testée) : ne lit ni le DOM ni le stockage.
-function pickDailyPractice({ tasks = [], mood = null, tags = [], dueExperiment = null } = {}) {
+function pickDailyPractice({ tasks = [], mood = null, tags = [], dueExperiment = null, therapyDone = false } = {}) {
   const open = tasks.filter(t => (t.count || 0) < (t.target || 1));
   if (open.length) {
     open.sort((a, b) => (a.due || '9999') < (b.due || '9999') ? -1 : (a.due || '9999') > (b.due || '9999') ? 1 : 0);
@@ -2958,7 +2968,8 @@ function pickDailyPractice({ tasks = [], mood = null, tags = [], dueExperiment =
     return {
       source: 'psy', kind: ex ? t.kind : null, screen: ex ? ex.screen : 'taches',
       title: ex ? ex.title : t.title, text: t.detail || (ex ? ex.desc : ''),
-      meta: `Proposé par ton psy · ${t.count || 0}/${t.target || 1}`,
+      // Thérapie terminée : la tâche est devenue un engagement de maintien choisi par la personne.
+      meta: `${therapyDone ? 'Ton engagement' : 'Proposé par ton psy'} · ${t.count || 0}/${t.target || 1}`,
     };
   }
   if (dueExperiment) {
@@ -2987,7 +2998,7 @@ function renderPractice() {
   if (!card) return;
   const today = getTodayMood();
   const due = loadExperiments().find(e => e.observation === null && e.targetDate && e.targetDate <= ymd()) || null;
-  currentPractice = pickDailyPractice({ tasks: loadTasks(), mood: today ? today.mood : null, tags: today ? today.tags || [] : [], dueExperiment: due });
+  currentPractice = pickDailyPractice({ tasks: loadTasks(), mood: today ? today.mood : null, tags: today ? today.tags || [] : [], dueExperiment: due, therapyDone: isTherapyDone() });
   const p = currentPractice;
   const ex = p.kind ? exerciseByKind(p.kind) : null;
   const color = ex ? ex.color : '#d8b78a';
@@ -4436,7 +4447,7 @@ const STORE_KEYS = [
   'serein_cards', 'serein_diary', 'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
   'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_widget_tip_dismissed', 'serein_journal_draft',
@@ -4500,7 +4511,7 @@ const DATA_KEYS = [
   'serein_cards', 'serein_diary', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_journal_draft', 'serein_values',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze',
   // anciennes clés (avant la refonte) : effacées aussi par « Tout effacer »
   'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
 ];
@@ -4838,7 +4849,7 @@ function openExercise(kind) {
 }
 // Une thérapie cible quelques exercices, pas tous : un exercice jamais fait n'affiche
 // ni niveau vide ni « pas encore commencé » (pas de liste à cocher). Ceux que le psy
-// a proposés sont signalés.
+// a proposés (ou, thérapie terminée, les engagements de maintien) sont signalés.
 function renderExercisesHub() {
   const list = document.getElementById('exercisesList');
   if (!list) return;
@@ -4850,7 +4861,7 @@ function renderExercisesHub() {
     const n = counts[ex.kind] || 0;
     const lvl = levelFor(n);
     const bars = [1, 2, 3].map(b => `<span style="background:${b <= lvl.bars ? ex.color : 'var(--color-border-strong)'}"></span>`).join('');
-    const psy = fromPsy.has(ex.kind) ? `<span class="ex-psy">Proposé par ton psy</span>` : '';
+    const psy = fromPsy.has(ex.kind) ? `<span class="ex-psy">${isTherapyDone() ? 'Ton engagement' : 'Proposé par ton psy'}</span>` : '';
     const level = (n ? `<span class="ex-level"><span class="ex-bars" aria-hidden="true">${bars}</span>${lvl.label} · ${n} séance${n > 1 ? 's' : ''}</span>` : '') + psy;
     return `<button class="hub-card" onclick="openExercise('${ex.kind}')">
       ${exIconHtml(ex)}
@@ -5191,6 +5202,7 @@ function savePlanField(key, value) {
   const p = loadPlan();
   p[key] = value;
   p.updatedAt = ymd();
+  if (!p.createdAt) p.createdAt = ymd();
   Store.set(PLAN_KEY, JSON.stringify(p));
   clearTimeout(planSaveTimer);
   planSaveTimer = setTimeout(renderPlanPreviews, 250);
@@ -5201,6 +5213,7 @@ function togglePlanHelp(kind) {
   if (helps.has(kind)) helps.delete(kind); else helps.add(kind);
   p.helps = [...helps];
   p.updatedAt = ymd();
+  if (!p.createdAt) p.createdAt = ymd();
   Store.set(PLAN_KEY, JSON.stringify(p));
   renderPlanHelps();
   renderPlanPreviews();
@@ -5235,6 +5248,110 @@ function renderPlanPreviews() {
     ? `Mis à jour le ${new Date(p.updatedAt + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`
     : 'À remplir de préférence avec ton psy, en fin de thérapie.';
 }
+// ─── POINT DU MOIS SUR LES SIGNAUX D'ALERTE (prévention de la rechute) ───
+// Une fois par mois, la personne regarde si elle a remarqué un de SES signaux (section 2
+// du plan). Aucun score, aucune alerte : un signal remarqué renvoie vers ce qui aide et
+// vers le seuil choisi pour recontacter son psy. « Plus tard » reporte d'une semaine.
+const CHECKIN_KEY = 'serein_plan_checkins';          // [{ d: AAAA-MM-JJ, seen: [signal, ...] }]
+const CHECKIN_SNOOZE_KEY = 'serein_plan_checkin_snooze'; // AAAA-MM-JJ
+const CHECKIN_EVERY_DAYS = 30;
+const CHECKIN_SNOOZE_DAYS = 7;
+function loadPlanCheckins() { return safeParse(CHECKIN_KEY, []); }
+function daysBetween(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000); }
+function addDays(iso, n) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return ymd(d); }
+// Pure (testée) : dû si le plan a au moins un signal, si le dernier point (à défaut, la création
+// du plan) date d'au moins 30 jours, et hors report « Plus tard ».
+function planCheckinDue({ plan = {}, checkins = [], today = ymd(), snoozeUntil = null } = {}) {
+  if (!firstPlanLine(plan.signals).length) return false;
+  if (snoozeUntil && today < snoozeUntil) return false;
+  const since = checkins.length ? checkins[checkins.length - 1].d : (plan.createdAt || plan.updatedAt);
+  if (!since) return false;
+  return daysBetween(since, today) >= CHECKIN_EVERY_DAYS;
+}
+// Pure (testée) : message après le point, jamais alarmant ni culpabilisant.
+function planCheckinMessage(seenCount, therapyDone) {
+  if (!seenCount) return "Rien de tout ça ces dernières semaines. Ton plan reste là, au cas où.";
+  return `${seenCount === 1 ? 'Un signal' : seenCount + ' signaux'} ces dernières semaines. Un écart n'est pas une rechute : c'est le moment de ressortir ce qui t'aide.`
+    + (therapyDone ? '' : ' Parles-en aussi à ta prochaine séance.');
+}
+let checkinSel = new Set();
+let checkinResult = null;   // { seen: [...] } juste après validation, pour afficher le retour
+let checkinOpenOnPlan = false;
+function checkinFormHtml(where) {
+  const signals = firstPlanLine(loadPlan().signals);
+  return `<div class="practice-head"><span class="practice-eyebrow">Ton point du mois</span><span class="practice-meta">Plan anti-rechute</span></div>
+    <strong class="checkin-q">As-tu remarqué un de tes signaux d'alerte ces dernières semaines ?</strong>
+    <div class="chip-row">${signals.map((sig, i) => `<button type="button" class="chip${checkinSel.has(sig) ? ' selected' : ''}" aria-pressed="${checkinSel.has(sig)}" onclick="toggleCheckinSignal(${i}, '${where}')">${escHtml(sig)}</button>`).join('')}</div>
+    <div class="checkin-actions">
+      <button class="btn btn-primary" onclick="submitPlanCheckin('${where}')">${checkinSel.size ? 'Valider' : 'Rien remarqué'}</button>
+      ${where === 'home' ? `<button class="btn btn-ghost" onclick="snoozePlanCheckin()">Plus tard</button>` : `<button class="btn btn-ghost" onclick="closePlanCheckin()">Annuler</button>`}
+    </div>`;
+}
+function checkinResultHtml() {
+  const p = loadPlan();
+  const seen = checkinResult.seen;
+  let html = `<div class="practice-head"><span class="practice-eyebrow">Ton point du mois</span></div>
+    <p class="checkin-msg">${escHtml(planCheckinMessage(seen.length, isTherapyDone()))}</p>`;
+  if (seen.length) {
+    const helps = (p.helps || []).map(exerciseByKind).filter(Boolean);
+    if (helps.length) html += `<div class="checkin-sub">Ce qui t'aide</div><div class="chip-row">${helps.map(ex =>
+      `<button type="button" class="chip tinted selected" style="--c:${ex.color}" onclick="openExercise('${ex.kind}')">${escHtml(ex.title)}</button>`).join('')}</div>`;
+    const other = firstPlanLine(p.helpsOther);
+    if (other.length) html += `<p class="checkin-note">${other.map(escHtml).join(' · ')}</p>`;
+    const re = firstPlanLine(p.recontact)[0];
+    if (re) html += `<p class="checkin-note"><strong>Ton seuil pour recontacter ton psy :</strong> ${escHtml(re)}</p>`;
+    html += `<div class="checkin-actions"><button class="btn btn-secondary" onclick="navigateTo('plan')">Ouvrir mon plan</button></div>
+      <a class="btn btn-call-3114" href="tel:3114">En cas d'idées noires : appeler le 3114 <span>gratuit · 24h/24</span></a>`;
+  }
+  return html;
+}
+function toggleCheckinSignal(i, where) {
+  const sig = firstPlanLine(loadPlan().signals)[i];
+  if (sig === undefined) return;
+  if (checkinSel.has(sig)) checkinSel.delete(sig); else checkinSel.add(sig);
+  Haptics.light();
+  where === 'home' ? renderPlanCheckinCard() : renderPlanCheckinBox();
+}
+function submitPlanCheckin(where) {
+  const list = loadPlanCheckins();
+  const seen = [...checkinSel];
+  list.push({ d: ymd(), seen });
+  Store.set(CHECKIN_KEY, JSON.stringify(list));
+  Store.remove(CHECKIN_SNOOZE_KEY);
+  checkinResult = { seen, where };
+  checkinSel = new Set();
+  Haptics.medium();
+  where === 'home' ? renderPlanCheckinCard() : renderPlanCheckinBox();
+}
+function snoozePlanCheckin() {
+  Store.set(CHECKIN_SNOOZE_KEY, addDays(ymd(), CHECKIN_SNOOZE_DAYS));
+  checkinSel = new Set();
+  renderPlanCheckinCard();
+}
+function openPlanCheckin() { checkinOpenOnPlan = true; checkinResult = null; checkinSel = new Set(); renderPlanCheckinBox(); }
+function closePlanCheckin() { checkinOpenOnPlan = false; checkinSel = new Set(); renderPlanCheckinBox(); }
+// Accueil : la carte n'apparaît que lorsque le point est dû (ou juste après l'avoir fait).
+function renderPlanCheckinCard() {
+  const card = document.getElementById('planCheckinCard');
+  if (!card) return;
+  if (checkinResult && checkinResult.where === 'home') { card.hidden = false; card.innerHTML = checkinResultHtml(); return; }
+  const due = planCheckinDue({ plan: loadPlan(), checkins: loadPlanCheckins(), snoozeUntil: localStorage.getItem(CHECKIN_SNOOZE_KEY) });
+  card.hidden = !due;
+  if (due) card.innerHTML = checkinFormHtml('home');
+}
+// Écran du plan : faire le point à tout moment, et voir les derniers points.
+function renderPlanCheckinBox() {
+  const box = document.getElementById('planCheckinBox');
+  if (!box) return;
+  const signals = firstPlanLine(loadPlan().signals);
+  if (!signals.length) { box.innerHTML = ''; return; }
+  if (checkinResult && checkinResult.where === 'plan') { box.innerHTML = `<div class="defi-card">${checkinResultHtml()}</div>`; return; }
+  if (checkinOpenOnPlan) { box.innerHTML = `<div class="defi-card">${checkinFormHtml('plan')}</div>`; return; }
+  const last = loadPlanCheckins().slice(-3).reverse();
+  const hist = last.length ? `<p class="checkin-note">Derniers points : ${last.map(c => `${formatDayShort(c.d)} (${c.seen.length ? c.seen.length + (c.seen.length > 1 ? ' signaux' : ' signal') : 'rien'})`).join(' · ')}</p>` : '';
+  box.innerHTML = `<button class="btn btn-secondary" onclick="openPlanCheckin()">Faire le point sur mes signaux</button>${hist}`;
+}
+
 function renderPlan() {
   const p = loadPlan();
   ['learned', 'signals', 'risks', 'helpsOther', 'recontact', 'p1name', 'p1tel', 'p2name', 'p2tel'].forEach(k => {
@@ -5243,6 +5360,8 @@ function renderPlan() {
   });
   renderPlanHelps();
   renderPlanPreviews();
+  checkinResult = null; checkinOpenOnPlan = false;
+  renderPlanCheckinBox();
 }
 
 // ─── NOTIFICATIONS (Capacitor LocalNotifications + fallback web) ───
@@ -5563,6 +5682,7 @@ async function boot() {
   migrateMoodLog(); // ancien suivi d'anxiété → humeur 0-10 (une seule fois)
   renderCheckinState(); // écran Aujourd'hui actif par défaut : pas de navigateTo au boot
   renderPractice();
+  renderPlanCheckinCard();
   renderDefi();
   initOnboarding();
   Notify.flushWeb();

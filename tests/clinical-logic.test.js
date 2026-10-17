@@ -84,6 +84,8 @@ const SHIM = `
   moodColor: moodColor,
   moodFromLegacyIntensity: moodFromLegacyIntensity,
   pickDailyPractice: pickDailyPractice,
+  planCheckinDue: planCheckinDue,
+  planCheckinMessage: planCheckinMessage,
   EXERCISES: EXERCISES,
   PRACTICE_KINDS: PRACTICE_KINDS,
   levelFor: levelFor,
@@ -296,3 +298,36 @@ test('pickFocusDomain : plus grand écart parmi les importants, sinon le plus im
   assert.strictEqual(r2.rating.key, 'loisirs');
   assert.strictEqual(r2.mode, 'entretien');
 });
+
+test('pratique du jour : thérapie terminée → « Ton engagement », jamais « Proposé par ton psy »', () => {
+  const tasks = [{ kind: 'exposition', count: 0, target: 2 }];
+  assert.match(C.pickDailyPractice({ tasks }).meta, /^Proposé par ton psy/);
+  const after = C.pickDailyPractice({ tasks, therapyDone: true });
+  assert.match(after.meta, /^Ton engagement/);
+  assert.ok(!/psy/.test(after.meta));
+});
+
+test('point du mois : seulement avec des signaux, tous les 30 jours, hors report', () => {
+  const plan = { signals: 'Je dors mal\nJ\'évite mes amis', createdAt: '2026-09-01' };
+  assert.strictEqual(C.planCheckinDue({ plan: { createdAt: '2026-01-01' }, today: '2026-10-17' }), false, 'pas de signal : jamais');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: '  \n ', createdAt: '2026-01-01' }, today: '2026-10-17' }), false, 'signaux vides');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-09-20' }), false, 'plan récent');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-01' }), true, '30 jours après la création');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-10-10', seen: [] }], today: '2026-10-17' }), false, 'point récent');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-09-10', seen: [] }], today: '2026-10-17' }), true, 'dernier point il y a plus de 30 jours');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17', snoozeUntil: '2026-10-20' }), false, 'reporté');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-21', snoozeUntil: '2026-10-20' }), true, 'report passé');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', updatedAt: '2026-09-01' }, today: '2026-10-17' }), true, 'ancien plan sans createdAt : updatedAt');
+});
+
+test('point du mois : message jamais alarmant, renvoi vers la séance seulement pendant la thérapie', () => {
+  const none = C.planCheckinMessage(0, false);
+  assert.ok(!/rechute|séance/.test(none));
+  const one = C.planCheckinMessage(1, false);
+  assert.match(one, /^Un signal/);
+  assert.match(one, /n'est pas une rechute/);
+  assert.match(one, /prochaine séance/);
+  assert.match(C.planCheckinMessage(3, false), /^3 signaux/);
+  assert.ok(!/séance/.test(C.planCheckinMessage(2, true)), 'thérapie terminée : pas de « prochaine séance »');
+});
+

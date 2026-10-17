@@ -23,7 +23,7 @@ Exercices TCC entre les séances, et après. Sans pub, sans compte, hors ligne.
 ## DESCRIPTION LONGUE
 (max 4000 caractères)
 
-Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue formé aux thérapies cognitives et comportementales (TCC) et à la thérapie d'acceptation et d'engagement (ACT).
+Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue du travail formé aux thérapies cognitives et comportementales (TCC).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
@@ -71,7 +71,7 @@ Ce que vous écrivez ne regarde que vous.
 - Un bouton « Tout effacer » pour repartir de zéro à tout moment
 
 🌱 UN PROJET INDÉPENDANT
-Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant, sans investisseurs, sans publicité, sans modèle économique basé sur les données.
+Fondé par César Broche Aguilar, psychologue du travail formé aux thérapies cognitives et comportementales, Serein est un projet indépendant, sans investisseurs, sans publicité, sans modèle économique basé sur les données.
 
 ⚠️ IMPORTANT
 Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (numéro national de prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
@@ -165,7 +165,7 @@ Ta TCC entre les séances
 ## DESCRIPTION
 (max 4000 caractères)
 
-Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue formé aux thérapies cognitives et comportementales (TCC) et à la thérapie d'acceptation et d'engagement (ACT).
+Serein Relais vous accompagne entre deux séances de thérapie, puis une fois la thérapie terminée, pour garder vos exercices à portée de main. Conçue en français par un psychologue du travail formé aux thérapies cognitives et comportementales (TCC).
 
 Pas d'abonnement. Pas de publicité. Pas de compte. Aucune donnée envoyée nulle part.
 
@@ -210,7 +210,7 @@ Tout est embarqué dans l'application. Aucune connexion requise.
 • Un bouton « Tout effacer » pour repartir de zéro
 
 — UN PROJET INDÉPENDANT —
-Fondé par César Broche Aguilar, psychologue, Serein est un projet indépendant, financé sans publicité ni revente de données.
+Fondé par César Broche Aguilar, psychologue du travail formé aux thérapies cognitives et comportementales, Serein est un projet indépendant, financé sans publicité ni revente de données.
 
 ⚠️ Serein Relais est un outil de soutien et d'auto-assistance, et non un substitut à un suivi médical ou psychologique. En cas de détresse, le 3114 (prévention du suicide) est joignable gratuitement, 24h/24. En cas de danger immédiat : 15 ou 112.
 

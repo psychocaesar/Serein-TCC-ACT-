@@ -4447,7 +4447,7 @@ const STORE_KEYS = [
   'serein_cards', 'serein_diary', 'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
   'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at',
   'serein_theme', 'serein_onboarding_done', 'serein_disclaimer_seen',
   'serein_reminder_enabled', 'serein_reminder_time',
   'serein_widget_tip_dismissed', 'serein_journal_draft',
@@ -4511,7 +4511,7 @@ const DATA_KEYS = [
   'serein_cards', 'serein_diary', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
   'serein_journal_draft', 'serein_values',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
-  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze',
+  'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at',
   // anciennes clés (avant la refonte) : effacées aussi par « Tout effacer »
   'serein_anxiety_log', 'serein_checkins', 'serein_tcc_stats',
 ];
@@ -5103,7 +5103,12 @@ function deleteTask(id) {
   showUndoToast('Tâche supprimée.', () => { const cur = loadTasks(); cur.splice(idx, 0, removed); saveTasks(cur); renderTaches(); });
 }
 function saveNextSession(v) { if (v) Store.set('serein_next_session', v); else Store.remove('serein_next_session'); renderTaches(); }
-function setTherapyDone(on) { Store.set('serein_therapy_done', on ? '1' : '0'); renderTaches(); }
+function setTherapyDone(on) {
+  Store.set('serein_therapy_done', on ? '1' : '0');
+  // Date de fin : le premier point du mois vient 30 jours après, pas le jour même.
+  if (on) Store.set('serein_therapy_done_at', ymd()); else Store.remove('serein_therapy_done_at');
+  renderTaches();
+}
 // Récap des 7 derniers jours (ou depuis la création de la plus ancienne tâche en cours).
 function weekRecap() {
   const since = periodDays(7)[0];
@@ -5259,12 +5264,16 @@ const CHECKIN_SNOOZE_DAYS = 7;
 function loadPlanCheckins() { return safeParse(CHECKIN_KEY, []); }
 function daysBetween(a, b) { return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000); }
 function addDays(iso, n) { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return ymd(d); }
-// Pure (testée) : dû si le plan a au moins un signal, si le dernier point (à défaut, la création
-// du plan) date d'au moins 30 jours, et hors report « Plus tard ».
-function planCheckinDue({ plan = {}, checkins = [], today = ymd(), snoozeUntil = null } = {}) {
+// Pure (testée) : réservé à l'après-thérapie (pendant le suivi, c'est le psy qui fait le point ;
+// le bouton du plan reste disponible pour tous). Dû si le plan a au moins un signal, si 30 jours
+// ont passé depuis le dernier point, la fin de la thérapie ou la création du plan (le plus récent
+// des trois), et hors report « Plus tard ».
+function planCheckinDue({ plan = {}, checkins = [], today = ymd(), snoozeUntil = null, therapyDone = false, therapyDoneAt = null } = {}) {
+  if (!therapyDone) return false;
   if (!firstPlanLine(plan.signals).length) return false;
   if (snoozeUntil && today < snoozeUntil) return false;
-  const since = checkins.length ? checkins[checkins.length - 1].d : (plan.createdAt || plan.updatedAt);
+  const since = [checkins.length ? checkins[checkins.length - 1].d : null, therapyDoneAt, plan.createdAt || plan.updatedAt]
+    .filter(Boolean).sort().pop();
   if (!since) return false;
   return daysBetween(since, today) >= CHECKIN_EVERY_DAYS;
 }
@@ -5335,7 +5344,8 @@ function renderPlanCheckinCard() {
   const card = document.getElementById('planCheckinCard');
   if (!card) return;
   if (checkinResult && checkinResult.where === 'home') { card.hidden = false; card.innerHTML = checkinResultHtml(); return; }
-  const due = planCheckinDue({ plan: loadPlan(), checkins: loadPlanCheckins(), snoozeUntil: localStorage.getItem(CHECKIN_SNOOZE_KEY) });
+  const due = planCheckinDue({ plan: loadPlan(), checkins: loadPlanCheckins(), snoozeUntil: localStorage.getItem(CHECKIN_SNOOZE_KEY),
+    therapyDone: isTherapyDone(), therapyDoneAt: localStorage.getItem('serein_therapy_done_at') });
   card.hidden = !due;
   if (due) card.innerHTML = checkinFormHtml('home');
 }

@@ -307,17 +307,20 @@ test('pratique du jour : thérapie terminée → « Ton engagement », jamais «
   assert.ok(!/psy/.test(after.meta));
 });
 
-test('point du mois : seulement avec des signaux, tous les 30 jours, hors report', () => {
-  const plan = { signals: 'Je dors mal\nJ\'évite mes amis', createdAt: '2026-09-01' };
-  assert.strictEqual(C.planCheckinDue({ plan: { createdAt: '2026-01-01' }, today: '2026-10-17' }), false, 'pas de signal : jamais');
-  assert.strictEqual(C.planCheckinDue({ plan: { signals: '  \n ', createdAt: '2026-01-01' }, today: '2026-10-17' }), false, 'signaux vides');
-  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-09-20' }), false, 'plan récent');
-  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-01' }), true, '30 jours après la création');
-  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-10-10', seen: [] }], today: '2026-10-17' }), false, 'point récent');
-  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-09-10', seen: [] }], today: '2026-10-17' }), true, 'dernier point il y a plus de 30 jours');
-  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17', snoozeUntil: '2026-10-20' }), false, 'reporté');
-  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-21', snoozeUntil: '2026-10-20' }), true, 'report passé');
-  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', updatedAt: '2026-09-01' }, today: '2026-10-17' }), true, 'ancien plan sans createdAt : updatedAt');
+test('point du mois : seulement après la thérapie, avec des signaux, tous les 30 jours, hors report', () => {
+  const plan = { signals: 'Je dors mal\nJ\'évite mes amis', createdAt: '2026-06-01' };
+  const after = { therapyDone: true, therapyDoneAt: '2026-08-01' };
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17' }), false, 'pendant la thérapie : jamais sur l\'accueil');
+  assert.strictEqual(C.planCheckinDue({ plan: { createdAt: '2026-01-01' }, today: '2026-10-17', ...after }), false, 'pas de signal : jamais');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: '  \n ', createdAt: '2026-01-01' }, today: '2026-10-17', ...after }), false, 'signaux vides');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-08-20', ...after }), false, 'thérapie finie depuis moins de 30 jours (même si le plan est ancien)');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-08-31', ...after }), true, '30 jours après la fin de la thérapie');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-10-10', seen: [] }], today: '2026-10-17', ...after }), false, 'point récent');
+  assert.strictEqual(C.planCheckinDue({ plan, checkins: [{ d: '2026-09-10', seen: [] }], today: '2026-10-17', ...after }), true, 'dernier point il y a plus de 30 jours');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-17', snoozeUntil: '2026-10-20', ...after }), false, 'reporté');
+  assert.strictEqual(C.planCheckinDue({ plan, today: '2026-10-21', snoozeUntil: '2026-10-20', ...after }), true, 'report passé');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', createdAt: '2026-10-01' }, today: '2026-10-17', ...after }), false, 'plan rempli après la fin : 30 jours après le plan');
+  assert.strictEqual(C.planCheckinDue({ plan: { signals: 'X', updatedAt: '2026-01-01' }, today: '2026-10-17', therapyDone: true }), true, 'ancien plan, date de fin inconnue : updatedAt');
 });
 
 test('point du mois : message jamais alarmant, renvoi vers la séance seulement pendant la thérapie', () => {

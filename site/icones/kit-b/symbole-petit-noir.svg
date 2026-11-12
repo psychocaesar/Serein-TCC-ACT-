@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <title>Serein Relais</title>
+  <!-- Coupe petites tailles, noir -->
+  <g transform="translate(-71.7 -71.7) scale(0.78)" fill="none" stroke-width="54" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 196 150 H 256 A 58 58 0 0 1 256 266 H 196 M 236 266 C 272 266 302 316 326 362" stroke="#000"/>
+    <path d="M 186 150 V 362" stroke="#000"/>
+  </g>
+</svg>

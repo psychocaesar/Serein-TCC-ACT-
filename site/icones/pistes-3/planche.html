@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serein Relais · pistes de logo n°3</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#f4f1ea;color:#1d2a25;padding:36px 40px 48px;width:1480px}
+  h1{font-size:26px;font-weight:700;margin-bottom:6px}
+  .sub{font-size:15px;color:#5d6b64;margin-bottom:30px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+  .col h2{font-size:19px;margin-bottom:4px}
+  .col .idea{font-size:14px;color:#5d6b64;line-height:1.45;min-height:62px;margin-bottom:14px}
+  .big{width:230px;height:230px;display:block}
+  .sizes{display:flex;align-items:flex-end;gap:16px;margin:16px 0}
+  .sizes img{display:block}
+  .row{display:flex;gap:12px;margin-top:14px}
+  .mono{width:104px;height:104px;border-radius:22px;display:flex;align-items:center;justify-content:center}
+  .mono img{width:74px;height:74px}
+  .mono.w{background:#fff;border:1px solid #ddd6c8}
+  .mono.k{background:#111}
+  .mono.k img{filter:invert(1)}
+  .lock{margin-top:14px;border-radius:14px;padding:14px 16px;height:74px;display:flex;align-items:center}
+  .lock img{height:44px}
+  .lock.l{background:#fff;border:1px solid #ddd6c8}
+  .lock.d{background:#0f241d}
+  .home{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+  .screen{background:linear-gradient(160deg,#c9b9e6,#7f93d6 55%,#3f4fa3);border-radius:28px;padding:22px 18px 14px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px 10px}
+  .app{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#fff}
+  .app i{width:60px;height:60px;border-radius:14px;display:block}
+  .app img{width:60px;height:60px;border-radius:14px;display:block}
+  .cap{font-size:13px;color:#5d6b64;margin-top:8px;text-align:center}
+</style>
+</head>
+<body>
+<h1>Serein Relais · pistes de logo n°3</h1>
+<p class="sub">Icône 230 px · écran d'accueil 60 / 40 / 29 px · une couleur · avec le nom · à côté de Serein</p>
+
+<div class="grid" id="grid"></div>
+<div class="home" id="home"></div>
+
+<script>
+const pistes = [
+  { f: '../kit-c/icone-app-arrondie.svg', n: '../kit-c/symbole-noir.svg', l: '../kit-c/assemblage-horizontal-clair.svg', d: '../kit-c/assemblage-horizontal-sombre.svg',
+    t: 'Actuel · Le S en deux temps', i: 'Le S de Serein coupé en deux : la séance, puis le relais.' },
+  { k: 'a-trait-d-union', t: 'A · Le trait d\'union', i: 'Le S de Serein relie deux points : deux séances, et le chemin entre les deux.' },
+  { k: 'b-r-deux-gestes', t: 'B · Le R en deux gestes', i: 'Le R de Relais dans le trait de Serein : un montant (la séance) et ce qui en part.' },
+  { k: 'c-r-italique', t: 'C · Le R italique', i: 'Le R du mot « Relais » tel qu\'il s\'écrit sur le site : Fraunces italique, sable.' },
+];
+const g = document.getElementById('grid'), h = document.getElementById('home');
+const others = [['#e9573f','Agenda'],['#2ecc71','Messages'],['#f5f5f5','Photos'],['#3498db','Météo'],['#111','Horloge'],null,null,['#f39c12','Notes']];
+for (const p of pistes) {
+  const f = p.f || `${p.k}-icone.svg`, n = p.n || `${p.k}-noir.svg`, l = p.l || `${p.k}-assemblage-clair.svg`, d = p.d || `${p.k}-assemblage-sombre.svg`;
+  g.insertAdjacentHTML('beforeend', `<div class="col"><h2>${p.t}</h2><p class="idea">${p.i}</p>
+    <img class="big" src="${f}" alt="">
+    <div class="sizes"><img src="${f}" width="60" height="60"><img src="${f}" width="40" height="40"><img src="${f}" width="29" height="29"><img src="${f}" width="16" height="16"></div>
+    <div class="row"><div class="mono w"><img src="${n}"></div><div class="mono k"><img src="${n}"></div></div>
+    <div class="lock l"><img src="${l}"></div><div class="lock d"><img src="${d}"></div></div>`);
+  let s = '<div><div class="screen">';
+  let slot = 0;
+  for (const o of others) {
+    if (o) s += `<div class="app"><i style="background:${o[0]}"></i>${o[1]}</div>`;
+    else s += slot++ === 0 ? `<div class="app"><img src="../../../tools/icons/logo-serein.svg">Serein</div>` : `<div class="app"><img src="${f}">Serein Relais</div>`;
+  }
+  h.insertAdjacentHTML('beforeend', s + '</div></div>');
+}
+</script>
+</body>
+</html>

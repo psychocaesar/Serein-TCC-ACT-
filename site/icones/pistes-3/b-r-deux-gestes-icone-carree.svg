@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Serein Relais</title>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#132e26"/><stop offset="100%" stop-color="#0a1a14"/></radialGradient>
+    <radialGradient id="halo" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#2f6f5e" stop-opacity="0.35"/><stop offset="100%" stop-color="#2f6f5e" stop-opacity="0"/></radialGradient>
+    <linearGradient id="vert" gradientUnits="userSpaceOnUse" x1="0" y1="130" x2="0" y2="382"><stop offset="0%" stop-color="#7ee8be"/><stop offset="55%" stop-color="#4db896"/><stop offset="100%" stop-color="#2a8a68"/></linearGradient>
+    <linearGradient id="sable" gradientUnits="userSpaceOnUse" x1="0" y1="130" x2="0" y2="382"><stop offset="0%" stop-color="#f0d9b5"/><stop offset="100%" stop-color="#c9a370"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="0" fill="url(#bg)"/><rect width="512" height="512" rx="0" fill="url(#halo)"/><g fill="none" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"><path d="M 186 150 H 256 A 58 58 0 0 1 256 266 H 186 M 236 268 C 268 276 300 318 326 362" stroke="url(#sable)"/><path d="M 186 150 V 362" stroke="url(#vert)"/></g>
+</svg>

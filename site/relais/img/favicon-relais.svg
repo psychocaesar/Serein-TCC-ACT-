@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <title>Serein Relais</title>
+  <!-- Favicon : coupe petites tailles, aplats, tuile sombre -->
+  <rect width="256" height="256" rx="56" fill="#0f241d"/>
+  <g transform="translate(-51.2 -51.2) scale(0.7)" fill="none" stroke-width="54" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 196 150 H 256 A 58 58 0 0 1 256 266 H 196 M 236 266 C 272 266 302 316 326 362" stroke="#d8b78a"/>
+    <path d="M 186 150 V 362" stroke="#4db896"/>
+  </g>
+</svg>

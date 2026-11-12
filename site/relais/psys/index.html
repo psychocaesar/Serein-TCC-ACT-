@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1814">
+  <title>Serein Relais pour les psychologues et thérapeutes TCC | Serein Relais</title>
+  <meta name="description" content="Une application gratuite, sans compte et hors ligne, pour que vos patients fassent entre les séances les exercices de TCC que vous leur proposez. Rien à installer de votre côté, aucune donnée de santé sur un serveur.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="César Broche Aguilar">
+  <link rel="canonical" href="https://sereinapp.fr/relais/psys/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Serein Relais pour les psychologues et thérapeutes TCC">
+  <meta property="og:description" content="Vos patients font entre les séances les exercices que vous leur proposez. Gratuit, sans compte, hors ligne. Conçu par un psychologue formé aux TCC.">
+  <meta property="og:image" content="https://sereinapp.fr/relais/img/og-relais.png">
+  <meta property="og:url" content="https://sereinapp.fr/relais/psys/">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="Serein Relais">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Serein Relais pour les psychologues et thérapeutes TCC">
+  <meta name="twitter:image" content="https://sereinapp.fr/relais/img/og-relais.png">
+  <link rel="icon" type="image/svg+xml" href="../img/favicon-relais.svg">
+  <link rel="icon" href="../img/favicon-relais.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../img/apple-touch-icon-relais.png">
+  <link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://sereinapp.fr/relais/psys/#page",
+    "url": "https://sereinapp.fr/relais/psys/",
+    "name": "Serein Relais pour les psychologues et thérapeutes TCC",
+    "description": "Une application gratuite, sans compte et hors ligne, pour que vos patients fassent entre les séances les exercices de TCC que vous leur proposez.",
+    "inLanguage": "fr-FR",
+    "isPartOf": { "@type": "WebSite", "name": "Serein", "url": "https://sereinapp.fr" },
+    "audience": { "@type": "MedicalAudience", "audienceType": "Professionnels de santé mentale" },
+    "about": { "@id": "https://sereinapp.fr/relais/#app" }
+  }
+  </script>
+  <style>
+    @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Fraunces';font-style:normal;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+    @font-face{font-family:'Fraunces';font-style:italic;font-weight:300 400;font-display:swap;src:url('../assets/fonts/fraunces-italic-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('../assets/fonts/hanken-grotesk-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+    @font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300 700;font-display:swap;src:url('../assets/fonts/hanken-grotesk-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0d1b15;--bg2:#0e1f18;--surface:#1c3127;--surface2:#1a2e24;
+      --primary:#93c9ac;--accent:#d8b78a;
+      --gradient:linear-gradient(120deg,#93c9ac,#d8b78a);
+      --primary-light:rgba(147,201,172,0.12);
+      --text:#f0f4f0;--text2:#93a89b;--text3:#52756d;
+      --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+      --serif:'Fraunces',Georgia,serif;--sans:'Hanken Grotesk',system-ui,sans-serif;
+      --r:1.25rem;--r2:.75rem;--max:680px;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.7;padding:0 0 5rem}
+
+    .nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(11,24,20,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:.6rem;text-decoration:none}
+    .nav-logo img{width:26px;height:26px;border-radius:7px}
+    .nav-logo-name{font-family:var(--serif);font-size:1.15rem;font-weight:400;color:var(--text);font-variation-settings:"opsz" 60;letter-spacing:-.01em}
+    .nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
+    .nav-links a{font-size:.88rem;color:var(--text2);text-decoration:none;transition:color .2s}
+    .nav-links a:hover{color:var(--text)}
+    .nav-links .nav-dl{background:var(--gradient);color:#0d1b15;padding:.45rem 1.1rem;border-radius:999px;font-size:.85rem;font-weight:600;transition:opacity .2s}
+    .nav-links .nav-dl:hover{opacity:.88}
+    .nav-toggle{display:none;background:none;border:none;cursor:pointer;padding:.4rem;width:42px;height:42px;flex-direction:column;justify-content:center;align-items:center;gap:5px}
+    .nav-toggle span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:transform .25s,opacity .25s}
+    .nav.open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .nav.open .nav-toggle span:nth-child(2){opacity:0}
+    .nav.open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+    @media(max-width:1024px){
+      .nav-toggle{display:flex}
+      .nav-links{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:rgba(11,24,20,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);padding:.5rem 0;display:none}
+      .nav.open .nav-links{display:flex}
+      .nav-links li{display:block;width:100%}
+      .nav-links a{display:block;padding:.85rem 2rem}
+      .nav-links .nav-dl{margin:.6rem 2rem .35rem;text-align:center;padding:.7rem 1.1rem}
+    }
+
+    .container{max-width:var(--max);margin:0 auto;padding:7rem 2rem 0}
+    @media(max-width:640px){.container{padding:6rem 1.25rem 0}}
+
+    .breadcrumb{font-size:.78rem;color:var(--text3);margin-bottom:1.5rem}
+    .breadcrumb a{color:var(--text3);text-decoration:none}
+    .breadcrumb a:hover{color:var(--text2)}
+
+    .page-header{margin-bottom:1.75rem}
+    .eyebrow{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--primary);margin-bottom:.75rem;display:block}
+    h1{font-family:var(--serif);font-size:clamp(1.9rem,5vw,2.6rem);font-weight:300;line-height:1.14;letter-spacing:-.02em;font-variation-settings:"opsz" 100;margin-bottom:1rem}
+    .lede{font-size:1.02rem;color:var(--text2);line-height:1.7;font-weight:300}
+
+    article h2{font-family:var(--serif);font-size:1.35rem;font-weight:400;color:var(--text);font-variation-settings:"opsz" 60;margin:2.1rem 0 .85rem;letter-spacing:-.01em}
+    article p{font-size:.97rem;color:var(--text2);line-height:1.78;font-weight:300;margin-bottom:1.05rem}
+    article strong{color:var(--text);font-weight:500}
+
+    .feature-list{list-style:none;margin:.35rem 0 1.05rem}
+    .feature-list li{position:relative;padding-left:1.5rem;font-size:.97rem;color:var(--text2);line-height:1.6;font-weight:300;margin-bottom:.6rem}
+    .feature-list li::before{content:'';position:absolute;left:0;top:.62em;width:.5rem;height:.5rem;border-radius:50%;background:var(--gradient)}
+    .feature-list strong{color:var(--text);font-weight:500}
+
+    .disclaimer-box{background:rgba(216,183,138,.08);border:1px solid rgba(216,183,138,.22);border-radius:var(--r2);padding:1.1rem 1.25rem;margin:2rem 0;font-size:.85rem;color:var(--text2);line-height:1.6}
+
+    .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;text-align:center;margin:2.5rem 0}
+    .cta-box h2{font-family:var(--serif);font-size:1.3rem;font-weight:400;color:var(--text);margin-bottom:.5rem;font-variation-settings:"opsz" 60}
+    .cta-box p.cta-sub{font-size:.9rem;color:var(--text2);line-height:1.6;font-weight:300;margin-bottom:1.35rem;max-width:36ch;margin-left:auto;margin-right:auto}
+    .don-btn{display:inline-flex;align-items:center;gap:.65rem;background:var(--gradient);color:#0d1b15;font-family:var(--sans);font-size:.95rem;font-weight:600;padding:.9rem 1.75rem;border-radius:999px;text-decoration:none;transition:opacity .22s,transform .22s}
+    .don-btn:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 24px rgba(147,201,172,.2)}
+    .cta-secondary{display:block;margin-top:1rem;font-size:.85rem;color:var(--text2);text-decoration:none}
+    .cta-secondary:hover{color:var(--text)}
+
+    .cta-badges{display:flex;gap:.85rem;justify-content:center;flex-wrap:wrap;margin:2rem 0 0}
+    .app-badge{display:block;text-decoration:none;transition:transform .22s,opacity .22s}
+    .app-badge:hover{transform:translateY(-2px);opacity:.92}
+    .app-badge img{height:44px;width:auto;display:block}
+
+    .legal-line{font-size:.78rem;color:var(--text3);text-align:center;margin-top:1.5rem}
+
+    footer{max-width:var(--max);margin:3rem auto 0;padding:1.5rem 2rem 0;border-top:1px solid var(--border);text-align:center}
+    @media(max-width:640px){footer{padding:1.5rem 1.25rem 0}}
+    footer p{font-size:.8rem;color:var(--text3);font-weight:300}
+    footer a{color:var(--text2);text-decoration:none}
+    footer a:hover{color:var(--text)}
+
+    /* ── Spécifique Serein Relais ── */
+    .nav-logo-name em{font-style:italic;color:var(--accent)}
+    article a{color:var(--primary)}
+    .refs{font-size:.85rem}
+    .app-badge.soon{opacity:.45;cursor:default}
+    .app-badge.soon:hover{transform:none;opacity:.45}
+  </style>
+</head>
+<body>
+
+<header class="nav" role="banner">
+  <a class="nav-logo" href="../">
+    <img src="../img/logo-relais.svg" alt="Logo Serein Relais">
+    <span class="nav-logo-name">Serein <em>Relais</em></span>
+  </a>
+  <nav aria-label="Navigation principale">
+    <ul class="nav-links" id="nav-links">
+      <li><a href="../#comment">Comment ça marche</a></li>
+      <li><a href="../exercices/">Les exercices</a></li>
+      <li><a href="../pourquoi.html">Pourquoi Relais</a></li>
+      <li><a href="./">Pour les psys</a></li>
+      <li><a href="../#cesar">À propos</a></li>
+      <li><a href="../#faq">Questions</a></li>
+      <li><a href="../#telecharger" class="nav-dl">Télécharger</a></li>
+    </ul>
+  </nav>
+  <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="container">
+
+  <p class="breadcrumb"><a href="../">Serein Relais</a> › Pour les psys</p>
+
+  <div class="page-header">
+    <h1>Serein Relais pour les psychologues et thérapeutes TCC</h1>
+    <p class="lede">Une application avec laquelle vos patients font, entre les séances, les exercices que vous leur proposez, puis gardent leurs acquis après la fin du suivi. Gratuite, sans compte, hors ligne. Rien à installer ni à payer de votre côté, aucune donnée de santé sur un serveur.</p>
+  </div>
+
+  <article>
+    <h2>L'utiliser avec un patient</h2>
+    <ul class="feature-list">
+      <li><strong>En fin de séance</strong>, votre patient note les exercices proposés (journal de pensées, exposition, expériences…). L'app les lui propose en priorité et ils avancent quand il les fait.</li>
+      <li><strong>Avant la séance suivante</strong>, il peut vous montrer un récap : exercices faits, humeur, pensées travaillées et leurs nouvelles cotations.</li>
+      <li><strong>En fin de thérapie</strong>, vous remplissez ensemble son plan anti-rechute. L'app lui propose ensuite, chaque mois, de faire le point sur ses signaux d'alerte.</li>
+    </ul>
+    <p>Pas de compte thérapeute : rien ne vous remonte, le patient garde la main sur ce qu'il partage.</p>
+
+    <h2>Ce que contient l'application</h2>
+    <ul class="feature-list">
+      <li><strong>Restructuration cognitive</strong> : journal de pensées en sept étapes, avec cotation de la croyance (0 à 100) et de l'émotion (0 à 10), puis nouvelle cotation après la pensée alternative. Aucune valeur pré-remplie, pour éviter l'ancrage.</li>
+      <li><strong>Expériences comportementales</strong> : prédiction, degré de croyance, résultat observé, nouvelle cotation.</li>
+      <li><strong>Exposition graduée</strong> : hiérarchie personnelle. Le patient cote sa croyance dans la prédiction avant et après chaque palier ; l'anxiété n'est jamais le critère de réussite, selon l'approche par apprentissage inhibiteur (Craske et al., 2014).</li>
+      <li><strong>Activation comportementale</strong> : une action à la fois, cotée en plaisir et en maîtrise.</li>
+      <li><strong>Inquiétudes</strong> : report à un créneau fixe (Borkovec et al., 1983), puis tri entre problème actuel, traité par résolution de problèmes écrite, et inquiétude hypothétique, laissée sans réassurance.</li>
+      <li><strong>ACT</strong> : clarification des valeurs et exercices de défusion.</li>
+      <li><strong>Respiration et ancrage</strong>, présentés comme des compétences à entraîner, à mettre de côté pendant une exposition.</li>
+      <li><strong>Prévention de la rechute</strong> : plan en six rubriques (signaux d'alerte, ce qui aide, personnes ressources, seuil pour reprendre contact…) et engagements de maintien.</li>
+    </ul>
+    <p><a href="../exercices/">Le détail des exercices, tel que le patient les voit →</a></p>
+
+    <h2>Pourquoi vous pouvez la recommander</h2>
+    <ul class="feature-list">
+      <li><strong>Alignée sur votre travail</strong> : l'app ne déroule pas un programme à elle. Elle met en avant ce que vous avez proposé.</li>
+      <li><strong>Confidentialité par conception</strong> : pas de compte, pas de publicité, pas de tracker, aucune requête réseau. Les données restent sur le téléphone du patient ; vous n'avez aucun hébergement de données de santé à gérer.</li>
+      <li><strong>Gratuite, sans abonnement</strong> : vos patients ont accès à l'intégralité du contenu.</li>
+      <li><strong>Sans culpabilisation</strong> : pas de série à tenir, pas de jour « raté », pas de niveau à atteindre.</li>
+      <li><strong>Transparente</strong> : le code source est public, sous licence MIT.</li>
+    </ul>
+
+    <h2>Ce que Serein Relais n'est pas</h2>
+    <p>Serein Relais n'est <strong>pas un dispositif médical</strong>. Elle ne pose pas de diagnostic, ne propose aucun questionnaire de dépistage et ne remplace ni une prise en charge, ni un traitement. C'est un outil de soutien et d'auto-assistance, pensé pour prolonger le travail engagé en consultation.</p>
+
+    <h2>Précautions d'usage</h2>
+    <ul class="feature-list">
+      <li><strong>L'exposition</strong> gagne à être préparée avec vous. L'app invite le patient à choisir des situations sans danger réel et, pour un traumatisme, un TOC ou une peur très intense, à construire l'échelle avec son psy plutôt que seul. L'exposition en imagination n'y figure pas.</li>
+      <li><strong>En cas de crise</strong>, le bouton SOS reste en haut de l'écran : respiration, ancrage, carte de coping, plan anti-rechute, appel direct du 3114, et 15 ou 112 en cas de danger immédiat. L'app ne remplace pas un plan de sécurité construit avec un professionnel.</li>
+    </ul>
+    <p class="refs">Références : Craske, Treanor, Conway, Zbozinek &amp; Vervliet (2014), <em>Behaviour Research and Therapy</em>, 58, 10-23, <a href="https://doi.org/10.1016/j.brat.2014.04.006">doi:10.1016/j.brat.2014.04.006</a> · Borkovec, Wilkinson, Folensbee &amp; Lerman (1983), <em>Behaviour Research and Therapy</em>, 21, 247-251, <a href="https://doi.org/10.1016/0005-7967(83)90206-1">doi:10.1016/0005-7967(83)90206-1</a></p>
+  </article>
+
+  <div class="cta-box">
+    <h2>Vos retours comptent</h2>
+    <p class="cta-sub">Vous l'utilisez avec vos patients, ou vous aimeriez y voir un outil ? Vos remarques orientent la suite.</p>
+    <a class="don-btn" href="mailto:contact@sereinapp.fr?subject=Serein%20Relais%20-%20retour%20de%20psy">Écrire à César Broche Aguilar</a>
+    <a class="cta-secondary" href="https://sereinapp.fr/pro/">Serein méditation pour les professionnels de santé →</a>
+  </div>
+
+  <div class="disclaimer-box">Serein Relais est un outil de soutien et d'auto-assistance. Il ne constitue pas un avis médical et ne remplace pas l'accompagnement d'un·e professionnel·le de santé.</div>
+
+  <div class="cta-badges" aria-label="Bientôt disponible sur l'App Store et Google Play">
+    <!-- À la sortie : remplacer par les liens des stores (voir site/README.md) -->
+    <span class="app-badge soon"><img src="../assets/badges/app-store-fr.svg" alt="" width="126" height="40"></span>
+    <span class="app-badge soon"><img src="../assets/badges/google-play-fr.png" alt="" width="124" height="48"></span>
+  </div>
+  <p class="legal-line">Bientôt disponible · Sereinapp Méditation - association loi 1901, RNA W302023362</p>
+
+</div>
+
+<footer role="contentinfo">
+  <p>Serein Relais · <a href="../">Accueil</a> · <a href="../exercices/">Les exercices</a> · <a href="../pourquoi.html">Pourquoi Relais</a> · <a href="mailto:contact@sereinapp.fr">contact@sereinapp.fr</a> · <a href="../privacy.html">Confidentialité</a> · <a href="https://sereinapp.fr/mentions-legales.html">Mentions légales</a></p>
+  <p>© 2026 Sereinapp Méditation · <a href="https://sereinapp.fr/">Serein méditation</a> · Code source sous licence <a href="https://github.com/psychocaesar/Serein-TCC-ACT-" target="_blank" rel="noopener">MIT</a></p>
+</footer>
+
+<script>
+  const navEl = document.querySelector('.nav');
+  const navToggle = document.querySelector('.nav-toggle');
+  navToggle.addEventListener('click', () => {
+    const open = navEl.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+    navToggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  });
+  navEl.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+    navEl.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.setAttribute('aria-label', 'Ouvrir le menu');
+  }));
+</script>
+</body>
+</html>

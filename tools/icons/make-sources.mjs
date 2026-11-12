@@ -1,11 +1,11 @@
 // Genere les sources d'icones/splash (assets/) pour @capacitor/assets a partir
-// du master vectoriel logo-serein-tcc.svg (S en deux temps sur fond vert-noir arrondi).
+// du master vectoriel logo-relais.svg (R en deux gestes sur fond vert-noir arrondi).
 //
 // Produit, en plein cadre (sans coins arrondis : l'OS applique le masque) :
 //   assets/icon-only.png        1024  -> iOS + Android legacy
-//   assets/icon-foreground.png  1024  -> Android adaptatif (le S, transparent)
+//   assets/icon-foreground.png  1024  -> Android adaptatif (le R, transparent)
 //   assets/icon-background.png  1024  -> Android adaptatif (fond degrade)
-//   assets/splash.png           2732  -> splash clair/sombre (S centre sur fond)
+//   assets/splash.png           2732  -> splash clair/sombre (R centre sur fond)
 //   assets/splash-dark.png      2732
 //
 // Usage : node tools/icons/make-sources.mjs
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..', '..');
 const assets = join(root, 'assets');
-const svg = readFileSync(join(here, 'logo-serein-tcc.svg'), 'utf8');
+const svg = readFileSync(join(here, 'logo-relais.svg'), 'utf8');
 
 // Variantes par retrait d'elements (decoupage par classe : bg / halo / fg)
 const removeClass = (s, cls) => s.replace(new RegExp('\\s*<[a-zA-Z]+[^>]*class="' + cls + '"[^>]*/>', 'g'), '');
@@ -32,16 +32,16 @@ const render = (svgStr, size) =>
 await render(squared, 1024).toFile(join(assets, 'icon-only.png'));
 await render(bgOnly, 1024).toFile(join(assets, 'icon-background.png'));
 
-// S seul rogne au plus juste (sert d'avant-plan adaptatif + splash)
+// R seul rogne au plus juste (sert d'avant-plan adaptatif + splash)
 const fgRaw = await render(fgOnly, 1200).toBuffer();
 const sTrim = await sharp(fgRaw).trim().toBuffer();
 const transparent = (size) => ({ create: { width: size, height: size, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } });
 
-// Avant-plan adaptatif : le S occupe ~58% du cadre, centre dans la zone de securite
+// Avant-plan adaptatif : le R occupe ~58% du cadre, centre dans la zone de securite
 const fgInner = await sharp(sTrim).resize({ width: 600, height: 600, fit: 'inside' }).toBuffer();
 await sharp(transparent(1024)).composite([{ input: fgInner, gravity: 'center' }]).png().toFile(join(assets, 'icon-foreground.png'));
 
-// Splash : fond degrade plein 2732 + S centre (~28%)
+// Splash : fond degrade plein 2732 + R centre (~28%)
 const splashBg = await render(bgOnly, 2732).toBuffer();
 const splashS = await sharp(sTrim).resize({ width: 760, height: 760, fit: 'inside' }).toBuffer();
 const splash = await sharp(splashBg).composite([{ input: splashS, gravity: 'center' }]).png().toBuffer();

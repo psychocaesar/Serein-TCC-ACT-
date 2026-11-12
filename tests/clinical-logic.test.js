@@ -81,6 +81,9 @@ sandbox.globalThis = sandbox;
 const SHIM = `
 ;globalThis.__clinical = {
   moodLabel: moodLabel,
+  moodAck: moodAck,
+  greetingFor: greetingFor,
+  practiceDoneLine: practiceDoneLine,
   moodColor: moodColor,
   moodFromLegacyIntensity: moodFromLegacyIntensity,
   pickDailyPractice: pickDailyPractice,
@@ -123,6 +126,36 @@ test('moodLabel couvre 0-10 et ne déduit jamais une émotion (que des niveaux)'
   for (let v = 0; v <= 10; v++) assert.ok(allowed.includes(C.moodLabel(v)), `${v} -> "${C.moodLabel(v)}"`);
   assert.strictEqual(C.moodLabel(5), 'Mitigé');
   for (let v = 0; v <= 10; v++) assert.match(C.moodColor(v), /^#[0-9a-f]{6}$/i);
+});
+
+test('moodAck accuse réception sans conseil, sans émotion déduite, sans culpabilité', () => {
+  for (let v = 0; v <= 10; v++) {
+    const msg = C.moodAck(v);
+    assert.match(msg, /^C'est noté\. /, `${v} -> "${msg}"`);
+    assert.doesNotMatch(msg, /bravo|tu devrais|il faut|essaie|triste|stress|anxi|déprim/i, `${v} -> "${msg}"`);
+  }
+  assert.strictEqual(C.moodAck(3), C.moodAck(0));
+  assert.notStrictEqual(C.moodAck(3), C.moodAck(4));
+  assert.notStrictEqual(C.moodAck(6), C.moodAck(7));
+});
+
+test('practiceDoneLine reconnaît le geste, jamais un résultat (ni mieux-être, ni anxiété qui baisse)', () => {
+  for (const ex of C.PRACTICE_KINDS) {
+    const line = C.practiceDoneLine(ex.kind);
+    assert.strictEqual(typeof line, 'string');
+    assert.doesNotMatch(line, /mieux|soulag|anxiété|peur|baiss|diminu|réussi|guéri/i, `${ex.kind} -> "${line}"`);
+  }
+  assert.ok(C.practiceDoneLine('exposition'), "l'exposition a sa phrase de fin");
+  assert.ok(C.practiceDoneLine('journal'), 'le journal a sa phrase de fin');
+  assert.strictEqual(C.practiceDoneLine('inconnu'), '');
+});
+
+test('greetingFor : bonjour le jour, bonsoir dès 18 h et la nuit', () => {
+  assert.strictEqual(C.greetingFor(5), 'Bonjour');
+  assert.strictEqual(C.greetingFor(17), 'Bonjour');
+  assert.strictEqual(C.greetingFor(18), 'Bonsoir');
+  assert.strictEqual(C.greetingFor(23), 'Bonsoir');
+  assert.strictEqual(C.greetingFor(2), 'Bonsoir');
 });
 
 test('migration de l\'ancien suivi : intensité (haut = mal) → humeur (haut = bien)', () => {

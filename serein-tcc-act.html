@@ -1339,8 +1339,24 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .practice-text span { font-size: 0.82rem; color: var(--color-muted); line-height: 1.35; }
 .btn.practice-go { width: 100%; margin-top: 0.2rem; }
 .practice-add { align-self: center; min-height: 36px; font-size: 0.8rem; font-weight: 500; }
-/* Humeur pas encore notée : pastille neutre, pas de valeur affichée */
-.mood-orb.unset { background: var(--color-border-strong); box-shadow: none; color: var(--color-muted); }
+/* Humeur pas encore notée : pas de valeur affichée, et une teinte neutre (aucune couleur de
+   l'échelle, pour ne pas suggérer un niveau). La pastille respire doucement : elle attend,
+   elle n'est pas « vide ». */
+.mood-orb.unset {
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.3), var(--color-border-strong) 72%);
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.08); color: var(--color-muted);
+  animation: orbWait 4.5s ease-in-out infinite;
+}
+@keyframes orbWait {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.08); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 9px rgba(255,255,255,0); }
+}
+@media (prefers-reduced-motion: reduce) { .mood-orb.unset { animation: none; } }
+[data-theme="light"] .mood-orb.unset { background: radial-gradient(circle at 35% 30%, #fff, rgba(0,0,0,0.1) 72%); }
+/* Accueil : un mot d'accueil en clair plutôt qu'une étiquette en capitales */
+#screen-home .time-label { text-transform: none; letter-spacing: 0; font-size: 0.92rem; font-weight: 700; color: var(--color-primary-2); margin-bottom: 0.35rem; }
+.recap-num { font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; color: var(--color-muted); margin-left: 0.15rem; }
+.recap-ack { margin-top: 0.85rem; padding-top: 0.8rem; border-top: 1px solid var(--color-border); font-size: 0.9rem; line-height: 1.45; color: var(--color-text); }
 .mood-orb.unset small { display: none; }
 #moodMore { margin-top: 0.9rem; }
 .mood-card .slider-ends { margin-bottom: 0; }
@@ -1403,6 +1419,9 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   border-top: 1px solid var(--color-border); color: var(--color-text); font-family: var(--font-body); font-size: 0.9rem;
 }
 .carnet-more-row:first-child { border-top: 0; }
+/* Chaque ligne porte l'icône et la couleur de sa rubrique : un carnet, pas une liste de réglages. */
+.carnet-more-row > svg { width: 22px; height: 22px; flex-shrink: 0; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.carnet-more-row > span:not(.hub-chevron) { flex: 1; min-width: 0; }
 .carnet-more-row small { display: block; font-size: 0.76rem; color: var(--color-muted); margin-top: 0.1rem; }
 .carnet-more-row .hub-chevron { color: var(--color-muted); font-size: 1.2rem; }
 
@@ -1706,6 +1725,7 @@ input[type="date"], input[type="tel"] {
           </div>
           <button class="btn btn-ghost checkin-recap-edit" onclick="editTodayMood()" aria-label="Modifier mon humeur du jour">Modifier</button>
         </div>
+        <p class="recap-ack" id="recapAck"></p>
       </div>
     </div>
 
@@ -1736,7 +1756,7 @@ input[type="date"], input[type="tel"] {
       <div class="step active" id="step-1">
         <div class="step-num">1</div>
         <h2>La situation</h2>
-        <p class="mb-1">Décris objectivement ce qui s'est passé, sans interprétation.</p>
+        <p class="mb-1">Raconte ce qui s'est passé, comme une caméra l'aurait filmé : les faits, sans les interpréter.</p>
         <div class="form-group">
           <label class="form-label" for="situationField">Situation</label>
           <textarea id="situationField" rows="4" placeholder="Ex. : Mon ami n'a pas répondu à mon message depuis hier." oninput="saveJournalDraft()"></textarea>
@@ -1913,10 +1933,10 @@ input[type="date"], input[type="tel"] {
 
     <!-- RESPIRER : le cercle d'abord ; rythme et durée (mémorisés) derrière « Changer » -->
     <div id="calmRespirer">
-    <p class="calm-frame">Une compétence qui s'entraîne. Pendant une exposition, laisse-la de côté.</p>
+    <p class="calm-frame">Quelques minutes pour ralentir. Suis le cercle, à ton rythme.</p>
     <details class="onboarding-tip">
       <summary>À savoir</summary>
-      <div class="tip-body"><p>Respirer lentement aide à se réguler. Le but n'est pas de faire disparaître l'anxiété à tout prix : elle a le droit d'être là.</p></div>
+      <div class="tip-body"><p>Respirer lentement aide à se réguler, et ça s'entraîne. Le but n'est pas de faire disparaître l'anxiété à tout prix : elle a le droit d'être là.</p><p>Pendant une exposition, laisse la respiration de côté.</p></div>
     </details>
 
     <div class="breath-choice">
@@ -2839,7 +2859,17 @@ function logPractice(kind) {
   Haptics.medium();
   return practiceCounts(log)[kind] || 0;
 }
-// Petit bloc « +1 carreau » affiché à la fin d'un exercice.
+// Une phrase de fin par exercice, quand l'écran n'en dit pas déjà une (respiration, ancrage,
+// petit pas et inquiétudes ont la leur). Elle reconnaît le geste, jamais un résultat :
+// ni « tu vas mieux », ni anxiété qui baisse (l'exposition ne se juge pas là-dessus).
+const PRACTICE_DONE_LINES = {
+  journal: 'Tu as regardé cette pensée de plus près.',
+  experiences: 'Tu es allé·e vérifier dans les faits.',
+  exposition: "Tu y es allé·e. C'est ça qui compte.",
+  valeurs: 'Tu as pris un moment pour observer cette pensée.',
+};
+function practiceDoneLine(kind) { return PRACTICE_DONE_LINES[kind] || ''; }
+// Petit bloc affiché à la fin d'un exercice : la phrase de fin, puis « +1 carreau ».
 function renderTileReward(elId, kind, total) {
   const el = document.getElementById(elId);
   const ex = exerciseByKind(kind);
@@ -2849,9 +2879,12 @@ function renderTileReward(elId, kind, total) {
     const c = (exerciseByKind(p.k) || ex).color;
     return `<span class="${i === recent.length - 1 ? 'tile-new' : ''}" style="background:${c}"></span>`;
   }).join('');
-  el.innerHTML = `<div class="tile-reward-tiles" aria-hidden="true">${tiles}</div>
-    <div><div class="tile-reward-title">+1 carreau</div>
-    <div class="tile-reward-text">${escHtml(ex.title)} · ${total} séance${total > 1 ? 's' : ''}.</div></div>`;
+  const line = practiceDoneLine(kind);
+  const count = `${escHtml(ex.title)} · ${total} séance${total > 1 ? 's' : ''}.`;
+  // La grille ne réserve que les colonnes utiles (sinon un seul carreau flotte loin du texte).
+  el.innerHTML = `<div class="tile-reward-tiles" style="grid-template-columns:repeat(${Math.min(recent.length, 5)},16px)" aria-hidden="true">${tiles}</div>
+    <div><div class="tile-reward-title">${line ? escHtml(line) : '+1 carreau'}</div>
+    <div class="tile-reward-text">${line ? '+1 carreau · ' : ''}${count}</div></div>`;
   el.classList.add('visible');
 }
 
@@ -2983,7 +3016,7 @@ function takeView(screen, fallback) {
   return v;
 }
 const screenInitFns = {
-  home: () => { checkinResult = null; renderCheckinState(); renderPractice(); renderPlanCheckinCard(); renderDefi(); },
+  home: () => { checkinResult = null; setGreeting(); renderCheckinState(); renderPractice(); renderPlanCheckinCard(); renderDefi(); },
   exercices: renderExercisesHub,
   carnet: renderCarnet,
   suivi: () => { renderMosaic(); renderTracking(); },
@@ -3096,6 +3129,13 @@ function moodLabel(v) {
   if (v <= 7) return 'Plutôt bien';
   return 'Bien';
 }
+// Une phrase après l'enregistrement, selon le niveau seulement (jamais d'émotion déduite,
+// jamais de conseil ni de promesse) : on accuse réception, c'est tout.
+function moodAck(v) {
+  if (v <= 3) return "C'est noté. Pas besoin d'aller bien pour venir ici.";
+  if (v <= 6) return "C'est noté. Une journée en demi-teinte, ça arrive.";
+  return "C'est noté. Une bonne journée, ça se remarque aussi.";
+}
 function moodColor(v) { return MOOD_COLORS[Math.max(0, Math.min(10, Math.round(v)))]; }
 function paintMoodOrb(el, v) {
   if (!el) return;
@@ -3154,7 +3194,7 @@ function updateMoodOrb() {
   if (!moodSet) {
     document.getElementById('moodOrbNum').textContent = '–';
     document.getElementById('moodLabel').textContent = 'Ton humeur';
-    document.getElementById('moodDesc').textContent = 'Glisse le curseur pour la noter';
+    document.getElementById('moodDesc').textContent = 'Glisse le curseur. Il n\'y a pas de bonne réponse.';
     orb.style.background = '';
     orb.style.boxShadow = '';
     el.setAttribute('aria-valuetext', 'Pas encore notée');
@@ -3194,8 +3234,16 @@ function renderCheckinState() {
     const orb = document.getElementById('recapOrb');
     orb.textContent = today.mood;
     paintMoodOrb(orb, today.mood);
-    document.getElementById('recapMoodLabel').textContent = `${today.mood}/10 · ${moodLabel(today.mood)}`;
-    document.getElementById('recapTags').textContent = today.tags && today.tags.length ? today.tags.join(' · ') : '✓ Ajouté à ton suivi';
+    const recapLabel = document.getElementById('recapMoodLabel');
+    recapLabel.textContent = moodLabel(today.mood) + ' ';
+    const num = document.createElement('span');
+    num.className = 'recap-num';
+    num.textContent = `${today.mood}/10`;
+    recapLabel.append(num);
+    const tags = document.getElementById('recapTags');
+    tags.textContent = today.tags && today.tags.length ? today.tags.join(' · ') : '';
+    tags.hidden = !tags.textContent;
+    document.getElementById('recapAck').textContent = moodAck(today.mood);
     slider.hidden = true;
     recap.hidden = false;
   } else {
@@ -3221,9 +3269,11 @@ function editTodayMood() {
   renderMoodTags();
   updateMoodOrb();
 }
+// Un mot d'accueil avant la date : l'écran s'adresse à quelqu'un avant de lui demander une mesure.
+// « Bonsoir » dès 18 h et jusqu'à 5 h (« Bonne soirée » et « Bonne nuit » se disent en partant).
+function greetingFor(hour) { return hour >= 5 && hour < 18 ? 'Bonjour' : 'Bonsoir'; }
 function setGreeting() {
-  const d = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-  document.getElementById('timeLabel').textContent = d.charAt(0).toUpperCase() + d.slice(1);
+  document.getElementById('timeLabel').textContent = greetingFor(new Date().getHours());
 }
 
 // Micro-interventions pour une humeur haute (savouring / broaden-and-build / soi observateur /
@@ -3603,7 +3653,7 @@ function renderJournalHistory() {
   if (!list) return;
   const all = loadJournalEntries();
   if (!all.length) {
-    list.innerHTML = '<div class="card-empty"><p>Aucune pensée pour l\'instant.<br>Ton premier journal apparaîtra ici.</p></div>';
+    list.innerHTML = '<div class="card-empty"><p>Tes pensées équilibrées se garderont ici,<br>à relire quand tu veux.</p></div>';
     return;
   }
   list.innerHTML = all.map(e => {
@@ -3781,7 +3831,7 @@ function renderLadder() {
   const box = document.getElementById('ladderSteps');
   if (!box) return;
   if (!l.steps.length) {
-    box.innerHTML = '<div class="card-empty"><p>Ton échelle est vide.<br>Ajoute un premier palier facile ci-dessous.</p></div>';
+    box.innerHTML = '<div class="card-empty"><p>Ton échelle commence ici.<br>Ajoute un premier palier, le plus facile, ci-dessous.</p></div>';
     return;
   }
   box.innerHTML = l.steps.map((s, i) => {
@@ -4976,7 +5026,7 @@ function renderCards() {
   const cards = loadCards();
   const list = document.getElementById('cardsList');
   if (cards.length === 0) {
-    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Écris la tienne, ou pars d\'un modèle.</p></div>';
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Ta première carte se rangera ici.<br>Écris la tienne, ou pars d\'un modèle.</p></div>';
     return;
   }
   list.innerHTML = cards.map((c, i) => `
@@ -5456,7 +5506,7 @@ function renderDiary() {
   const entries = loadDiaryEntries();
   const list = document.getElementById('diaryList');
   if (entries.length === 0) {
-    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">📗</div><p>Pas encore d\'entrées.<br>Qu\'est-ce qui s\'est bien passé aujourd\'hui ?</p></div>';
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">📗</div><p>Tes bons moments se garderont ici.</p></div>';
     return;
   }
   list.innerHTML = entries.map((e, i) => `
@@ -5542,14 +5592,15 @@ function renderMosaic() {
   if (!grid) return;
   const log = loadPractice();
   const counts = practiceCounts(log);
-  document.getElementById('mosaicCount').innerHTML = `<strong>${log.length}</strong> carreau${log.length > 1 ? 'x' : ''}`;
+  // Pas de « 0 carreau » : un compteur à zéro se lit comme un manque.
+  document.getElementById('mosaicCount').innerHTML = log.length ? `<strong>${log.length}</strong> carreau${log.length > 1 ? 'x' : ''}` : '';
   grid.innerHTML = log.map((p, i) => {
     const ex = exerciseByKind(p.k);
     if (!ex) return '';
     return `<button class="mosaic-tile${mosaicSel === i ? ' sel' : ''}" style="background:${ex.color}" onclick="pickMosaicTile(${i})" aria-label="${escHtml(ex.title)}, ${formatDayShort(p.d)}"></button>`;
   }).join('') + `<button class="mosaic-tile next" onclick="pickMosaicTile(-1)" aria-label="Prochain carreau"></button>`;
   let caption;
-  if (!log.length) caption = 'Ta mosaïque est vide pour l\'instant. Termine un exercice : son carreau apparaîtra ici.';
+  if (!log.length) caption = 'Chaque exercice mené au bout pose un carreau ici. Aucun rythme à tenir, et rien ne s\'efface.';
   else if (mosaicSel === -1) caption = 'Le prochain carreau t\'attend, sans date limite.';
   else if (mosaicSel !== null && log[mosaicSel]) caption = `${exerciseByKind(log[mosaicSel].k).title} · ${formatDayShort(log[mosaicSel].d)}`;
   else caption = 'Touche un carreau pour revoir ce que tu as fait. Rien ne s\'efface.';
@@ -5598,7 +5649,7 @@ function renderTracking() {
   const entries = days.map(date => ({ date, mood: byDate[date] ?? null }));
   const filled = entries.filter(e => e.mood !== null);
   if (!filled.length) {
-    container.innerHTML = `<div class="track-empty"><p>Aucune humeur notée sur cette période.</p><button class="btn btn-primary empty-cta" onclick="navigateTo('home')">Noter mon humeur</button></div>`;
+    container.innerHTML = `<div class="track-empty"><p>Ta courbe se dessinera ici, au fil des jours où tu notes ton humeur.</p><button class="btn btn-primary empty-cta" onclick="navigateTo('home')">Noter mon humeur</button></div>`;
     insight.textContent = '';
     return;
   }
@@ -5688,8 +5739,8 @@ function renderCarnet() {
       <span class="carnet-tile-label">${t.label}</span>
     </button>`).join('');
   // Ce qui est encore vide ne prend pas une case : une simple ligne pour commencer.
-  const more = s.starters.map(t => `<button class="carnet-more-row" onclick="navigateTo('${t.screen}')"><span>${t.start}</span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
-  if (!s.planProminent) more.push(`<button class="carnet-more-row" onclick="navigateTo('plan')"><span>Mon plan anti-rechute <small>à préparer avec ton psy, en fin de thérapie</small></span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
+  const more = s.starters.map(t => `<button class="carnet-more-row" onclick="navigateTo('${t.screen}')"><svg viewBox="0 0 24 24" style="stroke:${t.color}" aria-hidden="true"><path d="${t.icon}"/></svg><span>${t.start}</span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
+  if (!s.planProminent) more.push(`<button class="carnet-more-row" onclick="navigateTo('plan')"><svg viewBox="0 0 24 24" style="stroke:var(--color-muted)" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/></svg><span>Mon plan anti-rechute <small>à préparer avec ton psy, en fin de thérapie</small></span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
   document.getElementById('carnetMore').innerHTML = more.join('');
 }
 // Ce que le carnet affiche. Fonction pure (testée) : une rubrique vide n'occupe pas de case ;
@@ -5854,7 +5905,7 @@ function renderTaches() {
         <button class="task-del" onclick="deleteTask(${t.id})" aria-label="Supprimer cette tâche">×</button>
       </span>
     </div>`;
-  }).join('') : `<div class="card-empty"><p>${done ? 'Aucun engagement pour l\'instant.' : 'Aucune tâche pour l\'instant.<br>Ajoute ce que ton psy t\'a proposé en séance.'}</p></div>`;
+  }).join('') : `<div class="card-empty"><p>${done ? 'Rien de prévu pour l\'instant.' : 'Rien de prévu pour l\'instant.<br>Ajoute ce que ton psy t\'a proposé en séance.'}</p></div>`;
   const r = weekRecap();
   document.getElementById('recapTitle').textContent = done ? 'Tes 7 derniers jours' : 'Pour ta prochaine séance';
   document.getElementById('recapStats').innerHTML = `
@@ -6254,7 +6305,7 @@ function renderExperiments() {
   const list = document.getElementById('expList');
   const exps = loadExperiments();
   if (!exps.length) {
-    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🔬</div><p>Aucune expérience pour l\'instant.<br>Choisis une croyance anxieuse à mettre à l\'épreuve.</p></div>';
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🔬</div><p>Ta première expérience se préparera ici.<br>Choisis une croyance anxieuse à mettre à l\'épreuve.</p></div>';
     return;
   }
   list.innerHTML = exps.map(e => {

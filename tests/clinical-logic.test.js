@@ -4,7 +4,7 @@
 // (Store.hydrate, plugins Capacitor...) puisque seules les déclarations pures nous
 // intéressent ici. Couvre la « pratique du jour » (pickDailyPractice), le point où une
 // régression silencieuse enverrait quelqu'un vers le mauvais exercice en pleine détresse,
-// plus l'échelle d'humeur, les niveaux de la mosaïque et la boussole des valeurs.
+// plus l'échelle d'humeur, « Mes exercices », le carnet et la boussole des valeurs.
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
@@ -92,8 +92,9 @@ const SHIM = `
   planCheckinMessage: planCheckinMessage,
   EXERCISES: EXERCISES,
   PRACTICE_KINDS: PRACTICE_KINDS,
-  levelFor: levelFor,
-  nextLevelGap: nextLevelGap,
+  splitExercises: splitExercises,
+  defiVisible: defiVisible,
+  carnetSections: carnetSections,
   defiOptions: defiOptions,
   quizData: quizData,
   schemaLabels: schemaLabels,
@@ -172,6 +173,7 @@ test('pratique du jour : détresse forte → d\'abord apaiser le corps (jamais l
 
 test('pratique du jour : routage par ce qui domine (humeur moyenne)', () => {
   assert.strictEqual(P({ mood: 5, tags: ['Rumination'] }).kind, 'valeurs');
+  assert.strictEqual(P({ mood: 5, tags: ['Rumination'] }).view, 'recul', 'rumination → onglet « Prendre du recul », pas la boussole');
   assert.strictEqual(P({ mood: 5, tags: ['Stress'] }).kind, 'respirer');
   assert.strictEqual(P({ mood: 5, tags: ['Fatigue'] }).kind, 'petitpas');
   assert.strictEqual(P({ mood: 5, tags: [] }).kind, 'journal');
@@ -194,7 +196,7 @@ test('pratique du jour : chaque proposition pointe vers un écran réel', () => 
   }
 });
 
-// ── Exercices, mosaïque, niveaux ──
+// ── Exercices, « Mes exercices », défi, carnet ──
 
 test('EXERCISES : 7 outils, clés uniques, écrans réels rattachés à l\'onglet Exercices', () => {
   assert.strictEqual(C.EXERCISES.length, 7);
@@ -209,15 +211,49 @@ test('EXERCISES : 7 outils, clés uniques, écrans réels rattachés à l\'ongle
   }
 });
 
-test('niveaux : découverte dès 1, pratique à 5, autonomie à 15 ; écart au niveau suivant', () => {
-  assert.strictEqual(C.levelFor(0).bars, 0);
-  assert.strictEqual(C.levelFor(1).label, 'Découverte');
-  assert.strictEqual(C.levelFor(4).label, 'Découverte');
-  assert.strictEqual(C.levelFor(5).label, 'Pratique');
-  assert.strictEqual(C.levelFor(15).label, 'Autonomie');
-  assert.strictEqual(C.levelFor(400).label, 'Autonomie');
-  assert.deepStrictEqual({ ...C.nextLevelGap(10) }, { label: 'Autonomie', left: 5 });
-  assert.strictEqual(C.nextLevelGap(15), null);
+test('mes exercices : rien de choisi ni de proposé → aucun tri (le hub affiche les sept à plat)', () => {
+  const r = C.splitExercises({});
+  assert.strictEqual(r.mine.length, 0);
+  assert.strictEqual(r.others.length, 7);
+});
+
+test('mes exercices : tâches du psy en cours d\'abord, puis ceux choisis ; le reste en « Autres outils »', () => {
+  const r = C.splitExercises({
+    focus: ['journal', 'respirer'],
+    tasks: [{ kind: 'exposition', count: 0, target: 2 }, { kind: 'petitpas', count: 1, target: 1 }, { kind: 'autre', count: 0, target: 1 }],
+  });
+  assert.deepStrictEqual([...r.mine.map(e => e.kind)], ['exposition', 'respirer', 'journal']); // tâche finie et « Autre » ignorées
+  assert.deepStrictEqual([...r.fromPsy], ['exposition', 'autre']);
+  assert.strictEqual(r.mine.length + r.others.length, 7, 'aucun exercice perdu ni dupliqué');
+  assert.ok(!r.others.some(e => r.mine.includes(e)));
+});
+
+test('mes exercices : un exercice à la fois choisi et proposé par le psy n\'apparaît qu\'une fois', () => {
+  const r = C.splitExercises({ focus: ['journal'], tasks: [{ kind: 'journal', count: 0, target: 3 }] });
+  assert.deepStrictEqual([...r.mine.map(e => e.kind)], ['journal']);
+});
+
+test('défi du jour : seulement après un exercice fait aujourd\'hui, ou s\'il a déjà été relevé', () => {
+  const today = '2026-11-11';
+  assert.strictEqual(C.defiVisible({ practice: [], today }), false);
+  assert.strictEqual(C.defiVisible({ practice: [{ d: '2026-11-10', k: 'journal' }], today }), false, 'exercice de la veille');
+  assert.strictEqual(C.defiVisible({ practice: [{ d: today, k: 'defi' }], today }), false, 'un défi ne compte pas comme exercice');
+  assert.strictEqual(C.defiVisible({ practice: [{ d: today, k: 'respirer' }], today }), true);
+  assert.strictEqual(C.defiVisible({ practice: [], saved: { date: today, answer: 'filtre' }, today }), true, 'le retour reste visible');
+  assert.strictEqual(C.defiVisible({ practice: [], saved: { date: '2026-11-10', answer: 'filtre' }, today }), false);
+});
+
+test('carnet : une rubrique vide n\'occupe pas de case ; le plan n\'est en avant qu\'après la thérapie ou s\'il est commencé', () => {
+  const empty = C.carnetSections({});
+  assert.strictEqual(empty.tiles.length, 0);
+  assert.deepStrictEqual([...empty.starters.map(t => t.screen)], ['cards', 'diary'], 'seules les rubriques qu\'on remplit sur place gardent une ligne');
+  assert.strictEqual(empty.planProminent, false);
+  assert.strictEqual(C.carnetSections({ therapyDone: true }).planProminent, true);
+  assert.strictEqual(C.carnetSections({ planFilled: 1 }).planProminent, true);
+  const some = C.carnetSections({ counts: { cards: 2, jhistory: 1 } });
+  assert.deepStrictEqual([...some.tiles.map(t => t.screen)], ['cards', 'jhistory']);
+  assert.deepStrictEqual([...some.starters.map(t => t.screen)], ['diary']);
+  for (const t of [...empty.starters, ...some.tiles]) assert.ok(C.screenMap[t.screen], `écran ${t.screen} inconnu`);
 });
 
 test('défi du jour : 3 réponses distinctes dont la bonne, pour chaque pensée', () => {

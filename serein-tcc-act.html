@@ -431,8 +431,8 @@ p { color: var(--color-muted); line-height: 1.6; font-size: 0.9rem; }
 .emotion-btn:hover { border-color: var(--color-primary); background: var(--color-primary-light); }
 .emotion-btn.selected { border-color: var(--color-primary); background: var(--color-primary-light); }
 .emotion-btn .emoji { font-size: 2rem; display: block; margin-bottom: 0.4rem; }
-.emotion-btn .label { font-family: var(--font-title); font-weight: 600; font-size: 0.9rem; color: var(--color-text); }
-.emotion-btn .desc { font-size: 0.72rem; color: var(--color-muted); margin-top: 0.2rem; }
+.emotion-btn .label { display: block; font-family: var(--font-title); font-weight: 600; font-size: 0.9rem; color: var(--color-text); }
+.emotion-btn .desc { display: block; font-size: 0.72rem; color: var(--color-muted); margin-top: 0.2rem; }
 .emotion-btn.selected .label { color: var(--color-primary); }
 
 /* ─── SUGGESTION CARD ─── */
@@ -556,7 +556,9 @@ textarea::placeholder, input[type="text"]::placeholder { color: var(--color-mute
   font-family: var(--font-body); transition: all var(--transition); flex-shrink: 0;
 }
 .coping-cat-chip.active { background: var(--color-primary-light); border-color: var(--color-primary); color: var(--color-primary); font-weight: 600; }
-.coping-mechanism { font-size: 0.78rem; color: var(--color-muted); font-style: italic; line-height: 1.45; margin-bottom: 0.75rem; }
+.coping-mechanism { font-size: 0.8rem; color: var(--color-muted); line-height: 1.45; margin-bottom: 0.75rem; }
+.coping-models { margin-top: 1rem; }
+.coping-models[open] { padding-bottom: 0.5rem; }
 .coping-deck { display: flex; gap: 0.625rem; overflow-x: auto; padding-bottom: 0.5rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
 .coping-deck::-webkit-scrollbar { display: none; }
 .coping-preset-card {
@@ -1059,6 +1061,7 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   border-radius: var(--radius-sm); padding: 0.75rem 1rem;
   font-size: 0.82rem; color: var(--color-text); line-height: 1.5; margin: 0.5rem 0 0.75rem;
 }
+.onboarding-tip .data-note { background: none; border: 0; padding: 0; margin: 0.5rem 0 0; }
 .data-note:empty { display: none; } /* widgetHowToNote est vide avant renderWidgetInstructions() */
 .btn-wipe {
   width: 100%; padding: 0.7rem 1rem; border-radius: var(--radius-sm);
@@ -1245,10 +1248,35 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
   background: var(--c); color: var(--ink);
 }
 .ex-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.ex-level { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; font-size: 0.74rem; color: var(--color-muted); }
+.ex-level { display: block; margin-top: 0.4rem; font-size: 0.74rem; color: var(--color-muted); }
 .ex-psy { display: block; margin-top: 0.35rem; font-size: 0.74rem; color: var(--color-primary); font-weight: 600; }
-.ex-bars { display: flex; gap: 3px; }
-.ex-bars span { width: 16px; height: 4px; border-radius: 2px; }
+/* Hub : « Mes exercices » en tête, le reste replié */
+.link-btn {
+  background: none; border: 0; padding: 0 0.25rem; min-height: 44px; cursor: pointer;
+  color: var(--color-primary); font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+}
+.hub-section-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.hub-section-head .section-title { margin: 0; }
+.hub-choose { display: block; margin: -0.5rem 0 0.4rem; }
+.focus-edit {
+  display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 0.9rem; padding: 1rem;
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius);
+}
+.focus-edit .form-label { margin: 0; }
+.hub-others { margin-top: 1.1rem; }
+.hub-others summary {
+  display: flex; align-items: center; gap: 0.5rem; min-height: 44px; cursor: pointer; list-style: none;
+  color: var(--color-muted); font-size: 0.85rem; font-weight: 600;
+}
+.hub-others summary::-webkit-details-marker { display: none; }
+.hub-others summary span { font-weight: 400; opacity: 0.8; }
+.hub-others summary::after { content: '›'; margin-left: auto; font-size: 1.2rem; line-height: 1; transition: transform var(--transition); }
+.hub-others[open] summary::after { transform: rotate(90deg); }
+.hub-others .hub-list { margin-top: 0.4rem; }
+/* Premier lancement, étape 2 */
+.ob-chips { margin-bottom: 1.1rem; }
+.ob-hint { font-size: 0.82rem; color: var(--color-muted); margin: -0.5rem 0 1.1rem; }
+.btn.ob-skip { margin-top: 0.5rem; width: 100%; }
 
 /* Puces (humeur, défi, tâches, plan) */
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
@@ -1309,7 +1337,13 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .practice-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
 .practice-text strong { font-family: var(--font-title); font-size: 1rem; font-weight: 600; }
 .practice-text span { font-size: 0.82rem; color: var(--color-muted); line-height: 1.35; }
-.btn.practice-go { flex-shrink: 0; min-height: 44px; padding: 0 1rem; background: var(--color-primary); color: var(--on-primary); font-size: 0.88rem; }
+.btn.practice-go { width: 100%; margin-top: 0.2rem; }
+.practice-add { align-self: center; min-height: 36px; font-size: 0.8rem; font-weight: 500; }
+/* Humeur pas encore notée : pastille neutre, pas de valeur affichée */
+.mood-orb.unset { background: var(--color-border-strong); box-shadow: none; color: var(--color-muted); }
+.mood-orb.unset small { display: none; }
+#moodMore { margin-top: 0.9rem; }
+.mood-card .slider-ends { margin-bottom: 0; }
 .checkin-q { font-family: var(--font-title); font-size: 1rem; font-weight: 600; line-height: 1.35; }
 .checkin-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .checkin-actions .btn { flex: 1; min-height: 44px; }
@@ -1362,8 +1396,15 @@ input[type="date"] { width: 100%; padding: 0.7rem 0.875rem; border: 1px solid va
 .carnet-tile svg { width: 22px; height: 22px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .carnet-tile-n { font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; line-height: 1; }
 .carnet-tile-label { font-size: 0.8rem; color: var(--color-muted); }
-.carnet-tile-label.strong { color: var(--color-text); font-weight: 600; font-size: 0.88rem; }
-.carnet-tile-empty { font-size: 0.76rem; color: var(--color-primary); }
+.carnet-more { display: flex; flex-direction: column; margin-top: 0.5rem; }
+.carnet-more-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%; min-height: 48px;
+  padding: 0.5rem 0.25rem; text-align: left; cursor: pointer; background: none; border: 0;
+  border-top: 1px solid var(--color-border); color: var(--color-text); font-family: var(--font-body); font-size: 0.9rem;
+}
+.carnet-more-row:first-child { border-top: 0; }
+.carnet-more-row small { display: block; font-size: 0.76rem; color: var(--color-muted); margin-top: 0.1rem; }
+.carnet-more-row .hub-chevron { color: var(--color-muted); font-size: 1.2rem; }
 
 /* ─── Mon suivi ─── */
 .mosaic-card, .mood-chart-card { margin-bottom: 0.9rem; display: flex; flex-direction: column; gap: 0.8rem; }
@@ -1464,7 +1505,14 @@ input[type="date"], input[type="tel"] {
 .quote-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary-2); margin-bottom: 0.4rem; }
 .quote-text { font-size: 0.98rem; line-height: 1.45; font-style: italic; color: var(--color-text); }
 
-.calm-frame { font-size: 0.82rem; line-height: 1.5; margin: 0.4rem 0 0.9rem; }
+.calm-frame { font-size: 0.82rem; line-height: 1.5; margin: 0.4rem 0 0.2rem; }
+/* Écrans à deux exercices : onglets en tête, un seul visible */
+.view-tabs { margin: 0.25rem 0 1rem; }
+.view-tabs .seg-btn { min-height: 44px; }
+.breath-choice { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.1rem 0.5rem; margin-top: 0.75rem; font-size: 0.85rem; color: var(--color-muted); text-align: center; }
+.breath-choice strong { color: var(--color-text); font-weight: 600; }
+.breath-options { margin-top: 0.4rem; padding: 0.9rem 0.9rem 0.5rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); }
+.breath-options .breath-tech-tabs { margin: 0 0 0.9rem; justify-content: center; }
 .crisis-emergency { margin-top: 0.6rem; font-size: 0.82rem; color: var(--color-muted); text-align: center; }
 .crisis-emergency a { color: var(--color-text); font-weight: 700; }
 .rerate-title { font-family: var(--font-title); font-weight: 600; font-size: 0.95rem; text-align: center; margin-bottom: 0.75rem; }
@@ -1509,9 +1557,11 @@ input[type="date"], input[type="tel"] {
 </head>
 <body>
 
-<!-- ─── PREMIER LANCEMENT : un seul écran (orientation + avertissement + 3114) ─── -->
+<!-- ─── PREMIER LANCEMENT : 1) orientation + avertissement + 3114, 2) où tu en es et
+     sur quoi tu travailles (remplit « Mes exercices », rien d'obligatoire) ─── -->
 <div class="modal-overlay" id="onboardingModal" role="dialog" aria-modal="true" aria-labelledby="obTitle">
   <div class="modal-box onboarding-box">
+   <div id="obStep1">
     <div class="ob-mosaic" aria-hidden="true">
       <span style="background:#93c9ac"></span><span style="background:#d8b78a"></span><span style="background:#8fb3d9"></span>
       <span class="next"></span><span style="background:#c9d68a"></span><span style="background:#93c9ac"></span>
@@ -1526,8 +1576,19 @@ input[type="date"], input[type="tel"] {
     <div class="modal-disclaimer">
       Cette app <strong>ne remplace pas</strong> un suivi. En cas de détresse : <a href="tel:3114">3114</a>, gratuit, 24h/24. Trouver un psy : <a href="https://monsoutienpsy.ameli.fr/recherche-psychologue" target="_blank" rel="noopener">monsoutienpsy.ameli.fr</a>
     </div>
-    <button class="btn btn-primary" id="obNextBtn" onclick="finishOnboarding()">C'est parti</button>
+    <button class="btn btn-primary" id="obNextBtn" onclick="onboardingNext()">Continuer</button>
     <p class="ob-privacy">Tes données restent sur ton téléphone.</p>
+   </div>
+   <div id="obStep2" hidden>
+    <h2 tabindex="-1" id="obTitle2">Pour <span class="accent">commencer</span></h2>
+    <div class="form-label" id="obStageLabel">Où en es-tu ?</div>
+    <div class="chip-row ob-chips" id="obStageChips" role="group" aria-labelledby="obStageLabel"></div>
+    <div class="form-label" id="obFocusLabel">Sur quoi tu travailles avec ton psy ?</div>
+    <div class="chip-row ob-chips" id="obFocusChips" role="group" aria-labelledby="obFocusLabel"></div>
+    <p class="ob-hint">Ces exercices passeront en premier. Tu pourras changer à tout moment.</p>
+    <button class="btn btn-primary" onclick="finishOnboarding()">C'est parti</button>
+    <button class="btn btn-ghost ob-skip" onclick="finishOnboarding(true)">Je ne sais pas encore</button>
+   </div>
   </div>
 </div>
 
@@ -1618,18 +1679,22 @@ input[type="date"], input[type="tel"] {
 
     <div class="mood-card" id="checkin-card">
       <div id="checkinSliderMode">
+        <!-- Aucune humeur pré-remplie (anti-ancrage, comme la croyance du journal) : « – » tant que
+             le curseur n'est pas touché. Les étiquettes et « Enregistrer » n'arrivent qu'ensuite. -->
         <div class="mood-head" aria-live="polite">
-          <div class="mood-orb" id="moodOrb" aria-hidden="true"><span id="moodOrbNum">5</span><small>/10</small></div>
+          <div class="mood-orb unset" id="moodOrb" aria-hidden="true"><span id="moodOrbNum">–</span><small>/10</small></div>
           <div>
-            <div class="mood-label" id="moodLabel">Mitigé</div>
-            <div class="mood-desc">Glisse pour ajuster</div>
+            <div class="mood-label" id="moodLabel">Ton humeur</div>
+            <div class="mood-desc" id="moodDesc">Glisse le curseur pour la noter</div>
           </div>
         </div>
-        <input type="range" id="slider-mood" class="mood-range" min="0" max="10" step="1" value="5" oninput="onMoodSliderInput()" aria-label="Ton humeur, de 0 (difficile) à 10 (bien)">
+        <input type="range" id="slider-mood" class="mood-range" min="0" max="10" step="1" value="5" oninput="onMoodSliderInput()" onclick="onMoodSliderInput()" aria-label="Ton humeur, de 0 (difficile) à 10 (bien)">
         <div class="slider-ends"><span>Difficile</span><span>Bien</span></div>
-        <div class="mood-tags-label">Ce qui domine <span>(optionnel)</span></div>
-        <div class="chip-row" id="moodTags" role="group" aria-label="Ce qui domine"></div>
-        <button class="btn btn-primary" onclick="confirmMood()">Enregistrer</button>
+        <div id="moodMore" hidden>
+          <div class="mood-tags-label">Ce qui domine <span>(optionnel)</span></div>
+          <div class="chip-row" id="moodTags" role="group" aria-label="Ce qui domine"></div>
+          <button class="btn btn-primary" onclick="confirmMood()">Enregistrer</button>
+        </div>
       </div>
       <div id="checkinRecapMode" hidden>
         <div class="checkin-recap-row">
@@ -1654,8 +1719,7 @@ input[type="date"], input[type="tel"] {
   <!-- ═══ EXERCICE : JOURNAL DE PENSÉES (7 étapes) ═══ -->
   <div class="screen" id="screen-journal" role="main" aria-label="Journal de pensées">
     <div class="greeting-block">
-      <div class="time-label">Journal de pensées</div>
-      <h1>Regarde ta pensée <span>de plus près</span></h1>
+      <h1>Journal <span>de pensées</span></h1>
     </div>
 
     <div id="journalFlow">
@@ -1836,30 +1900,34 @@ input[type="date"], input[type="tel"] {
   </div>
 
   <!-- ═══ SCREEN 4 : CALME ═══ -->
-  <div class="screen" id="screen-calm" role="main" aria-label="Espace calme - respiration et ancrage">
+  <div class="screen" id="screen-calm" role="main" aria-label="Respirer et s'ancrer">
     <div class="greeting-block">
-      <div class="time-label">Espace calme</div>
-      <h1>Reviens au <span>présent</span></h1>
+      <h1>Respirer <span>&amp; s'ancrer</span></h1>
     </div>
 
-    <!-- BREATHING -->
-    <h2 class="mb-1">🌬️ Respiration guidée</h2>
-    <p>Choisis une technique. Appuie sur le cercle pour commencer.</p>
-    <p class="calm-frame">Respirer lentement aide à se réguler, et ça s'entraîne. Le but n'est pas de faire disparaître l'anxiété à tout prix : elle a le droit d'être là. Pendant une exposition, laisse ces exercices de côté.</p>
-
-    <div class="breath-tech-tabs" role="group" aria-label="Technique de respiration">
-      <button class="breath-tab active" onclick="selectBreathTech('coherence', this)" aria-pressed="true">Cohérence 5-5</button>
-      <button class="breath-tab" onclick="selectBreathTech('box', this)" aria-pressed="false">Boîte 4-4-4-4</button>
-      <button class="breath-tab" onclick="selectBreathTech('478', this)" aria-pressed="false">4-7-8</button>
+    <!-- Deux exercices, un seul visible à la fois -->
+    <div class="seg-control view-tabs" role="group" aria-label="Choisir l'exercice">
+      <button class="seg-btn active" id="calmTab-respirer" onclick="setCalmView('respirer')" aria-pressed="true">Respirer</button>
+      <button class="seg-btn" id="calmTab-ancrage" onclick="setCalmView('ancrage')" aria-pressed="false">S'ancrer</button>
     </div>
 
-    <div class="breath-dur-label">Durée de la séance</div>
-    <div class="breath-dur-tabs" role="group" aria-label="Durée de la séance">
-      <button class="breath-dur active" onclick="selectBreathDuration(0, this)" aria-pressed="true">Libre</button>
-      <button class="breath-dur" onclick="selectBreathDuration(180, this)" aria-pressed="false">3 min</button>
-      <button class="breath-dur" onclick="selectBreathDuration(300, this)" aria-pressed="false">5 min</button>
-      <button class="breath-dur" onclick="selectBreathDuration(600, this)" aria-pressed="false">10 min</button>
-      <button class="breath-dur" onclick="selectBreathDuration(900, this)" aria-pressed="false">15 min</button>
+    <!-- RESPIRER : le cercle d'abord ; rythme et durée (mémorisés) derrière « Changer » -->
+    <div id="calmRespirer">
+    <p class="calm-frame">Une compétence qui s'entraîne. Pendant une exposition, laisse-la de côté.</p>
+    <details class="onboarding-tip">
+      <summary>À savoir</summary>
+      <div class="tip-body"><p>Respirer lentement aide à se réguler. Le but n'est pas de faire disparaître l'anxiété à tout prix : elle a le droit d'être là.</p></div>
+    </details>
+
+    <div class="breath-choice">
+      <span id="breathSummary" aria-live="polite"></span>
+      <button class="link-btn" id="breathChangeBtn" onclick="toggleBreathOptions()" aria-expanded="false" aria-controls="breathOptions">Changer</button>
+    </div>
+    <div class="breath-options" id="breathOptions" hidden>
+      <div class="breath-dur-label">Rythme</div>
+      <div class="breath-tech-tabs" id="breathTechTabs" role="group" aria-label="Rythme de respiration"></div>
+      <div class="breath-dur-label">Durée de la séance</div>
+      <div class="breath-dur-tabs" id="breathDurTabs" role="group" aria-label="Durée de la séance"></div>
     </div>
 
     <div class="breath-circle-container">
@@ -1882,12 +1950,12 @@ input[type="date"], input[type="tel"] {
       <div class="breath-info" id="breathInfo" aria-live="polite"></div>
     </div>
 
-    <button class="btn btn-secondary mt-1" id="breathBtn" onclick="toggleBreathing()" aria-label="Démarrer la respiration guidée">▶ Commencer</button>
+    <!-- Le cercle démarre la séance ; ce bouton n'apparaît que pour l'arrêter ou la relancer. -->
+    <button class="btn btn-secondary mt-1" id="breathBtn" onclick="toggleBreathing()" hidden aria-label="Arrêter la respiration guidée">⏹ Arrêter</button>
+    </div>
 
-    <div class="divider"></div>
-
-    <!-- GROUNDING -->
-    <h2 class="mb-1">🌍 Ancrage 5-4-3-2-1</h2>
+    <!-- S'ANCRER (5-4-3-2-1) -->
+    <div id="calmAncrage" hidden>
     <p>Pour revenir au moment présent quand les pensées s'emballent. Un sens à la fois.</p>
 
     <div class="grounding-progress" id="groundingProgress" aria-label="Progression de l'ancrage" role="progressbar" aria-valuenow="0" aria-valuemax="5">
@@ -1975,13 +2043,13 @@ input[type="date"], input[type="tel"] {
       <div class="tile-reward" id="groundingReward"></div>
       <button class="btn btn-secondary mt-2" onclick="resetGrounding()" aria-label="Recommencer l'ancrage">Recommencer</button>
     </div>
+    </div>
   </div>
 
   <!-- ═══ EXERCICE : EXPOSITION (échelle personnelle, persistée) ═══ -->
   <div class="screen" id="screen-ladder" role="main" aria-label="Exposition">
     <div class="greeting-block">
-      <div class="time-label">Exposition</div>
-      <h1>Avance à ton <span>rythme</span></h1>
+      <h1>Exposition</h1>
     </div>
 
     <p>Construis ton échelle, du palier le plus facile au plus difficile, puis monte une marche à la fois. Idéalement avec ton psy.</p>
@@ -2025,24 +2093,11 @@ input[type="date"], input[type="tel"] {
   <!-- ═══ SCREEN : COPING CARDS ═══ -->
   <div class="screen" id="screen-cards" role="main" aria-label="Cartes de coping">
     <div class="greeting-block">
-      <div class="time-label">Cartes de coping</div>
-      <h1>Tes <span>reformulations</span></h1>
+      <h1>Cartes <span>de coping</span></h1>
     </div>
-    <p>Des phrases d'ancrage à relire quand une pensée difficile surgit. Inspire-toi des modèles, puis crée les tiennes.</p>
+    <p class="hub-intro">Des phrases à relire quand une pensée difficile surgit.</p>
 
-    <div class="section-title mt-2">Modèles par thème</div>
-    <div class="coping-cat-chips" id="copingCatChips" role="group" aria-label="Thèmes de cartes de coping"></div>
-    <div class="coping-mechanism" id="copingMechanism" aria-live="polite"></div>
-    <div class="coping-deck" id="copingDeck" role="list" aria-label="Cartes modèles"></div>
-
-    <div class="divider"></div>
-
-    <div class="widget-tip" id="widgetTip" hidden role="note">
-      <span>💡 Affiche une de tes cartes directement sur ton écran d'accueil grâce à un widget. <a onclick="navigateTo('reglages')" aria-label="Voir comment ajouter le widget dans Réglages">Comment faire →</a></span>
-      <button onclick="dismissWidgetTip()" aria-label="Fermer cette astuce">×</button>
-    </div>
-
-    <div class="section-title">Mes cartes</div>
+    <!-- Mes cartes d'abord ; les modèles sont derrière « S'inspirer d'un modèle ». -->
     <div class="cards-list" id="cardsList"></div>
 
     <button class="btn btn-secondary mt-2" id="cardAddBtn" onclick="toggleCardForm()" aria-label="Ajouter une carte de coping">+ Nouvelle carte</button>
@@ -2061,12 +2116,23 @@ input[type="date"], input[type="tel"] {
         <button class="btn btn-primary" id="cardSaveBtn" onclick="saveCard()" aria-label="Enregistrer la carte">Enregistrer</button>
       </div>
     </div>
+
+    <details class="onboarding-tip coping-models" id="copingModels">
+      <summary>S'inspirer d'un modèle</summary>
+      <div class="coping-cat-chips mt-1" id="copingCatChips" role="group" aria-label="Thèmes de cartes de coping"></div>
+      <div class="coping-mechanism" id="copingMechanism" aria-live="polite"></div>
+      <div class="coping-deck" id="copingDeck" role="list" aria-label="Cartes modèles"></div>
+    </details>
+
+    <div class="widget-tip" id="widgetTip" hidden role="note">
+      <span>💡 Affiche une de tes cartes directement sur ton écran d'accueil grâce à un widget. <a onclick="navigateTo('reglages')" aria-label="Voir comment ajouter le widget dans Réglages">Comment faire →</a></span>
+      <button onclick="dismissWidgetTip()" aria-label="Fermer cette astuce">×</button>
+    </div>
   </div>
 
   <!-- ═══ SCREEN : POSITIVE DIARY ═══ -->
-  <div class="screen" id="screen-diary" role="main" aria-label="Journal positif">
+  <div class="screen" id="screen-diary" role="main" aria-label="Ce qui va bien">
     <div class="greeting-block">
-      <div class="time-label">Mon carnet</div>
       <h1>Ce qui va <span>bien</span></h1>
     </div>
     <p>Un espace pour ce qui va bien, même petit. Pour contrebalancer le filtre mental négatif.</p>
@@ -2084,10 +2150,9 @@ input[type="date"], input[type="tel"] {
   </div>
 
   <!-- ═══ SCREEN : HISTORIQUE DU JOURNAL ═══ -->
-  <div class="screen" id="screen-jhistory" role="main" aria-label="Historique du journal">
+  <div class="screen" id="screen-jhistory" role="main" aria-label="Pensées équilibrées">
     <div class="greeting-block">
-      <div class="time-label">Journal de pensées</div>
-      <h1>Mes pensées <span>équilibrées</span></h1>
+      <h1>Pensées <span>équilibrées</span></h1>
     </div>
     <p>Relis-les pour les ancrer. Tu peux en faire des cartes de coping.</p>
 
@@ -2097,10 +2162,9 @@ input[type="date"], input[type="tel"] {
   </div>
 
   <!-- ═══ SCREEN : EXPÉRIENCES COMPORTEMENTALES ═══ -->
-  <div class="screen" id="screen-experiments" role="main" aria-label="Expériences comportementales">
+  <div class="screen" id="screen-experiments" role="main" aria-label="Expériences">
     <div class="greeting-block">
-      <div class="time-label">Expériences</div>
-      <h1>Expériences <span>comportementales</span></h1>
+      <h1>Expériences</h1>
     </div>
     <p>Une croyance anxieuse est une hypothèse, pas un fait. Conçois une petite expérience pour la mettre à l'épreuve du réel.</p>
 
@@ -2157,8 +2221,7 @@ input[type="date"], input[type="tel"] {
   <!-- ═══ ÉCRAN : UN PETIT PAS (activation douce, basse énergie) ═══ -->
   <div class="screen" id="screen-microstep" role="main" aria-label="Un petit pas">
     <div class="greeting-block">
-      <div class="time-label">Activation douce</div>
-      <h1>Juste <span>un petit pas</span></h1>
+      <h1>Un <span>petit pas</span></h1>
     </div>
     <p class="ms-intro">Pas besoin d'élan ni de motivation. Une seule petite chose, maintenant. L'action vient avant l'envie - pas l'inverse.</p>
 
@@ -2202,8 +2265,7 @@ input[type="date"], input[type="tel"] {
        réassurance. L'exposition en imagination reste avec le psy. -->
   <div class="screen" id="screen-worry" role="main" aria-label="Mes inquiétudes">
     <div class="greeting-block">
-      <div class="time-label">Mes inquiétudes</div>
-      <h1>Noter, <span>reporter</span>, trier</h1>
+      <h1>Mes <span>inquiétudes</span></h1>
     </div>
 
     <div id="worryHome">
@@ -2294,25 +2356,31 @@ input[type="date"], input[type="tel"] {
   </div>
 
   <!-- ═══ SCREEN : BOUSSOLE DES VALEURS (ACT) ═══ -->
-  <div class="screen" id="screen-valeurs" role="main" aria-label="Boussole des valeurs">
+  <div class="screen" id="screen-valeurs" role="main" aria-label="Valeurs et recul">
     <div class="greeting-block">
-      <div class="time-label">Valeurs &amp; défusion</div>
-      <h1>Ta <span>boussole</span> intérieure</h1>
+      <h1>Valeurs <span>&amp; recul</span></h1>
     </div>
 
+    <!-- Deux exercices, un seul visible à la fois -->
+    <div class="seg-control view-tabs" role="group" aria-label="Choisir l'exercice">
+      <button class="seg-btn active" id="valTab-valeurs" onclick="setValTab('valeurs')" aria-pressed="true">Mes valeurs</button>
+      <button class="seg-btn" id="valTab-recul" onclick="setValTab('recul')" aria-pressed="false">Prendre du recul</button>
+    </div>
+
+    <div id="valViewValeurs">
     <!-- Vue 1 : choix des domaines (1 à 3, anti-surcharge) -->
     <div id="valSelect">
-      <p class="ms-intro">Tes valeurs sont des directions de vie qui comptent pour toi. Contrairement à un objectif qu'on atteint et qu'on coche, une valeur est un processus continu - comme marcher vers l'Ouest : tu n'y « arrives » jamais, mais ça guide chaque pas.</p>
+      <p class="ms-intro">Choisis ce qui compte pour toi en ce moment, puis un petit pas dans ce sens.</p>
       <details class="onboarding-tip" style="margin-bottom:1rem;cursor:pointer;">
         <summary style="font-weight:600;list-style:none;">Pourquoi ça aide</summary>
         <div class="val-psycho">
           <p><strong>Valeurs ou objectifs ?</strong> Les valeurs sont une direction constante, comme l'Ouest. Les objectifs sont des étapes concrètes, comme des montagnes à franchir. On atteint un objectif ; on incarne une valeur chaque jour, par ses actes.</p>
-          <p><strong>Agir malgré l'inconfort.</strong> Avancer vers ce qui compte déclenche parfois de l'inconfort ou de la peur. La défusion permet d'avancer avec ces émotions « sous le bras », sans attendre qu'elles disparaissent pour commencer.</p>
+          <p><strong>Agir malgré l'inconfort.</strong> Avancer vers ce qui compte déclenche parfois de l'inconfort ou de la peur. Prendre du recul sur ses pensées permet d'avancer avec ces émotions « sous le bras », sans attendre qu'elles disparaissent pour commencer.</p>
           <p><strong>Le pouvoir du petit pas.</strong> Une micro-action de deux minutes suffit pour réorienter ta trajectoire. L'important n'est pas l'ampleur du pas, mais sa direction.</p>
           <p><strong>Plus grand que soi.</strong> Le domaine spirituel, au sens large, définit ce qui te dépasse et te relie. Il aide à replacer les moments difficiles dans une perspective plus vaste - religieuse ou totalement laïque.</p>
         </div>
       </details>
-      <div class="form-label">Choisis 1 à 3 domaines qui comptent pour toi en ce moment - pour toi, pas pour les attentes des autres</div>
+      <div class="form-label">1 à 3 domaines : pour toi, pas pour les attentes des autres</div>
       <div class="emotion-grid" id="valDomainGrid" role="group" aria-label="Choix des domaines de vie"></div>
       <button class="btn btn-primary" id="valSelectNext" onclick="valStartRating()" disabled aria-label="Continuer vers la notation">Continuer →</button>
     </div>
@@ -2362,16 +2430,15 @@ input[type="date"], input[type="tel"] {
       </div>
       <button class="btn btn-ghost mt-1" onclick="valRestart()" aria-label="Refaire l'exercice de la boussole">↺ Refaire l'exercice</button>
     </div>
+    </div>
 
-    <div class="divider"></div>
-
-    <!-- Défusion (anciennement dans « Schémas ») : même famille ACT que les valeurs -->
-    <h2 class="mb-1">Prendre du recul sur tes pensées</h2>
-    <p>Observer une pensée sans t'y accrocher. Choisis un exercice :</p>
-    <div class="breath-tech-tabs mt-1" role="group" aria-label="Exercice de défusion">
-      <button class="breath-tab active" onclick="selectDefusion(0,this)" aria-pressed="true">Feuilles</button>
-      <button class="breath-tab" onclick="selectDefusion(1,this)" aria-pressed="false">Bus</button>
-      <button class="breath-tab" onclick="selectDefusion(2,this)" aria-pressed="false">Le mot</button>
+    <!-- Prendre du recul (défusion) : même famille ACT que les valeurs -->
+    <div id="valViewRecul" hidden>
+    <p class="ms-intro">Observer une pensée sans t'y accrocher. Choisis une image :</p>
+    <div class="breath-tech-tabs mt-1" role="group" aria-label="Exercice pour prendre du recul">
+      <button class="breath-tab active" onclick="selectDefusion(0,this)" aria-pressed="true">Les feuilles sur l'eau</button>
+      <button class="breath-tab" onclick="selectDefusion(1,this)" aria-pressed="false">Les passagers du bus</button>
+      <button class="breath-tab" onclick="selectDefusion(2,this)" aria-pressed="false">Répéter le mot</button>
     </div>
     <div id="defusionSteps" class="act-steps mt-1"></div>
     <button class="btn btn-secondary mt-1" id="defusionDoneBtn" onclick="defusionDone()">J'ai fait l'exercice ✓</button>
@@ -2401,6 +2468,7 @@ input[type="date"], input[type="tel"] {
         </div>
       </details>
     </div>
+    </div>
 
   </div>
 
@@ -2409,8 +2477,8 @@ input[type="date"], input[type="tel"] {
     <div class="greeting-block">
       <h1>Exercices</h1>
     </div>
-    <p class="hub-intro">Sept outils, à piocher selon ce que tu travailles avec ton psy. Chaque séance ajoute un carreau à ta mosaïque.</p>
-    <div class="hub-list" id="exercisesList"></div>
+    <p class="hub-intro" id="hubIntro">À piocher selon ce que tu travailles avec ton psy.</p>
+    <div id="exercisesList"></div>
   </div>
 
   <!-- ═══ ONGLET : MON CARNET ═══ -->
@@ -2420,12 +2488,15 @@ input[type="date"], input[type="tel"] {
     </div>
     <p class="hub-intro">Ce que tu construis, pour le garder.</p>
     <div class="carnet-tasks" id="carnetTasks"></div>
-    <button class="hub-card plan-card" onclick="navigateTo('plan')">
+    <!-- Le plan est mis en avant après la thérapie ou dès qu'il a du contenu ; pendant le suivi,
+         tant qu'il est vide, il reste accessible en bas de page (ligne discrète). -->
+    <button class="hub-card plan-card" id="carnetPlanCard" onclick="navigateTo('plan')">
       <span class="ex-icon" style="--c:#d8b78a" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
       <span class="hub-text"><h3>Mon plan anti-rechute</h3><p id="carnetPlanSub">Mes signaux, ce qui m'aide, qui appeler</p></span>
       <span class="hub-chevron" aria-hidden="true">›</span>
     </button>
     <div class="carnet-grid" id="carnetGrid"></div>
+    <div class="carnet-more" id="carnetMore"></div>
   </div>
 
   <!-- ═══ ONGLET : MON SUIVI ═══ -->
@@ -2477,17 +2548,21 @@ input[type="date"], input[type="tel"] {
         <div class="form-label" id="taskKindLabel">Quel exercice ?</div>
         <div class="chip-row" id="taskKindChips" role="group" aria-labelledby="taskKindLabel"></div>
       </div>
-      <div class="form-group">
-        <label class="form-label" for="taskDetail">Précision <span class="optional">(optionnel)</span></label>
-        <input type="text" id="taskDetail" placeholder="Ex. : le soir, avant de dormir">
-      </div>
-      <div class="range-group">
-        <label for="taskTarget">Combien de fois ? <span class="range-val" id="taskTargetVal">1</span></label>
-        <input type="range" id="taskTarget" min="1" max="7" value="1" oninput="document.getElementById('taskTargetVal').textContent=this.value" aria-label="Nombre de fois, de 1 à 7">
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="taskDue">Pour quand ? <span class="optional">(optionnel)</span></label>
-        <input type="date" id="taskDue">
+      <!-- Un seul choix suffit pour enregistrer ; le reste est derrière « Préciser ». -->
+      <button type="button" class="link-btn" id="taskMoreBtn" onclick="showTaskMore()">Préciser (combien de fois, pour quand)</button>
+      <div id="taskMore" hidden>
+        <div class="form-group">
+          <label class="form-label" for="taskDetail"><span id="taskDetailLabel">Précision</span> <span class="optional" id="taskDetailOptional">(optionnel)</span></label>
+          <input type="text" id="taskDetail" placeholder="Ex. : le soir, avant de dormir">
+        </div>
+        <div class="range-group">
+          <label for="taskTarget">Combien de fois ? <span class="range-val" id="taskTargetVal">1</span></label>
+          <input type="range" id="taskTarget" min="1" max="7" value="1" oninput="document.getElementById('taskTargetVal').textContent=this.value" aria-label="Nombre de fois, de 1 à 7">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="taskDue">Pour quand ? <span class="optional">(optionnel)</span></label>
+          <input type="date" id="taskDue">
+        </div>
       </div>
       <div class="row">
         <button class="btn btn-ghost" onclick="toggleTaskForm()">Annuler</button>
@@ -2509,19 +2584,9 @@ input[type="date"], input[type="tel"] {
         </div>
         <div class="setting-control"><input type="date" id="nextSession" onchange="saveNextSession(this.value)"></div>
       </div>
-      <div class="setting-row">
-        <div class="setting-info">
-          <strong>Ma thérapie est terminée</strong>
-          <span>Ces tâches deviennent tes engagements de maintien</span>
-        </div>
-        <div class="setting-control">
-          <label class="toggle-switch">
-            <input type="checkbox" id="therapyDoneToggle" onchange="setTherapyDone(this.checked)" aria-label="Ma thérapie est terminée">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
     </div>
+    <!-- L'interrupteur « Ma thérapie est terminée » est dans les Réglages (il change tout le mode de l'app). -->
+    <button class="link-btn" id="tachesTherapyLink" onclick="navigateTo('reglages')">Ta thérapie est terminée ? Ça se règle ici</button>
   </div>
 
   <!-- ═══ CARNET : PLAN ANTI-RECHUTE ═══ -->
@@ -2595,8 +2660,7 @@ input[type="date"], input[type="tel"] {
   <!-- ═══ ÉCRAN : RÉGLAGES ═══ -->
   <div class="screen" id="screen-reglages" role="main" aria-label="Réglages">
     <div class="greeting-block">
-      <div class="time-label">⚙️ Réglages</div>
-      <h1>Tes <span>préférences</span></h1>
+      <h1>Réglages</h1>
     </div>
 
     <div class="reglages-block">
@@ -2607,6 +2671,22 @@ input[type="date"], input[type="tel"] {
         <button class="seg-btn" id="theme-auto" onclick="setTheme('auto')" aria-label="Thème automatique">🌗 Auto</button>
       </div>
       <p class="data-note">« Auto » suit le réglage clair / sombre de ton téléphone.</p>
+    </div>
+
+    <div class="reglages-block">
+      <div class="section-title">Mon suivi</div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <strong>Ma thérapie est terminée</strong>
+          <span>Les tâches du psy deviennent tes engagements de maintien, et le plan anti-rechute passe au premier plan</span>
+        </div>
+        <div class="setting-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="therapyDoneToggle" onchange="setTherapyDone(this.checked)" aria-label="Ma thérapie est terminée">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
     </div>
 
     <div class="reglages-block">
@@ -2630,7 +2710,10 @@ input[type="date"], input[type="tel"] {
     <div class="reglages-block">
       <div class="section-title">Widget d'écran d'accueil</div>
       <p class="data-note" id="widgetIntroNote">Affiche une de tes cartes de coping directement sur ton écran, sans avoir à ouvrir l'app.</p>
-      <p class="data-note" id="widgetHowToNote"></p>
+      <details class="onboarding-tip">
+        <summary>Comment l'ajouter</summary>
+        <p class="data-note" id="widgetHowToNote"></p>
+      </details>
     </div>
 
     <div class="reglages-block">
@@ -2713,7 +2796,7 @@ const state = {
 // `kind` sert de clé dans le journal de pratique ; `defi` n'est pas un exercice du hub
 // (c'est le défi du jour de l'accueil) mais a ses propres carreaux.
 const EXERCISES = [
-  { kind: 'respirer', screen: 'calm', title: "Respirer & s'ancrer", desc: 'Cohérence cardiaque, 4-7-8, ancrage 5-4-3-2-1', color: '#93c9ac',
+  { kind: 'respirer', screen: 'calm', title: "Respirer & s'ancrer", desc: 'Respiration guidée, ou ancrage par les cinq sens', color: '#93c9ac',
     icon: 'M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2M9.6 4.6A2 2 0 1 1 11 8H2M12.6 19.4A2 2 0 1 0 14 16H2' },
   { kind: 'journal', screen: 'journal', title: 'Journal de pensées', desc: 'Situation, pensée, faits, pensée équilibrée', color: '#d8b78a',
     icon: 'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z' },
@@ -2723,7 +2806,7 @@ const EXERCISES = [
     icon: 'M3 21h4v-4h4v-4h4V9h4V5h2' },
   { kind: 'petitpas', screen: 'microstep', title: 'Un petit pas', desc: 'Une seule action, quand tout est lourd', color: '#c9d68a',
     icon: 'M12 21v-9M12 12C12 8 9 5 4 5c0 4 3 7 8 7ZM12 14c0-3 2.5-6 8-6 0 4-3 6-8 6Z' },
-  { kind: 'valeurs', screen: 'valeurs', title: 'Valeurs & défusion', desc: 'Ce qui compte, et prendre du recul sur ses pensées', color: '#b9a6e0',
+  { kind: 'valeurs', screen: 'valeurs', title: 'Valeurs & recul', desc: 'Ce qui compte pour toi, et prendre du recul sur une pensée (défusion)', color: '#b9a6e0',
     icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
   { kind: 'inquietudes', screen: 'worry', title: 'Mes inquiétudes', desc: 'Noter, reporter à ton moment, puis trier', color: '#e3a0b4',
     icon: 'M12 7v5l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z' },
@@ -2733,22 +2816,9 @@ const PRACTICE_KINDS = [...EXERCISES, DEFI_KIND];
 const exerciseByKind = k => PRACTICE_KINDS.find(e => e.kind === k) || null;
 const exerciseByScreen = s => EXERCISES.find(e => e.screen === s) || null;
 
-// Niveau par exercice : la progression parle de compétence (devenir son propre thérapeute),
-// jamais d'assiduité. Seuils volontairement bas : la découverte compte déjà.
-const LEVELS = [
-  { min: 15, label: 'Autonomie', bars: 3 },
-  { min: 5, label: 'Pratique', bars: 2 },
-  { min: 1, label: 'Découverte', bars: 1 },
-];
-function levelFor(n) {
-  return LEVELS.find(l => n >= l.min) || { min: 0, label: 'Pas encore commencé', bars: 0 };
-}
-function nextLevelGap(n) {
-  const next = [...LEVELS].reverse().find(l => l.min > n);
-  return next ? { label: next.label, left: next.min - n } : null;
-}
-
 // ─── JOURNAL DE PRATIQUE (la mosaïque) ───
+// Une seule mesure de progression : les carreaux, et le nombre de séances par exercice.
+// Pas de niveaux ni de palier à atteindre (retirés : trois notions pour une même idée).
 // Un carreau = un exercice mené au bout. Les carreaux s'ajoutent les uns après les autres,
 // sans jamais tenir compte des jours sans pratique : aucune série à casser, rien ne s'efface.
 const PRACTICE_KEY = 'serein_practice';
@@ -2774,7 +2844,6 @@ function renderTileReward(elId, kind, total) {
   const el = document.getElementById(elId);
   const ex = exerciseByKind(kind);
   if (!el || !ex) return;
-  const gap = nextLevelGap(total);
   const recent = loadPractice().slice(-10);
   const tiles = recent.map((p, i) => {
     const c = (exerciseByKind(p.k) || ex).color;
@@ -2782,19 +2851,68 @@ function renderTileReward(elId, kind, total) {
   }).join('');
   el.innerHTML = `<div class="tile-reward-tiles" aria-hidden="true">${tiles}</div>
     <div><div class="tile-reward-title">+1 carreau</div>
-    <div class="tile-reward-text">${escHtml(ex.title)} · ${total} séance${total > 1 ? 's' : ''}.${gap ? ` Encore ${gap.left} pour le niveau ${gap.label}.` : ''}</div></div>`;
+    <div class="tile-reward-text">${escHtml(ex.title)} · ${total} séance${total > 1 ? 's' : ''}.</div></div>`;
   el.classList.add('visible');
 }
 
+// ─── MES EXERCICES : ceux que la personne travaille ───
+// Une thérapie cible deux ou trois exercices, pas les sept : ceux-là passent en tête du hub,
+// le reste se replie sous « Autres outils ». Choisis au premier lancement, modifiables dans le hub.
+const FOCUS_KEY = 'serein_focus';
+function loadFocus() {
+  const f = safeParse(FOCUS_KEY, []);
+  return Array.isArray(f) ? f.filter(k => EXERCISES.some(e => e.kind === k)) : [];
+}
+function saveFocus(kinds) { Store.set(FOCUS_KEY, JSON.stringify(kinds)); }
+// Fonction pure (testée). « Mes exercices » = tâches du psy en cours (en premier) + ceux choisis.
+// Sans rien de choisi ni de proposé, `mine` est vide : le hub affiche alors les sept à plat.
+function splitExercises({ focus = [], tasks = [] } = {}) {
+  const fromPsy = [...new Set(tasks.filter(t => (t.count || 0) < (t.target || 1)).map(t => t.kind))];
+  const isMine = k => fromPsy.includes(k) || focus.includes(k);
+  const mine = EXERCISES.filter(e => isMine(e.kind)).sort((a, b) => fromPsy.includes(b.kind) - fromPsy.includes(a.kind));
+  return { mine, others: EXERCISES.filter(e => !isMine(e.kind)), fromPsy };
+}
+function focusChipsHtml(selected, handler) {
+  return EXERCISES.map(ex => {
+    const on = selected.includes(ex.kind);
+    return `<button type="button" class="chip tinted${on ? ' selected' : ''}" style="--c:${ex.color}" aria-pressed="${on}" onclick="${handler}('${ex.kind}')">${escHtml(ex.title)}</button>`;
+  }).join('');
+}
+
 // ─── PREMIER LANCEMENT ───
+let obStage = null;   // 'suivi' | 'apres' | null (pas répondu : rien ne change)
+let obFocus = [];
 function initOnboarding() {
   if (!localStorage.getItem('serein_onboarding_done')) {
     document.getElementById('onboardingModal').classList.add('visible');
   }
 }
-function finishOnboarding() {
+function renderOnboardingChoices() {
+  document.getElementById('obStageChips').innerHTML = [['suivi', 'Je vois un psy'], ['apres', 'Ma thérapie est terminée']].map(([k, label]) =>
+    `<button type="button" class="chip${obStage === k ? ' selected' : ''}" aria-pressed="${obStage === k}" onclick="pickObStage('${k}')">${label}</button>`).join('');
+  document.getElementById('obFocusLabel').textContent = obStage === 'apres' ? 'Que veux-tu continuer à pratiquer ?' : 'Sur quoi tu travailles avec ton psy ?';
+  document.getElementById('obFocusChips').innerHTML = focusChipsHtml(obFocus, 'toggleObFocus');
+}
+function pickObStage(k) { obStage = obStage === k ? null : k; renderOnboardingChoices(); Haptics.light(); }
+function toggleObFocus(k) {
+  obFocus = obFocus.includes(k) ? obFocus.filter(x => x !== k) : [...obFocus, k];
+  renderOnboardingChoices();
+  Haptics.light();
+}
+function onboardingNext() {
+  // L'avertissement a été vu : on le note tout de suite, même si l'app est fermée à l'étape 2.
+  Store.set('serein_disclaimer_seen', '1');
+  document.getElementById('obStep1').hidden = true;
+  document.getElementById('obStep2').hidden = false;
+  renderOnboardingChoices();
+  document.getElementById('obTitle2').focus();
+}
+function finishOnboarding(skip) {
   Store.set('serein_onboarding_done', '1');
   Store.set('serein_disclaimer_seen', '1');
+  if (!skip && obFocus.length) saveFocus(obFocus);
+  if (obStage === 'apres' && !isTherapyDone()) setTherapyDone(true);
+  renderPractice();
   const m = document.getElementById('onboardingModal');
   m.style.transition = 'opacity 0.3s ease';
   m.style.opacity = '0';
@@ -2856,6 +2974,14 @@ function parentOf(screen) {
   if (MAIN_TABS.includes(screen)) return screen === 'home' ? null : 'home';
   return { 'nav-home': 'home', 'nav-exercices': 'exercices', 'nav-carnet': 'carnet', 'nav-suivi': 'suivi' }[navMap[screen]] || 'home';
 }
+// Écrans à deux onglets (Respirer / S'ancrer, Mes valeurs / Prendre du recul) : onglet demandé
+// par l'appelant pour la prochaine entrée sur l'écran, consommé par son init.
+const pendingView = {};
+function takeView(screen, fallback) {
+  const v = pendingView[screen] || fallback;
+  delete pendingView[screen];
+  return v;
+}
 const screenInitFns = {
   home: () => { checkinResult = null; renderCheckinState(); renderPractice(); renderPlanCheckinCard(); renderDefi(); },
   exercices: renderExercisesHub,
@@ -2863,14 +2989,14 @@ const screenInitFns = {
   suivi: () => { renderMosaic(); renderTracking(); },
   taches: renderTaches,
   plan: renderPlan,
-  cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); initWidgetTip(); },
+  cards: () => { renderCopingCats(); renderCopingDeck(); renderCards(); initWidgetTip(); document.getElementById('copingModels').open = false; },
   diary: renderDiary,
-  valeurs: () => { initValeurs(); renderDefusion(currentDefusion); resetDefusionDone(); },
-  calm: loadBells,
+  valeurs: () => { initValeurs(); renderDefusion(currentDefusion); resetDefusionDone(); setValTab(takeView('valeurs', 'valeurs')); },
+  calm: () => { loadBells(); initCalm(); },
   experiments: () => { renderExperiments(); renderNotifRow(); },
   ladder: renderLadder,
   jhistory: renderJournalHistory,
-  reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); loadAppLockPrefs(); },
+  reglages: () => { loadReminderPrefs(); renderWidgetInstructions(); loadAppLockPrefs(); document.getElementById('therapyDoneToggle').checked = isTherapyDone(); },
   microstep: initMicroStep,
   worry: initWorry,
 };
@@ -3018,17 +3144,32 @@ function toggleMoodTag(t) {
   renderMoodTags();
   Haptics.light();
 }
+let moodSet = false; // faux tant que le curseur n'a pas été touché : rien n'est affiché ni enregistré
 function updateMoodOrb() {
   const el = document.getElementById('slider-mood');
   if (!el) return;
+  const orb = document.getElementById('moodOrb');
+  document.getElementById('moodMore').hidden = !moodSet;
+  orb.classList.toggle('unset', !moodSet);
+  if (!moodSet) {
+    document.getElementById('moodOrbNum').textContent = '–';
+    document.getElementById('moodLabel').textContent = 'Ton humeur';
+    document.getElementById('moodDesc').textContent = 'Glisse le curseur pour la noter';
+    orb.style.background = '';
+    orb.style.boxShadow = '';
+    el.setAttribute('aria-valuetext', 'Pas encore notée');
+    return;
+  }
   const v = +el.value;
   document.getElementById('moodOrbNum').textContent = v;
   document.getElementById('moodLabel').textContent = moodLabel(v);
-  paintMoodOrb(document.getElementById('moodOrb'), v);
+  document.getElementById('moodDesc').textContent = 'Glisse pour ajuster';
+  paintMoodOrb(orb, v);
   el.setAttribute('aria-valuetext', `${v} sur 10, ${moodLabel(v)}`);
 }
 function onMoodSliderInput() {
   const before = document.getElementById('moodLabel').textContent;
+  moodSet = true;
   moodSliderTouched = true;
   updateMoodOrb();
   if (document.getElementById('moodLabel').textContent !== before) Haptics.light();
@@ -3037,6 +3178,7 @@ function persistTodayMood() {
   saveMoodEntry(+document.getElementById('slider-mood').value, selectedMoodTags);
 }
 function confirmMood() {
+  if (!moodSet) return;
   persistTodayMood();
   moodSliderTouched = false;
   Haptics.medium();
@@ -3059,6 +3201,10 @@ function renderCheckinState() {
   } else {
     slider.hidden = false;
     recap.hidden = true;
+    // Pas d'humeur aujourd'hui : curseur au milieu, « – », rien de pré-rempli.
+    moodSet = false;
+    selectedMoodTags = new Set();
+    document.getElementById('slider-mood').value = 5;
     renderMoodTags();
     updateMoodOrb();
   }
@@ -3068,6 +3214,7 @@ function editTodayMood() {
   if (today) {
     document.getElementById('slider-mood').value = today.mood;
     selectedMoodTags = new Set(today.tags || []);
+    moodSet = true;
   }
   document.getElementById('checkinSliderMode').hidden = false;
   document.getElementById('checkinRecapMode').hidden = true;
@@ -3115,9 +3262,10 @@ function pickDailyPractice({ tasks = [], mood = null, tags = [], dueExperiment =
   if (dueExperiment) {
     return { source: 'experience', kind: 'experiences', screen: 'experiments', title: 'Ton expérience prévue', text: dueExperiment.belief || '', meta: "C'est le jour" };
   }
-  const pick = (kind, text, meta) => {
+  // `view` : onglet à ouvrir dans un écran qui en a deux (ex. « Prendre du recul » dans Valeurs & recul).
+  const pick = (kind, text, meta, view) => {
     const ex = exerciseByKind(kind);
-    return { source: mood === null ? 'none' : 'mood', kind, screen: ex.screen, title: ex.title, text, meta };
+    return { source: mood === null ? 'none' : 'mood', kind, screen: ex.screen, title: ex.title, text, meta, ...(view ? { view } : {}) };
   };
   const has = t => tags.includes(t);
   if (mood === null) return pick('respirer', 'Deux minutes pour commencer en douceur.', 'Pour commencer');
@@ -3125,7 +3273,7 @@ function pickDailyPractice({ tasks = [], mood = null, tags = [], dueExperiment =
     if ((has('Tristesse') || has('Fatigue')) && !has('Stress') && !has('Colère')) return pick('petitpas', 'Une seule petite action, rien de plus.', "Selon ton humeur");
     return pick('respirer', "D'abord apaiser le corps. Le reste peut attendre.", 'Selon ton humeur');
   }
-  if (has('Rumination')) return pick('valeurs', "Prendre du recul sur une pensée qui tourne en boucle.", 'Selon ton humeur');
+  if (has('Rumination')) return pick('valeurs', "Prendre du recul sur une pensée qui tourne en boucle.", 'Selon ton humeur', 'recul');
   if (has('Stress') || has('Colère')) return pick('respirer', 'Quelques minutes pour faire redescendre la tension.', 'Selon ton humeur');
   if (has('Tristesse') || has('Fatigue')) return pick('petitpas', "L'action vient avant l'envie : une seule petite chose.", 'Selon ton humeur');
   if (mood <= 6) return pick('journal', "Une situation qui t'a contrarié·e aujourd'hui ?", 'Selon ton humeur');
@@ -3143,18 +3291,25 @@ function renderPractice() {
   const ex = p.kind ? exerciseByKind(p.kind) : null;
   const color = ex ? ex.color : '#d8b78a';
   const icon = ex ? ex.icon : 'M12 2v2M12 20v2M2 12h2M20 12h2M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z';
+  // La pratique du jour est l'action principale de l'accueil : un seul gros bouton.
+  // Sans tâche du psy en cours, un raccourci mène droit au formulaire d'ajout.
+  const addTask = p.source === 'psy' ? '' : `<button class="link-btn practice-add" onclick="openTaskForm()">${isTherapyDone() ? 'Ajouter un engagement' : "Ton psy t'a proposé un exercice ? L'ajouter"}</button>`;
   card.innerHTML = `
     <div class="practice-head"><span class="practice-eyebrow">Ta pratique du jour</span><span class="practice-meta">${escHtml(p.meta || '')}</span></div>
     <div class="practice-row">
       <span class="ex-icon" style="--c:${color}" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${icon}"/></svg></span>
       <span class="practice-text"><strong>${escHtml(p.title)}</strong><span>${escHtml(p.text || '')}</span></span>
-      <button class="btn practice-go" onclick="goPractice()">${p.positive ? 'Noter' : 'Y aller'}</button>
-    </div>`;
+    </div>
+    <button class="btn btn-primary practice-go" onclick="goPractice()">${p.positive ? 'Noter ce moment' : 'Commencer'}</button>
+    ${addTask}`;
 }
 function goPractice() {
   if (!currentPractice) return;
   if (currentPractice.screen === 'journal') startNewJournal();
-  else navigateTo(currentPractice.screen);
+  else {
+    if (currentPractice.view) pendingView[currentPractice.screen] = currentPractice.view;
+    navigateTo(currentPractice.screen);
+  }
 }
 
 // ─── DÉFI DU JOUR : une pensée, quel piège ? (une question par jour) ───
@@ -3171,12 +3326,20 @@ function defiOptions(q, idx) {
   const r = idx % 3;
   return [...opts.slice(r), ...opts.slice(0, r)];
 }
+// Le défi ne concurrence pas la pratique du jour : il n'apparaît qu'une fois un exercice fait
+// aujourd'hui (ou s'il a déjà été relevé, pour garder le retour). Fonction pure (testée).
+function defiVisible({ practice = [], saved = null, today = ymd() } = {}) {
+  if (saved && saved.date === today) return true;
+  return practice.some(p => p.d === today && p.k !== 'defi');
+}
 function renderDefi() {
   const card = document.getElementById('defiCard');
   if (!card) return;
   const idx = defiIndexFor();
   const q = quizData[idx];
   const saved = safeParse(DEFI_KEY, null);
+  card.hidden = !defiVisible({ practice: loadPractice(), saved });
+  if (card.hidden) { card.innerHTML = ''; return; }
   const answer = saved && saved.date === ymd() ? saved.answer : null;
   const opts = defiOptions(q, idx).map(k => {
     let cls = 'chip';
@@ -3189,7 +3352,7 @@ function renderDefi() {
     feedback = `<p class="defi-feedback">${answer === q.schema ? 'Bien vu.' : `C'était : ${schemaLabels[q.schema]}.`} ${escHtml(q.explain)}</p>`;
   }
   card.innerHTML = `
-    <div class="practice-head"><span class="practice-eyebrow defi">Défi du jour</span><span class="practice-meta"><span class="tile-dot" style="background:${DEFI_KIND.color}"></span>${answer ? 'Carreau gagné' : '+1 carreau'}</span></div>
+    <div class="practice-head"><span class="practice-eyebrow defi">Défi du jour</span>${answer ? `<span class="practice-meta"><span class="tile-dot" style="background:${DEFI_KIND.color}"></span>Dans ta mosaïque</span>` : ''}</div>
     <p class="defi-thought">« ${escHtml(q.thought)} »</p>
     <p class="defi-q">Quel piège de pensée ?</p>
     <div class="chip-row">${opts}</div>
@@ -3741,8 +3904,8 @@ window.addEventListener('touchstart', primeAudio, { once: true });
 // ─── BREATHING ───
 const breathTechs = {
   coherence: { phases: [5, 5],    labels: ['Inspire', 'Expire'],           name: 'Cohérence cardiaque' },
-  box:       { phases: [4, 4, 4, 4], labels: ['Inspire', 'Retiens', 'Expire', 'Retiens'], name: 'Respiration en boîte' },
-  '478':     { phases: [4, 7, 8], labels: ['Inspire', 'Retiens', 'Expire'], name: 'Technique 4-7-8' },
+  box:       { phases: [4, 4, 4, 4], labels: ['Inspire', 'Retiens', 'Expire', 'Retiens'], name: 'Respiration carrée' },
+  '478':     { phases: [4, 7, 8], labels: ['Inspire', 'Retiens', 'Expire'], name: '4-7-8' },
 };
 let breathActive = false;
 let breathTech = 'coherence';
@@ -3771,21 +3934,61 @@ function setRingProgress(fractionRemaining, instant) {
   }
 }
 
-function selectBreathTech(tech, el) {
+// Rythme et durée : mémorisés (le psy en recommande souvent un), affichés en une ligne,
+// modifiables derrière « Changer ».
+const BREATH_PREFS_KEY = 'serein_breath_prefs';
+const BREATH_DURATIONS = [[0, 'Libre'], [180, '3 min'], [300, '5 min'], [600, '10 min'], [900, '15 min']];
+function breathHint(tech) {
+  const t = breathTechs[tech];
+  return t.phases.map((d, i) => `${t.labels[i].toLowerCase()} ${d} s`).join(', ');
+}
+function renderBreathOptions() {
+  // Ordre explicite : Object.entries ferait passer la clé numérique '478' en premier.
+  document.getElementById('breathTechTabs').innerHTML = ['coherence', 'box', '478'].map(k =>
+    `<button class="breath-tab${k === breathTech ? ' active' : ''}" onclick="selectBreathTech('${k}')" aria-pressed="${k === breathTech}">${breathTechs[k].name}</button>`).join('');
+  document.getElementById('breathDurTabs').innerHTML = BREATH_DURATIONS.map(([sec, label]) =>
+    `<button class="breath-dur${sec === breathTargetSec ? ' active' : ''}" onclick="selectBreathDuration(${sec})" aria-pressed="${sec === breathTargetSec}">${label}</button>`).join('');
+  const dur = BREATH_DURATIONS.find(d => d[0] === breathTargetSec);
+  document.getElementById('breathSummary').innerHTML = `<strong>${breathTechs[breathTech].name}</strong> · ${breathHint(breathTech)}${breathTargetSec ? ` · ${dur[1]}` : ''}`;
+}
+function saveBreathPrefs() { Store.set(BREATH_PREFS_KEY, JSON.stringify({ tech: breathTech, sec: breathTargetSec })); }
+function toggleBreathOptions() {
+  const o = document.getElementById('breathOptions');
+  o.hidden = !o.hidden;
+  const btn = document.getElementById('breathChangeBtn');
+  btn.textContent = o.hidden ? 'Changer' : 'Fermer';
+  btn.setAttribute('aria-expanded', String(!o.hidden));
+}
+function selectBreathTech(tech) {
   if (breathActive) stopBreathing();
   breathTech = tech;
-  document.querySelectorAll('.breath-tab').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-  el.classList.add('active');
-  el.setAttribute('aria-pressed', 'true');
+  saveBreathPrefs();
+  renderBreathOptions();
   resetBreathCircle();
 }
 
-function selectBreathDuration(sec, el) {
+function selectBreathDuration(sec) {
   if (breathActive) stopBreathing();
   breathTargetSec = sec;
-  document.querySelectorAll('.breath-dur').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-  el.classList.add('active');
-  el.setAttribute('aria-pressed', 'true');
+  saveBreathPrefs();
+  renderBreathOptions();
+}
+function setCalmView(view) {
+  if (view !== 'respirer' && breathActive) stopBreathing();
+  document.getElementById('calmRespirer').hidden = view !== 'respirer';
+  document.getElementById('calmAncrage').hidden = view !== 'ancrage';
+  ['respirer', 'ancrage'].forEach(v => {
+    const b = document.getElementById('calmTab-' + v);
+    b.classList.toggle('active', v === view);
+    b.setAttribute('aria-pressed', String(v === view));
+  });
+}
+function initCalm() {
+  const p = safeParse(BREATH_PREFS_KEY, null);
+  if (p && breathTechs[p.tech]) breathTech = p.tech;
+  if (p && BREATH_DURATIONS.some(d => d[0] === p.sec)) breathTargetSec = p.sec;
+  renderBreathOptions();
+  setCalmView(takeView('calm', 'respirer'));
 }
 
 function toggleBreathing() {
@@ -3799,16 +4002,17 @@ function startBreathing() {
   breathCycles = 0;
   breathCounted = false;
   breathStartTime = Date.now();
-  document.getElementById('breathBtn').textContent = '⏹ Arrêter';
-  document.getElementById('breathBtn').setAttribute('aria-label', 'Arrêter la respiration guidée');
+  const btn = document.getElementById('breathBtn');
+  btn.hidden = false;
+  btn.textContent = '⏹ Arrêter';
+  btn.setAttribute('aria-label', 'Arrêter la respiration guidée');
   runBreathPhase();
 }
 
 function stopBreathing() {
   breathActive = false;
   clearTimeout(breathTimer);
-  document.getElementById('breathBtn').textContent = '▶ Commencer';
-  document.getElementById('breathBtn').setAttribute('aria-label', 'Démarrer la respiration guidée');
+  document.getElementById('breathBtn').hidden = true; // au repos, c'est le cercle qui démarre
   resetBreathCircle();
 }
 
@@ -4340,8 +4544,8 @@ function nextWorry() { worryQueue.shift(); showCurrentWorry(); }
 function worryToDefusion() {
   worryQueue.shift();
   finishWorrySession();
+  pendingView.valeurs = 'recul';
   navigateTo('valeurs');
-  setTimeout(() => { const el = document.getElementById('defusionSteps'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 250);
 }
 // Un carreau par moment d'inquiétude où au moins une inquiétude a été triée.
 function finishWorrySession() {
@@ -4467,6 +4671,15 @@ function loadValues() { return safeParse('serein_values', null); }
 function saveValues(ratings) { Store.set('serein_values', JSON.stringify({ date: ymd(), ratings })); }
 function valDomain(key) { return VALUES_DOMAINS.find(d => d.key === key); }
 
+function setValTab(view) {
+  document.getElementById('valViewValeurs').hidden = view !== 'valeurs';
+  document.getElementById('valViewRecul').hidden = view !== 'recul';
+  ['valeurs', 'recul'].forEach(v => {
+    const b = document.getElementById('valTab-' + v);
+    b.classList.toggle('active', v === view);
+    b.setAttribute('aria-pressed', String(v === view));
+  });
+}
 function setValeursView(view) {
   document.getElementById('valSelect').hidden = view !== 'select';
   document.getElementById('valRate').hidden = view !== 'rate';
@@ -4639,7 +4852,7 @@ function prevAnchor() {
 // ─── COPING PRESETS (modèles par thème) ───
 const copingPresets = {
   worry: { label: 'Inquiétude', emoji: '🌫️',
-    mechanism: "Contrer l'intolérance à l'incertitude et la fusion avec les scénarios catastrophes : se distancer de ses pensées (les pensées ne sont pas des faits) et se réancrer dans le présent.",
+    mechanism: "Pour quand tu imagines le pire : une pensée n'est pas un fait, et on peut avancer sans être sûr·e de tout.",
     cards: [
     "Je remarque que j'ai la pensée que le pire va arriver ; ce n'est qu'une pensée, pas une prédiction.",
     "Mon esprit essaie de me protéger en imaginant des catastrophes. Je le remercie, mais je choisis de revenir au moment présent.",
@@ -4649,7 +4862,7 @@ const copingPresets = {
     "Je ne peux pas contrôler l'avenir, mais je peux contrôler ce que je fais ici et maintenant.",
   ]},
   social: { label: 'Anxiété sociale', emoji: '👥',
-    mechanism: "Assouplir la « lecture de pensée » et l'hypervigilance : favoriser la décentration et l'acceptation de l'imperfection humaine.",
+    mechanism: "Pour quand tu crois deviner ce que les autres pensent de toi : on ne lit pas dans les pensées, et personne n'est parfait.",
     cards: [
     "Je ne peux pas lire dans les pensées des autres ; mes impressions de rejet ne sont pas des faits prouvés.",
     "Il est humain et normal de ressentir de la gêne ou de rougir - ce n'est pas une preuve de faiblesse.",
@@ -4659,7 +4872,7 @@ const copingPresets = {
     "Cette interaction est juste une discussion, pas un examen qui définit ma valeur personnelle.",
   ]},
   perfectionism: { label: 'Perfectionnisme', emoji: '🎯',
-    mechanism: "Cibler la pensée dichotomique (tout ou rien) et les impératifs rigides (« je dois », « il faut ») : introduire de la flexibilité et valoriser l'effort plutôt que le résultat absolu.",
+    mechanism: "Pour quand c'est « parfait ou raté » : remettre de la nuance, et compter l'effort autant que le résultat.",
     cards: [
     "Je remplace « je dois être parfait·e » par « j'aimerais bien faire » : la perfection n'est pas nécessaire pour réussir.",
     "Si le résultat n'est pas parfait, ce n'est pas un échec total ; j'accepte de voir les nuances et les réussites partielles.",
@@ -4669,7 +4882,7 @@ const copingPresets = {
     "J'observe cette règle mentale très stricte qui me met la pression, et je choisis d'avancer à mon rythme.",
   ]},
   panic: { label: 'Panique', emoji: '💨',
-    mechanism: "Désamorcer l'interprétation catastrophique des sensations corporelles : accepter l'activation physiologique sans chercher à la fuir.",
+    mechanism: "Pour quand ton corps s'emballe : ces sensations sont très désagréables, pas dangereuses, et elles redescendent.",
     cards: [
     "Mon cœur bat très vite parce que mon corps sécrète du stress - ce n'est pas une crise cardiaque.",
     "Ces sensations sont intenses et très inconfortables, mais elles sont inoffensives et ne me mettent pas en danger.",
@@ -4679,7 +4892,7 @@ const copingPresets = {
     "Je jette l'ancre : je ressens ma peur, je respire, et je sens le contact de mes pieds bien posés sur le sol.",
   ]},
   phobias: { label: 'Phobies', emoji: '🪜',
-    mechanism: "Enrayer le renforcement négatif (l'évitement qui soulage à court terme mais aggrave la peur) : agir en direction de ses valeurs malgré l'inconfort.",
+    mechanism: "Pour quand tu as envie d'éviter : fuir soulage sur le moment et renforce la peur ensuite. Avancer avec elle, vers ce qui compte.",
     cards: [
     "Fuir ou éviter me soulagerait tout de suite, mais me rendrait encore plus prisonnier·ère demain.",
     "J'accepte de prendre cette peur sous le bras pour faire ce qui compte réellement dans ma vie.",
@@ -4763,7 +4976,7 @@ function renderCards() {
   const cards = loadCards();
   const list = document.getElementById('cardsList');
   if (cards.length === 0) {
-    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Pioche un modèle ci-dessus, ou crée la tienne.</p><button class="btn btn-primary empty-cta" onclick="toggleCardForm()" aria-label="Créer ma première carte de coping">+ Créer ma première carte</button></div>';
+    list.innerHTML = '<div class="card-empty"><div class="empty-emoji">🃏</div><p>Aucune carte pour l\'instant.<br>Écris la tienne, ou pars d\'un modèle.</p></div>';
     return;
   }
   list.innerHTML = cards.map((c, i) => `
@@ -4869,6 +5082,7 @@ const STORE_KEYS = [
   'serein_widget_tip_dismissed', 'serein_journal_draft',
   'serein_app_lock_enabled', 'serein_values', 'serein_swipe_hint_seen',
   'serein_worry_time', 'serein_worry_reminder',
+  'serein_focus', 'serein_breath_prefs',
 ];
 const Store = {
   prefs() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences; },
@@ -4926,7 +5140,7 @@ async function alertDialog(message, title) {
 // Clés contenant les DONNÉES utilisateur (hors thème / état d'onboarding)
 const DATA_KEYS = [
   'serein_cards', 'serein_diary', 'serein_journal', 'serein_experiments', 'serein_notif_queue',
-  'serein_journal_draft', 'serein_values',
+  'serein_journal_draft', 'serein_values', 'serein_focus',
   'serein_mood_log', 'serein_practice', 'serein_defi', 'serein_tasks', 'serein_next_session',
   'serein_therapy_done', 'serein_relapse_plan', 'serein_exposure', 'serein_plan_checkins', 'serein_plan_checkin_snooze', 'serein_therapy_done_at', 'serein_worries',
   // anciennes clés (avant la refonte) : effacées aussi par « Tout effacer »
@@ -5060,10 +5274,10 @@ function renderWidgetInstructions() {
   const platform = window.Capacitor && window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'web';
   if (platform === 'android') {
     intro.textContent = "Affiche une de tes cartes de coping directement sur ton écran d'accueil, sans avoir à ouvrir l'app.";
-    howTo.innerHTML = '<strong>Pour l\'ajouter :</strong> appuie longuement sur ton écran d\'accueil, ouvre « Widgets », cherche « Serein Relais », puis dépose le widget Carte de coping.';
+    howTo.innerHTML = 'Appuie longuement sur ton écran d\'accueil, ouvre « Widgets », cherche « Serein Relais », puis dépose le widget Carte de coping.';
   } else {
     intro.textContent = "Affiche une de tes cartes de coping directement sur ton écran d'accueil ou verrouillé, sans avoir à ouvrir l'app.";
-    howTo.innerHTML = '<strong>Pour l\'ajouter :</strong> appuie longuement sur ton écran d\'accueil, appuie sur « + » en haut, cherche « Serein Relais », puis choisis le widget Carte de coping. Pour l\'écran verrouillé (iOS 16+) : verrouille ton téléphone, appuie longuement, puis Personnaliser.';
+    howTo.innerHTML = 'Appuie longuement sur ton écran d\'accueil, appuie sur « + » en haut, cherche « Serein Relais », puis choisis le widget Carte de coping. Pour l\'écran verrouillé (iOS 16+) : verrouille ton téléphone, appuie longuement, puis Personnaliser.';
   }
 }
 function openReminderTimePicker() {
@@ -5131,7 +5345,7 @@ async function cancelDailyReminder() {
 }
 
 // ─── EXPORT / IMPORT (sauvegarde JSON) ───
-const EXPORT_KEYS = [...DATA_KEYS, 'serein_theme', 'serein_reminder_enabled', 'serein_reminder_time', 'serein_worry_time', 'serein_worry_reminder'];
+const EXPORT_KEYS = [...DATA_KEYS, 'serein_theme', 'serein_reminder_enabled', 'serein_reminder_time', 'serein_worry_time', 'serein_worry_reminder', 'serein_breath_prefs'];
 function exportData() {
   const payload = { app: 'serein-tcc', version: 1, exportedAt: new Date().toISOString(), data: {} };
   EXPORT_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v !== null) payload.data[k] = v; });
@@ -5264,29 +5478,58 @@ function openExercise(kind) {
   if (!ex) return;
   if (ex.screen === 'journal') startNewJournal(); else navigateTo(ex.screen);
 }
-// Une thérapie cible quelques exercices, pas tous : un exercice jamais fait n'affiche
-// ni niveau vide ni « pas encore commencé » (pas de liste à cocher). Ceux que le psy
-// a proposés (ou, thérapie terminée, les engagements de maintien) sont signalés.
+// Une thérapie cible quelques exercices, pas tous : « Mes exercices » (proposés par le psy
+// ou choisis) en tête, le reste replié sous « Autres outils ». Un exercice jamais fait
+// n'affiche ni « 0 » ni « pas encore commencé » (pas de liste à cocher).
+let hubOthersOpen = false;
+let focusEditOpen = false;
+function toggleFocusEdit() { focusEditOpen = !focusEditOpen; renderExercisesHub(); }
+function toggleFocus(kind) {
+  const f = loadFocus();
+  saveFocus(f.includes(kind) ? f.filter(k => k !== kind) : [...f, kind]);
+  Haptics.light();
+  renderExercisesHub();
+}
 function renderExercisesHub() {
   const list = document.getElementById('exercisesList');
   if (!list) return;
+  const done = isTherapyDone();
+  document.getElementById('hubIntro').textContent = done
+    ? 'À piocher selon ce que tu veux continuer à pratiquer.'
+    : 'À piocher selon ce que tu travailles avec ton psy.';
   const counts = practiceCounts();
-  const fromPsy = new Set(loadTasks().filter(t => t.count < t.target).map(t => t.kind));
-  // Les exercices proposés par le psy remontent en tête (tri stable : l'ordre habituel est gardé sinon).
-  const ordered = [...EXERCISES].sort((a, b) => fromPsy.has(b.kind) - fromPsy.has(a.kind));
-  list.innerHTML = ordered.map(ex => {
+  const focus = loadFocus();
+  const { mine, others, fromPsy } = splitExercises({ focus, tasks: loadTasks() });
+  const card = ex => {
     const n = counts[ex.kind] || 0;
-    const lvl = levelFor(n);
-    const bars = [1, 2, 3].map(b => `<span style="background:${b <= lvl.bars ? ex.color : 'var(--color-border-strong)'}"></span>`).join('');
-    const psy = fromPsy.has(ex.kind) ? `<span class="ex-psy">${isTherapyDone() ? 'Ton engagement' : 'Proposé par ton psy'}</span>` : '';
-    const level = (n ? `<span class="ex-level"><span class="ex-bars" aria-hidden="true">${bars}</span>${lvl.label} · ${n} séance${n > 1 ? 's' : ''}</span>` : '') + psy;
+    const psy = fromPsy.includes(ex.kind) ? `<span class="ex-psy">${done ? 'Ton engagement' : 'Proposé par ton psy'}</span>` : '';
+    const sessions = n ? `<span class="ex-level">${n} séance${n > 1 ? 's' : ''}</span>` : '';
     return `<button class="hub-card" onclick="openExercise('${ex.kind}')">
       ${exIconHtml(ex)}
       <span class="hub-text"><h3>${escHtml(ex.title)}</h3><p>${escHtml(ex.desc)}</p>
-        ${level}</span>
+        ${sessions}${psy}</span>
       <span class="hub-chevron" aria-hidden="true">›</span>
     </button>`;
-  }).join('');
+  };
+  const editor = focusEditOpen ? `<div class="focus-edit">
+      <div class="form-label" id="focusEditLabel">${done ? 'Ce que tu veux continuer à pratiquer' : 'Ce que tu travailles avec ton psy'}</div>
+      <div class="chip-row" role="group" aria-labelledby="focusEditLabel">${focusChipsHtml(focus, 'toggleFocus')}</div>
+      <button class="btn btn-secondary" onclick="toggleFocusEdit()">Terminé</button>
+    </div>` : '';
+  if (!mine.length) {
+    // Rien de choisi ni de proposé : les sept à plat, et une invitation discrète à choisir.
+    list.innerHTML = `${focusEditOpen ? editor : `<button class="link-btn hub-choose" onclick="toggleFocusEdit()">Choisir mes exercices</button>`}
+      <div class="hub-list">${EXERCISES.map(card).join('')}</div>`;
+    return;
+  }
+  list.innerHTML = `
+    <div class="hub-section-head"><span class="section-title">Mes exercices</span>${focusEditOpen ? '' : `<button class="link-btn" onclick="toggleFocusEdit()">Modifier</button>`}</div>
+    ${editor}
+    <div class="hub-list">${mine.map(card).join('')}</div>
+    ${others.length ? `<details class="hub-others"${hubOthersOpen ? ' open' : ''} ontoggle="hubOthersOpen = this.open">
+      <summary>Autres outils <span>${others.length}</span></summary>
+      <div class="hub-list">${others.map(card).join('')}</div>
+    </details>` : ''}`;
 }
 
 // ─── MON SUIVI : la mosaïque ───
@@ -5433,20 +5676,39 @@ function renderCarnet() {
   const plan = loadPlan();
   const filled = PLAN_FIELDS.filter(k => planHas(plan, k)).length;
   document.getElementById('carnetPlanSub').textContent = filled ? `${filled} rubrique${filled > 1 ? 's' : ''} sur 6 remplie${filled > 1 ? 's' : ''}` : 'Mes signaux, ce qui m\'aide, qui appeler';
-  const values = loadValues();
-  const tiles = [
-    { screen: 'cards', n: loadCards().length, label: 'Cartes de coping', empty: 'Créer ma première carte', color: '#93c9ac', icon: 'M5 6h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2ZM7 3h12a2 2 0 0 1 2 2v12' },
-    { screen: 'jhistory', n: loadJournalEntries().filter(e => e.balanced).length, label: 'Pensées équilibrées', empty: 'Elles arriveront avec le journal', color: '#d8b78a', icon: 'M3 12h4l3 8 4-16 3 8h4' },
-    { screen: 'diary', n: loadDiaryEntries().length, label: 'Ce qui va bien', empty: 'Noter un bon moment', color: '#c9d68a', icon: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v2M12 20v2M2 12h2M20 12h2' },
-    { screen: 'valeurs', n: values && values.ratings ? values.ratings.length : 0, label: 'Directions de vie', empty: 'Trouver ce qui compte', color: '#b9a6e0', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
-  ];
-  document.getElementById('carnetGrid').innerHTML = tiles.map(t => `
+  const s = carnetSections({
+    therapyDone: done, planFilled: filled,
+    counts: { cards: loadCards().length, jhistory: loadJournalEntries().filter(e => e.balanced).length, diary: loadDiaryEntries().length, valeurs: (v => v && v.ratings ? v.ratings.length : 0)(loadValues()) },
+  });
+  document.getElementById('carnetPlanCard').hidden = !s.planProminent;
+  document.getElementById('carnetGrid').innerHTML = s.tiles.map(t => `
     <button class="carnet-tile" onclick="navigateTo('${t.screen}')">
       <svg viewBox="0 0 24 24" style="stroke:${t.color}" aria-hidden="true"><path d="${t.icon}"/></svg>
-      ${t.n ? `<span class="carnet-tile-n">${t.n}</span>` : ''}
-      <span class="carnet-tile-label${t.n ? '' : ' strong'}">${t.label}</span>
-      ${t.n ? '' : `<span class="carnet-tile-empty">${t.empty}</span>`}
+      <span class="carnet-tile-n">${t.n}</span>
+      <span class="carnet-tile-label">${t.label}</span>
     </button>`).join('');
+  // Ce qui est encore vide ne prend pas une case : une simple ligne pour commencer.
+  const more = s.starters.map(t => `<button class="carnet-more-row" onclick="navigateTo('${t.screen}')"><span>${t.start}</span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
+  if (!s.planProminent) more.push(`<button class="carnet-more-row" onclick="navigateTo('plan')"><span>Mon plan anti-rechute <small>à préparer avec ton psy, en fin de thérapie</small></span><span class="hub-chevron" aria-hidden="true">›</span></button>`);
+  document.getElementById('carnetMore').innerHTML = more.join('');
+}
+// Ce que le carnet affiche. Fonction pure (testée) : une rubrique vide n'occupe pas de case ;
+// celles qu'on remplit ici même (cartes, bons moments) gardent une ligne pour commencer, celles
+// qui se remplissent en faisant un exercice (pensées équilibrées, valeurs) n'apparaissent qu'ensuite.
+// Le plan anti-rechute est mis en avant après la thérapie, ou dès qu'il a du contenu.
+const CARNET_TILES = [
+  { screen: 'cards', label: 'Cartes de coping', start: 'Créer une carte à relire quand c\'est difficile', color: '#93c9ac', icon: 'M5 6h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2ZM7 3h12a2 2 0 0 1 2 2v12' },
+  { screen: 'jhistory', label: 'Pensées équilibrées', color: '#d8b78a', icon: 'M3 12h4l3 8 4-16 3 8h4' },
+  { screen: 'diary', label: 'Ce qui va bien', start: 'Noter un bon moment', color: '#c9d68a', icon: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v2M12 20v2M2 12h2M20 12h2' },
+  { screen: 'valeurs', label: 'Mes valeurs', color: '#b9a6e0', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM16 8l-2.5 5.5L8 16l2.5-5.5L16 8Z' },
+];
+function carnetSections({ therapyDone = false, planFilled = 0, counts = {} } = {}) {
+  const all = CARNET_TILES.map(t => ({ ...t, n: counts[t.screen] || 0 }));
+  return {
+    planProminent: therapyDone || planFilled > 0,
+    tiles: all.filter(t => t.n > 0),
+    starters: all.filter(t => t.n === 0 && t.start),
+  };
 }
 
 // ─── ENTRE DEUX SÉANCES : tâches proposées par le psy ───
@@ -5475,11 +5737,35 @@ function renderTaskKindChips() {
     `<button type="button" class="chip${taskKind === ex.kind ? ' selected' : ''}" aria-pressed="${taskKind === ex.kind}" onclick="selectTaskKind('${ex.kind}')">${escHtml(ex.title)}</button>`
   ).join('');
 }
-function selectTaskKind(k) { taskKind = k; renderTaskKindChips(); Haptics.light(); }
+function showTaskMore() {
+  document.getElementById('taskMore').hidden = false;
+  document.getElementById('taskMoreBtn').hidden = true;
+}
+function selectTaskKind(k) {
+  taskKind = k;
+  renderTaskKindChips();
+  // « Autre » n'a pas d'exercice derrière : il faut décrire la tâche, donc on ouvre les précisions.
+  const other = k === 'autre';
+  document.getElementById('taskDetailLabel').textContent = other ? 'La tâche' : 'Précision';
+  document.getElementById('taskDetailOptional').hidden = other;
+  document.getElementById('taskDetail').placeholder = other ? 'Ex. : appeler ma sœur' : 'Ex. : le soir, avant de dormir';
+  if (other) { showTaskMore(); document.getElementById('taskDetail').focus(); }
+  Haptics.light();
+}
+// Raccourci depuis l'accueil : ouvre directement le formulaire d'ajout.
+function openTaskForm() {
+  navigateTo('taches');
+  if (!document.getElementById('taskAddForm').classList.contains('visible')) toggleTaskForm();
+}
 function toggleTaskForm() {
   const f = document.getElementById('taskAddForm');
   const opening = !f.classList.contains('visible');
   taskKind = null;
+  document.getElementById('taskMore').hidden = true;
+  document.getElementById('taskMoreBtn').hidden = false;
+  document.getElementById('taskDetailLabel').textContent = 'Précision';
+  document.getElementById('taskDetailOptional').hidden = false;
+  document.getElementById('taskDetail').placeholder = 'Ex. : le soir, avant de dormir';
   document.getElementById('taskDetail').value = '';
   document.getElementById('taskTarget').value = 1;
   document.getElementById('taskTargetVal').textContent = '1';
@@ -5492,7 +5778,7 @@ function toggleTaskForm() {
 function saveTask() {
   const detail = document.getElementById('taskDetail').value.trim();
   if (!taskKind || (taskKind === 'autre' && !detail)) {
-    document.getElementById('taskDetail').placeholder = taskKind === 'autre' ? 'Décris la tâche ici' : 'Ex. : le soir, avant de dormir';
+    if (taskKind) { showTaskMore(); document.getElementById('taskDetail').placeholder = 'Décris la tâche ici'; }
     (taskKind ? document.getElementById('taskDetail') : document.getElementById('taskKindChips').querySelector('button')).focus();
     return;
   }
@@ -5546,7 +5832,7 @@ function renderTaches() {
   document.getElementById('tachesIntro').textContent = done
     ? 'Ce que tu choisis de continuer à pratiquer, à ton rythme.'
     : `Ce que ton psy t'a proposé.${next && next >= ymd() ? ` Prochaine séance : ${new Date(next + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}.` : ''}`;
-  document.getElementById('therapyDoneToggle').checked = done;
+  document.getElementById('tachesTherapyLink').textContent = done ? 'Tu as repris un suivi ? Ça se règle ici' : 'Ta thérapie est terminée ? Ça se règle ici';
   document.getElementById('nextSession').value = next || '';
   const list = document.getElementById('tasksList');
   const tasks = loadTasks();

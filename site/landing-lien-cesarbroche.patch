@@ -1,0 +1,31 @@
+--- a/index.html
++++ b/index.html
+@@ -64,9 +64,11 @@
+         "author": {
+           "@type": "Person",
+           "name": "César Broche Aguilar",
++          "alternateName": "César Broche",
+           "jobTitle": "Psychologue du travail formé aux thérapies cognitives et comportementales",
+           "url": "https://sereinapp.fr/#cesar",
+           "sameAs": [
++            "https://cesarbroche.fr/",
+             "https://www.instagram.com/sereinapp.fr/",
+             "https://github.com/psychocaesar/Serein"
+           ]
+@@ -202,6 +204,7 @@
+     .about-caption-role{font-size:.78rem;color:var(--text2);margin-top:.2rem;line-height:1.45}
+     .about-text .section-title{margin:.5rem 0 1.5rem;max-width:16ch}
+     .about-text p{font-size:.97rem;color:var(--text2);line-height:1.78;font-weight:300;margin-bottom:1.1rem;max-width:52ch}
++    .about-text p a{color:var(--primary);text-decoration:underline;text-underline-offset:3px}
+     .about-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.75rem}
+     .about-tag{font-size:.78rem;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.3rem .8rem;color:var(--text2)}
+     .about-more{display:inline-block;margin-top:1.5rem;font-size:.9rem;color:var(--primary);text-decoration:none;font-weight:500;transition:opacity .2s}
+@@ -421,7 +424,7 @@
+         <h2 class="section-title reveal d1">Une app fondée par<br>un <em>psychologue</em>.</h2>
+         <div class="reveal d2">
+           <p>Serein est né d'une conviction simple : une pratique de pleine conscience n'a pas besoin d'être compliquée pour être efficace.</p>
+-          <p>En tant que psychologue du travail formé aux thérapies cognitives et comportementales (TCC), j'ai voulu créer un outil sobre et honnête - sans gamification, sans abonnement, sans dark patterns.</p>
++          <p>En tant que psychologue du travail formé aux thérapies cognitives et comportementales (TCC), j'ai voulu créer un outil sobre et honnête - sans gamification, sans abonnement, sans dark patterns. Mon activité de psychologue à Nîmes est présentée sur <a href="https://cesarbroche.fr/">cesarbroche.fr</a>.</p>
+           <p>Les séances sont pensées avec une rigueur clinique, adaptées à des situations réelles : le stress du lundi matin, les réveils à 3h, le brouillard mental avant une réunion difficile.</p>
+           <p>Serein est développé et diffusé par l'association Sereinapp Méditation, association loi 1901 à but non lucratif, dont l'objet est de rendre la méditation accessible gratuitement au plus grand nombre, sans publicité ni exploitation des données.</p>
+         </div>

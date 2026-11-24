@@ -112,6 +112,8 @@ const SHIM = `
   getValuesProfile: getValuesProfile,
   valuesFeedbackFor: valuesFeedbackFor,
   pickFocusDomain: pickFocusDomain,
+  copingPresets: copingPresets,
+  anchorPhrases: anchorPhrases,
 };`;
 
 vm.createContext(sandbox);
@@ -299,12 +301,14 @@ test('défi du jour : 3 réponses distinctes dont la bonne, pour chaque pensée'
   });
 });
 
-test('pièges de pensée : 9 pièges cohérents partout (journal, exemples, défi)', () => {
+test('pièges de pensée : 10 pièges cohérents partout (journal, exemples, défi)', () => {
+  // Les 9 distorsions du cours (Beck, Psy.link) + « lecture de pensée » et « catastrophisme »
+  // (inférence arbitraire, vocabulaire de Burns) ; « filtre mental » = abstraction sélective.
   const keys = Object.keys(C.schemas).sort();
-  assert.strictEqual(keys.length, 9);
+  assert.strictEqual(keys.length, 10);
   assert.deepStrictEqual(Object.keys(C.schemaExamples).sort(), keys);
   assert.deepStrictEqual(Object.keys(C.schemaLabels).sort(), keys);
-  for (const k of ['emotionnel', 'devrais', 'etiquetage']) assert.ok(C.schemas[k], `piège ${k} manquant`);
+  for (const k of ['emotionnel', 'devrais', 'etiquetage', 'minimisation']) assert.ok(C.schemas[k], `piège ${k} manquant`);
   for (const k of keys) assert.ok(C.quizData.some(q => q.schema === k), `aucune pensée du défi pour ${k}`);
 });
 
@@ -312,6 +316,16 @@ test('re-cotation du journal : message non culpabilisant même si l\'émotion mo
   assert.match(C.rerateVerdict(8, 4), /baissé de 4/);
   assert.match(C.rerateVerdict(5, 5), /information utile/);
   assert.doesNotMatch(C.rerateVerdict(3, 6), /échec|raté|mauvais/i);
+  // Constat, pas d'allégation d'efficacité (« c'est ce que fait une pensée plus juste »).
+  assert.doesNotMatch(C.rerateVerdict(8, 4), /pensée plus juste|grâce|preuve/i);
+});
+
+test('cartes et phrases du SOS : aucune réassurance médicale (rien n\'a été examiné)', () => {
+  // Elles s'affichent aussi sur le widget, sans le texte d'explication de leur thème.
+  const all = [...Object.values(C.copingPresets).flatMap(c => [c.mechanism, ...c.cards]), ...C.anchorPhrases];
+  for (const t of all) {
+    assert.doesNotMatch(t, /crise cardiaque|infarctus|inoffensi|dangereu|en danger|m'étouffer|paralyse/i, t);
+  }
 });
 
 test('synthèse du suivi : pas de tendance avant 3 jours notés', () => {
